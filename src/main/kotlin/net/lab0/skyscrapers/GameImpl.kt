@@ -4,10 +4,10 @@ import net.lab0.skyscrapers.actions.ActionDSL
 import net.lab0.skyscrapers.exception.PlayerDoesntExist
 
 class GameImpl(
-  override val width: Int = 5,
-  override val height: Int = 5,
-  override val playerCount: Int = 2,
-  override val maxBuildersPerPlayer: Int = 2,
+  override val width: Int,
+  override val height: Int,
+  override val playerCount: Int,
+  override val maxBuildersPerPlayer: Int,
   private val buildings: Array<Array<Int>> = Array(width) { Array(height) { 0 } },
   private val players: Map<Int, MutableSet<Position>> = (0 until playerCount)
     .toList()
@@ -15,6 +15,8 @@ class GameImpl(
     .toMap()
     .toMutableMap(),
 ) : Game {
+
+  companion object : NewGame
 
   var internalTurns = 0
 

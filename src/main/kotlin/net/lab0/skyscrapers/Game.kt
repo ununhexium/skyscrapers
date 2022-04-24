@@ -19,6 +19,8 @@ import net.lab0.skyscrapers.actions.ActionDSL
  *
  */
 interface Game {
+  companion object : NewGame
+
   val height: Int
   val width: Int
 
