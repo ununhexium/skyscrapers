@@ -65,6 +65,7 @@ interface Game {
 
   fun play(action: ActionDSL.() -> (Game) -> Unit)
   fun addBuilder(player: Int, position: Position)
+  fun hasBuilder(position: Position): Boolean
 
   val phase: Phase
 }

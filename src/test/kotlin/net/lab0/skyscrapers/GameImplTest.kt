@@ -1,9 +1,9 @@
 package net.lab0.skyscrapers
 
+import net.lab0.skyscrapers.exception.CellUsedByAnotherBuilder
 import net.lab0.skyscrapers.exception.InvalidBoardSize
 import net.lab0.skyscrapers.exception.InvalidPlayersCount
 import net.lab0.skyscrapers.exception.WrongPlayerTurn
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Test
@@ -45,10 +45,16 @@ internal class GameImplTest {
     return (0 until width).flatMap { x ->
       (0 until height).map { y ->
         DynamicTest.dynamicTest("g[$x,$y] == 0") {
-          Assertions.assertThat(g[x, y]).isEqualTo(0)
+          assertThat(g[x, y]).isEqualTo(0)
         }
       }
     }
+  }
+
+  @Test
+  fun `the game starts in the placement phase`() {
+    val g = Game.new()
+    assertThat(g.phase).isEqualTo(Phase.PLACEMENT)
   }
 
   @Test
@@ -61,7 +67,7 @@ internal class GameImplTest {
   @Test
   fun `the game starts with the placing phase`() {
     val g = Game.new()
-    assertThat(g.phase).isEqualTo(Phase.PLACE)
+    assertThat(g.phase).isEqualTo(Phase.PLACEMENT)
   }
 
   @Test
@@ -139,5 +145,34 @@ internal class GameImplTest {
 
     assertThat(g.turn).isEqualTo(2)
     assertThat(g.currentPlayer).isEqualTo(0)
+  }
+
+  @Test
+  fun `can't place a builder on top of another builder`() {
+    val g = Game.new()
+
+    g.play {
+      player(0) {
+        addBuilder(0,0)
+      }
+    }
+
+    assertThrows<CellUsedByAnotherBuilder> {
+      g.play {
+        player(1) {
+          addBuilder(0,0)
+        }
+      }
+    }
+  }
+
+  @Test
+  fun `the game phase changes to building once all the builders have been placed`() {
+    val g = Game.new(playerCount = 2, buildersPerPlayer = 1)
+    g.play {
+      player(0) {
+        addBuilder(0,0)
+      }
+    }
   }
 }

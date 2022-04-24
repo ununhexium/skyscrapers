@@ -9,10 +9,8 @@ class GameImpl(
   override val playerCount: Int,
   override val maxBuildersPerPlayer: Int,
   private val buildings: Array<Array<Int>> = Array(width) { Array(height) { 0 } },
-  private val players: Map<Int, MutableSet<Position>> = (0 until playerCount)
-    .toList()
-    .map { it to mutableSetOf<Position>() }
-    .toMap()
+  private val builders: Map<Int, MutableSet<Position>> = (0 until playerCount)
+    .toList().associateWith { mutableSetOf<Position>() }
     .toMutableMap(),
 ) : Game {
 
@@ -23,13 +21,16 @@ class GameImpl(
   override fun get(x: Int, y: Int) = buildings[x][y]
 
   override fun getBuilders(player: Int) =
-    players[player]?.toList()
+    builders[player]?.toList()
       ?: throw Exception("The player #$player doesn't exist")
+
+  override fun hasBuilder(position: Position) =
+    builders.values.any { it.contains(position) }
 
   override val phase: Phase
     get() {
-      val placedBuilders = players.values.sumOf { it.size }
-      return if (placedBuilders < totalBuilders) Phase.PLACE else Phase.BUILD
+      val placedBuilders = builders.values.sumOf { it.size }
+      return if (placedBuilders < totalBuilders) Phase.PLACEMENT else Phase.BUILD
     }
 
   override fun play(action: ActionDSL.() -> (Game) -> Unit) {
@@ -40,7 +41,7 @@ class GameImpl(
   }
 
   override fun addBuilder(player: Int, position: Position) {
-    val builders = players[player] ?: throw PlayerDoesntExist(player)
+    val builders = builders[player] ?: throw PlayerDoesntExist(player)
     builders.add(position)
   }
 
