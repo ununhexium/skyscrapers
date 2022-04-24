@@ -261,4 +261,22 @@ internal class GameImplTest {
       assertThat(g.currentPlayer).isEqualTo(1)
     }
   }
+
+  @Nested
+  inner class Finished {
+    @Test
+    fun `when there is only 1 player remaining, the game is finished`() {
+      val g = gameWithSequentiallyPlacedBuilders()
+
+      assertThat(g.isFinished()).isFalse
+
+      g.play {
+        player(0) {
+          giveUp()
+        }
+      }
+
+      assertThat(g.isFinished()).isTrue
+    }
+  }
 }
