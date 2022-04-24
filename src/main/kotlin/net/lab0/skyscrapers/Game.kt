@@ -1,6 +1,6 @@
 package net.lab0.skyscrapers
 
-import net.lab0.skyscrapers.actions.PlayerDSL
+import net.lab0.skyscrapers.actions.Action
 
 /**
  * Represents a game.
@@ -55,7 +55,7 @@ interface Game {
 
   fun getBuilders(player: Int): List<Position>
 
-  fun play(action: PlayerDSL.() -> (Game) -> Unit)
+  fun play(action: Action)
   fun addBuilder(player: Int, position: Position)
   fun hasBuilder(position: Position): Boolean
 
@@ -69,7 +69,7 @@ interface Game {
    * Moves a builder of a player from a position to another
    * and checks for the validity of that action
    */
-  fun moveBuilder(player: Int, from: Position, target: Position)
+  fun moveBuilder(player: Int, from: Position, to: Position)
 
   val phase: Phase
   fun isFinished(): Boolean

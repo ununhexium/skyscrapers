@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers
 
+import net.lab0.skyscrapers.actions.DSL
 import net.lab0.skyscrapers.exception.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DynamicTest
@@ -21,13 +22,9 @@ internal class GameImplTest {
         val player = turn % playerCount
         val x = turn % width
         val y = turn / height
-        it.play {
-          player(player) {
-            placement {
-              addBuilder(Position(x, y))
-            }
-          }
-        }
+        it.play(
+          DSL.player(player).placement.addBuilder(Position(x, y))
+        )
       }
     }
 
@@ -109,13 +106,9 @@ internal class GameImplTest {
       val g: Game = Game.new()
       val player = 0
 
-      g.play {
-        player(player) {
-          placement {
-            addBuilder(Position(1, 2))
-          }
-        }
-      }
+      g.play(
+        DSL.player(player).placement.addBuilder(Position(1, 2))
+      )
 
       assertThat(g.getBuilders(player)).isEqualTo(listOf(Position(1, 2)))
     }
@@ -124,40 +117,24 @@ internal class GameImplTest {
     fun `players must add their builders in alternating turns`() {
       val g: Game = Game.new()
 
-      g.play {
-        player(0) {
-          placement {
-            addBuilder(0, 0)
-          }
-        }
-      }
+      g.play(
+        DSL.player(0).placement.addBuilder(0, 0)
+      )
 
       assertThrows<WrongPlayerTurn> {
-        g.play {
-          player(0) {
-            placement {
-              addBuilder(1, 1)
-            }
-          }
-        }
+        g.play(
+          DSL.player(0).placement.addBuilder(1, 1)
+        )
       }
 
-      g.play {
-        player(1) {
-          placement {
-            addBuilder(1, 1)
-          }
-        }
-      }
+      g.play(
+        DSL.player(1).placement.addBuilder(1, 1)
+      )
 
       assertThrows<WrongPlayerTurn> {
-        g.play {
-          player(1) {
-            placement {
-              addBuilder(2, 2)
-            }
-          }
-        }
+        g.play(
+          DSL.player(1).placement.addBuilder(2, 2)
+        )
       }
     }
 
@@ -172,24 +149,16 @@ internal class GameImplTest {
     fun `the turn increases each time a player plays`() {
       val g: Game = Game.new(playerCount = 2)
 
-      g.play {
-        player(0) {
-          placement {
-            addBuilder(0, 0)
-          }
-        }
-      }
+      g.play(
+        DSL.player(0).placement.addBuilder(0, 0)
+      )
 
       assertThat(g.turn).isEqualTo(1)
       assertThat(g.currentPlayer).isEqualTo(1)
 
-      g.play {
-        player(1) {
-          placement {
-            addBuilder(1, 1)
-          }
-        }
-      }
+      g.play(
+        DSL.player(1).placement.addBuilder(1, 1)
+      )
 
       assertThat(g.turn).isEqualTo(2)
       assertThat(g.currentPlayer).isEqualTo(0)
@@ -199,35 +168,23 @@ internal class GameImplTest {
     fun `can't place a builder on top of another builder`() {
       val g = Game.new()
 
-      g.play {
-        player(0) {
-          placement {
-            addBuilder(0, 0)
-          }
-        }
-      }
+      g.play(
+        DSL.player(0).placement.addBuilder(0, 0)
+      )
 
       assertThrows<CellUsedByAnotherBuilder> {
-        g.play {
-          player(1) {
-            placement {
-              addBuilder(0, 0)
-            }
-          }
-        }
+        g.play(
+          DSL.player(1).placement.addBuilder(0, 0)
+        )
       }
     }
 
     @Test
     fun `the game phase changes to building once all the builders have been placed`() {
       val g = Game.new(playerCount = 2, buildersPerPlayer = 1)
-      g.play {
-        player(0) {
-          placement {
-            addBuilder(0, 0)
-          }
-        }
-      }
+      g.play(
+        DSL.player(0).placement.addBuilder(0, 0)
+      )
     }
 
     @Test
@@ -235,13 +192,9 @@ internal class GameImplTest {
       val g = Game.new()
 
       assertThrows<CantGiveUpInThePlacementPhase> {
-        g.play {
-          player(0) {
-            building {
-              giveUp()
-            }
-          }
-        }
+        g.play(
+          DSL.player(0).building.giveUp()
+        )
       }
     }
 
@@ -250,35 +203,20 @@ internal class GameImplTest {
       val g = Game.new()
 
       // put a builder at 0,0
-      g.play {
-        player(0) {
-          placement {
-            addBuilder(0, 0)
-          }
-        }
-      }
+      g.play(
+        DSL.player(0).placement.addBuilder(0, 0)
+      )
 
       // the opponent plays
-      g.play {
-        player(1) {
-          placement {
-            addBuilder(5, 5)
-          }
-        }
-      }
+      g.play(
+        DSL.player(1).placement.addBuilder(5, 5)
+      )
 
       // can't move the first builder before placing them all
       assertThrows<IllegalMove> {
-        g.play {
-          player(0) {
-            building {
-              moveBuilder {
-                from(0, 0)
-                to(0, 1)
-              }
-            }
-          }
-        }
+        g.play(
+          DSL.player(0).building.move().from(0, 0).to(0, 1).andBuild(0, 0)
+        )
       }
     }
   }
@@ -297,40 +235,22 @@ internal class GameImplTest {
       assertThat(g.turn).isEqualTo(6)
       assertThat(g.currentPlayer).isEqualTo(0)
 
-      g.play {
-        player(0) {
-          building {
-            giveUp()
-          }
-        }
-      }
+      g.play(
+        DSL.player(0).building.giveUp()
+      )
       assertThat(g.turn).isEqualTo(7)
       assertThat(g.currentPlayer).isEqualTo(1)
 
-      g.play {
-        player(1) {
-          building {
-            moveBuilder {
-              from(1, 0)
-              to(1, 1)
-            }
-          }
-        }
-      }
+      g.play(
+        DSL.player(1).building.move().from(1, 0).to(1, 1).andBuild(1, 0)
+      )
 
       assertThat(g.turn).isEqualTo(8)
       assertThat(g.currentPlayer).isEqualTo(2)
 
-      g.play {
-        player(2) {
-          building {
-            moveBuilder {
-              from(2, 0)
-              to(2, 1)
-            }
-          }
-        }
-      }
+      g.play(
+        DSL.player(2).building.move().from(2, 0).to(2, 1).andBuild(2, 0)
+      )
 
       // now the player 0 doesn't play because it gave up
 
@@ -342,16 +262,9 @@ internal class GameImplTest {
     fun `the player can move a builder`() {
       val g = newGameWithSequentiallyPlacedBuilders()
 
-      g.play {
-        player(0) {
-          building {
-            moveBuilder {
-              from(0, 0)
-              to(0, 1)
-            }
-          }
-        }
-      }
+      g.play(
+        DSL.player(0).building.move().from(0, 0).to(0, 1).andBuild(0, 0)
+      )
 
       assertThat(g.getBuilders(0))
         .contains(Position(0, 1), Position(2, 0))
@@ -363,16 +276,9 @@ internal class GameImplTest {
       val g = newGameWithSequentiallyPlacedBuilders()
 
       assertThrows<IllegalMove> {
-        g.play {
-          player(0) {
-            building {
-              moveBuilder {
-                from(0, 0)
-                to(0, 2)
-              }
-            }
-          }
-        }
+        g.play(
+          DSL.player(0).building.move().from(0, 0).to(0, 2).andBuild(0, 0)
+        )
       }
     }
 
@@ -381,16 +287,9 @@ internal class GameImplTest {
       val g = newGameWithSequentiallyPlacedBuilders()
 
       assertThrows<IllegalMove> {
-        g.play {
-          player(0) {
-            building {
-              moveBuilder {
-                from(0, 0)
-                to(0, 0)
-              }
-            }
-          }
-        }
+        g.play(
+          DSL.player(0).building.move().from(0, 0).to(0, 0).andBuild(0, 0)
+        )
       }
     }
 
@@ -399,16 +298,9 @@ internal class GameImplTest {
       val g = newGameWithSequentiallyPlacedBuilders()
 
       assertThrows<IllegalMove> {
-        g.play {
-          player(0) {
-            building {
-              moveBuilder {
-                from(1, 0)
-                to(1, 1)
-              }
-            }
-          }
-        }
+        g.play(
+          DSL.player(0).building.move().from(1, 0).to(1, 1).andBuild(1, 0)
+        )
       }
     }
 
@@ -417,16 +309,9 @@ internal class GameImplTest {
       val g = newGameWithSequentiallyPlacedBuilders()
 
       assertThrows<IllegalMove> {
-        g.play {
-          player(0) {
-            building {
-              moveBuilder {
-                from(5, 5)
-                to(4, 4)
-              }
-            }
-          }
-        }
+        g.play(
+          DSL.player(0).building.move().from(5, 5).to(4, 4).andBuild(5, 5)
+        )
       }
     }
 
@@ -435,16 +320,9 @@ internal class GameImplTest {
       val g = newGameWithSequentiallyPlacedBuilders()
 
       assertThrows<WrongPlayerTurn> {
-        g.play {
-          player(99) {
-            building {
-              moveBuilder {
-                from(0, 0)
-                to(0, 1)
-              }
-            }
-          }
-        }
+        g.play(
+          DSL.player(99).building.move().from(0, 0).to(0, 1).andBuild(0, 0)
+        )
       }
     }
 
@@ -453,16 +331,9 @@ internal class GameImplTest {
       val g = newGameWithSequentiallyPlacedBuilders()
 
       assertThrows<IllegalMove> {
-        g.play {
-          player(0) {
-            building {
-              moveBuilder {
-                from(0, 0)
-                to(1, 0)
-              }
-            }
-          }
-        }
+        g.play(
+          DSL.player(0).building.move().from(0, 0).to(1, 0).andBuild(0, 0)
+        )
       }
     }
 
@@ -471,16 +342,9 @@ internal class GameImplTest {
       val g = newGameWithSequentiallyPlacedBuilders()
 
       assertThrows<IllegalMove> {
-        g.play {
-          player(0) {
-            building {
-              moveBuilder {
-                from(0, 0)
-                to(-1, -1)
-              }
-            }
-          }
-        }
+        g.play(
+          DSL.player(0).building.move().from(0, 0).to(-1, -1).andBuild(0, 0)
+        )
       }
     }
   }
@@ -493,13 +357,9 @@ internal class GameImplTest {
 
       assertThat(g.isFinished()).isFalse
 
-      g.play {
-        player(0) {
-          building {
-            giveUp()
-          }
-        }
-      }
+      g.play(
+        DSL.player(0).building.giveUp()
+      )
 
       assertThat(g.isFinished()).isTrue
     }

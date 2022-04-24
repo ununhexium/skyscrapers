@@ -1,6 +1,6 @@
 package net.lab0.skyscrapers
 
-import net.lab0.skyscrapers.actions.PlayerDSL
+import net.lab0.skyscrapers.actions.Action
 import net.lab0.skyscrapers.exception.*
 import java.util.LinkedList
 
@@ -45,10 +45,8 @@ class GameImpl(
       return if (placedBuilders < totalBuilders) Phase.PLACEMENT else Phase.BUILD
     }
 
-  override fun play(action: PlayerDSL.() -> (Game) -> Unit) {
-    val dsl = PlayerDSL()
-    val change = action(dsl)
-    change(this)
+  override fun play(action: Action) {
+    action(this)
 
     internalTurns++
 
@@ -81,9 +79,9 @@ class GameImpl(
     playersQueue.first.active = false
   }
 
-  override fun moveBuilder(player: Int, from: Position, target: Position) {
+  override fun moveBuilder(player: Int, from: Position, to: Position) {
     if(phase != Phase.BUILD)
-      throw IllegalMove(from, target, "this is the placement phase")
+      throw IllegalMove(from, to, "this is the placement phase")
 
     if(currentPlayer != player)
       throw WrongPlayerTurn(player, currentPlayer)
@@ -91,22 +89,22 @@ class GameImpl(
     val positions = builders[player]!!
 
     if (!positions.contains(from))
-      throw IllegalMove(from, target, "there is no builder in the starting position")
+      throw IllegalMove(from, to, "there is no builder in the starting position")
 
-    if(hasBuilder(target))
-      throw IllegalMove(from, target, "there is a builder at the target position")
+    if(hasBuilder(to))
+      throw IllegalMove(from, to, "there is a builder at the target position")
 
-    if(from == target)
-      throw IllegalMove(from, target, "the position must be different")
+    if(from == to)
+      throw IllegalMove(from, to, "the position must be different")
 
-    if(!from.nextTo(target))
-        throw IllegalMove(from, target, "too far away")
+    if(!from.nextTo(to))
+        throw IllegalMove(from, to, "too far away")
 
-    if(target.x < 0 || target.x >= width || target.y < 0 || target.y >= height)
-      throw IllegalMove(from, target, "the target position can't be outside of the board")
+    if(to.x < 0 || to.x >= width || to.y < 0 || to.y >= height)
+      throw IllegalMove(from, to, "the target position can't be outside of the board")
 
     positions.remove(from)
-    positions.add(target)
+    positions.add(to)
   }
 
   override fun isFinished(): Boolean {
