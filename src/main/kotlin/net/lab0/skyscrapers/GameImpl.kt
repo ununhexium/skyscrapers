@@ -15,6 +15,9 @@ class GameImpl(
     .toMap()
     .toMutableMap(),
 ) : Game {
+
+  var internalTurns = 0
+
   override fun get(x: Int, y: Int) = buildings[x][y]
 
   override fun getBuilders(player: Int) =
@@ -31,10 +34,14 @@ class GameImpl(
     val dsl = ActionDSL()
     val change = action(dsl)
     change(this)
+    internalTurns++
   }
 
   override fun addBuilder(player: Int, position: Position) {
     val builders = players[player] ?: throw PlayerDoesntExist(player)
     builders.add(position)
   }
+
+  override val turn: Int
+    get() = internalTurns
 }

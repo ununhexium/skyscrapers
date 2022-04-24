@@ -1,6 +1,7 @@
 package net.lab0.skyscrapers
 
 import net.lab0.skyscrapers.exception.PlayerDoesntExist
+import net.lab0.skyscrapers.exception.WrongPlayerTurn
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DynamicTest
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.TestFactory
 import org.junit.jupiter.api.assertThrows
 
 internal class GameImplTest {
+
   @TestFactory
   fun `the initial height of the buildings is 0`(): Iterable<DynamicTest> {
     val width = 3
@@ -52,14 +54,65 @@ internal class GameImplTest {
   }
 
   @Test
-  fun `throws when the player doesn't exist`() {
+  fun `players must add their builders in alternating turns`() {
     val g: Game = GameImpl()
-    assertThrows<PlayerDoesntExist> {
+
+    g.play {
+      player(0) {
+        addBuilder(0, 0)
+      }
+    }
+
+    assertThrows<WrongPlayerTurn> {
       g.play {
-        player(9) {
-          addBuilder(Position(0, 0))
+        player(0) {
+          addBuilder(1, 1)
         }
       }
     }
+
+    g.play {
+      player(1) {
+        addBuilder(1, 1)
+      }
+    }
+
+    assertThrows<WrongPlayerTurn> {
+      g.play {
+        player(1) {
+          addBuilder(2, 2)
+        }
+      }
+    }
+  }
+
+  @Test
+  fun `the game starts at turn 0`() {
+    val g: Game = GameImpl(playerCount = 2)
+    assertThat(g.turn).isEqualTo(0)
+    assertThat(g.currentPlayer).isEqualTo(0)
+  }
+
+  @Test
+  fun `the turn increases each time a player plays`() {
+    val g: Game = GameImpl(playerCount = 2)
+
+    g.play {
+      player(0) {
+        addBuilder(0,0)
+      }
+    }
+
+    assertThat(g.turn).isEqualTo(1)
+    assertThat(g.currentPlayer).isEqualTo(1)
+
+    g.play {
+      player(1) {
+        addBuilder(1,1)
+      }
+    }
+
+    assertThat(g.turn).isEqualTo(2)
+    assertThat(g.currentPlayer).isEqualTo(0)
   }
 }

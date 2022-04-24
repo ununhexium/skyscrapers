@@ -28,6 +28,26 @@ interface Game {
   val playerCount: Int
 
   /**
+   * Total number of turns that have been played
+   */
+  val turn: Int
+
+  /**
+   * The player whose turn it is to play
+   *
+   * For a 3 players game:
+   *
+   * Turn 0: player 0
+   * Turn 1: player 1
+   * Turn 2: player 2
+   * Turn 3: player 0
+   * Turn 4: player 1
+   * Turn 5: player 2
+   */
+  val currentPlayer: Int
+    get() = (turn % playerCount)
+
+  /**
    * Max number of builder per player.
    */
   val maxBuildersPerPlayer: Int
