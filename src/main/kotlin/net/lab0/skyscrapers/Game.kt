@@ -1,6 +1,6 @@
 package net.lab0.skyscrapers
 
-import net.lab0.skyscrapers.actions.ActionDSL
+import net.lab0.skyscrapers.actions.PlayerDSL
 
 /**
  * Represents a game.
@@ -55,7 +55,7 @@ interface Game {
 
   fun getBuilders(player: Int): List<Position>
 
-  fun play(action: ActionDSL.() -> (Game) -> Unit)
+  fun play(action: PlayerDSL.() -> (Game) -> Unit)
   fun addBuilder(player: Int, position: Position)
   fun hasBuilder(position: Position): Boolean
 

@@ -7,7 +7,9 @@ fun main() {
 
   g.play {
     player(1) {
-      addBuilder(Position(0, 0))
+      placement {
+        addBuilder(Position(0, 0))
+      }
     }
   }
 }

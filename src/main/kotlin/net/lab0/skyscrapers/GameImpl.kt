@@ -1,6 +1,6 @@
 package net.lab0.skyscrapers
 
-import net.lab0.skyscrapers.actions.ActionDSL
+import net.lab0.skyscrapers.actions.PlayerDSL
 import net.lab0.skyscrapers.exception.CantGiveUpInThePlacementPhase
 import net.lab0.skyscrapers.exception.CellUsedByAnotherBuilder
 import net.lab0.skyscrapers.exception.PlayerDoesntExist
@@ -47,8 +47,8 @@ class GameImpl(
       return if (placedBuilders < totalBuilders) Phase.PLACEMENT else Phase.BUILD
     }
 
-  override fun play(action: ActionDSL.() -> (Game) -> Unit) {
-    val dsl = ActionDSL()
+  override fun play(action: PlayerDSL.() -> (Game) -> Unit) {
+    val dsl = PlayerDSL()
     val change = action(dsl)
     change(this)
 

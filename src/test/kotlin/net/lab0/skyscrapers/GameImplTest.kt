@@ -23,7 +23,9 @@ internal class GameImplTest {
         val y = turn / height
         it.play {
           player(player) {
-            addBuilder(x, y)
+            placement {
+              addBuilder(Position(x, y))
+            }
           }
         }
       }
@@ -109,7 +111,9 @@ internal class GameImplTest {
 
       g.play {
         player(player) {
-          addBuilder(Position(1, 2))
+          placement {
+            addBuilder(Position(1, 2))
+          }
         }
       }
 
@@ -122,28 +126,36 @@ internal class GameImplTest {
 
       g.play {
         player(0) {
-          addBuilder(0, 0)
+          placement{
+            addBuilder(0, 0)
+          }
         }
       }
 
       assertThrows<WrongPlayerTurn> {
         g.play {
           player(0) {
-            addBuilder(1, 1)
+            placement {
+              addBuilder(1, 1)
+            }
           }
         }
       }
 
       g.play {
         player(1) {
-          addBuilder(1, 1)
+          placement {
+            addBuilder(1, 1)
+          }
         }
       }
 
       assertThrows<WrongPlayerTurn> {
         g.play {
           player(1) {
-            addBuilder(2, 2)
+            placement {
+              addBuilder(2, 2)
+            }
           }
         }
       }
@@ -162,7 +174,9 @@ internal class GameImplTest {
 
       g.play {
         player(0) {
-          addBuilder(0, 0)
+          placement {
+            addBuilder(0, 0)
+          }
         }
       }
 
@@ -171,7 +185,9 @@ internal class GameImplTest {
 
       g.play {
         player(1) {
-          addBuilder(1, 1)
+          placement {
+            addBuilder(1, 1)
+          }
         }
       }
 
@@ -185,14 +201,18 @@ internal class GameImplTest {
 
       g.play {
         player(0) {
-          addBuilder(0, 0)
+          placement {
+            addBuilder(0, 0)
+          }
         }
       }
 
       assertThrows<CellUsedByAnotherBuilder> {
         g.play {
           player(1) {
-            addBuilder(0, 0)
+            placement {
+              addBuilder(0, 0)
+            }
           }
         }
       }
@@ -203,7 +223,9 @@ internal class GameImplTest {
       val g = Game.new(playerCount = 2, buildersPerPlayer = 1)
       g.play {
         player(0) {
-          addBuilder(0, 0)
+          placement {
+            addBuilder(0, 0)
+          }
         }
       }
     }
@@ -215,7 +237,9 @@ internal class GameImplTest {
       assertThrows<CantGiveUpInThePlacementPhase> {
         g.play {
           player(0) {
-            giveUp()
+            building {
+              giveUp()
+            }
           }
         }
       }
@@ -234,7 +258,9 @@ internal class GameImplTest {
 
       g.play {
         player(0) {
-          giveUp()
+          building {
+            giveUp()
+          }
         }
       }
       assertThat(g.turn).isEqualTo(7)
@@ -242,7 +268,9 @@ internal class GameImplTest {
 
       g.play {
         player(1) {
-          moveBuilder(Position(1,0), Position(5,5))
+          building {
+            moveBuilder(Position(1,0), Position(5,5))
+          }
         }
       }
 
@@ -251,7 +279,9 @@ internal class GameImplTest {
 
       g.play {
         player(2) {
-          moveBuilder(Position(2,0), Position(4,5))
+          building {
+            moveBuilder(Position(2,0), Position(4,5))
+          }
         }
       }
 
@@ -272,7 +302,9 @@ internal class GameImplTest {
 
       g.play {
         player(0) {
-          giveUp()
+          building {
+            giveUp()
+          }
         }
       }
 
