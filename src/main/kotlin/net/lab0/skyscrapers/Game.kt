@@ -35,19 +35,11 @@ interface Game {
   val turn: Int
 
   /**
-   * The player whose turn it is to play
+   * The player whose turn it is to play.
    *
-   * For a 3 players game:
-   *
-   * Turn 0: player 0
-   * Turn 1: player 1
-   * Turn 2: player 2
-   * Turn 3: player 0
-   * Turn 4: player 1
-   * Turn 5: player 2
+   * Turns are 0-based.
    */
   val currentPlayer: Int
-    get() = (turn % playerCount)
 
   /**
    * Max number of builder per player.
@@ -67,5 +59,18 @@ interface Game {
   fun addBuilder(player: Int, position: Position)
   fun hasBuilder(position: Position): Boolean
 
+  /**
+   * The player abandons the game.
+   * The other players continue playing until there is only 1 remaining.
+   */
+  fun giveUp(player: Int)
+
+  /**
+   * Moves a builder of a player from a position to another
+   * and checks for the validity of that action
+   */
+  fun moveBuilder(player: Int, from: Position, to: Position)
+
   val phase: Phase
+  fun isFinished(): Boolean
 }

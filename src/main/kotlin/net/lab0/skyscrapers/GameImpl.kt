@@ -1,7 +1,10 @@
 package net.lab0.skyscrapers
 
 import net.lab0.skyscrapers.actions.ActionDSL
+import net.lab0.skyscrapers.exception.CantGiveUpInThePlacementPhase
+import net.lab0.skyscrapers.exception.CellUsedByAnotherBuilder
 import net.lab0.skyscrapers.exception.PlayerDoesntExist
+import java.util.LinkedList
 
 class GameImpl(
   override val width: Int,
@@ -16,7 +19,18 @@ class GameImpl(
 
   companion object : NewGame
 
-  var internalTurns = 0
+  private var internalTurns = 0
+
+  override val turn: Int
+    get() = internalTurns
+
+  data class Player(val id: Int, var active: Boolean)
+
+  private val playersQueue =
+    (0 until playerCount).mapTo(LinkedList()) { Player(it, true) }
+
+  override val currentPlayer: Int
+    get() = playersQueue.first.id
 
   override fun get(x: Int, y: Int) = buildings[x][y]
 
@@ -37,14 +51,37 @@ class GameImpl(
     val dsl = ActionDSL()
     val change = action(dsl)
     change(this)
+
     internalTurns++
+
+    // cycle players
+    if (!isFinished()) {
+      do {
+        val current = playersQueue.removeFirst()
+        playersQueue.addLast(current)
+      } while (!playersQueue.first.active)
+    }
   }
 
   override fun addBuilder(player: Int, position: Position) {
+    if (hasBuilder(position))
+      throw CellUsedByAnotherBuilder(position)
+
     val builders = builders[player] ?: throw PlayerDoesntExist(player)
     builders.add(position)
   }
 
-  override val turn: Int
-    get() = internalTurns
+  override fun giveUp(player: Int) {
+    if (phase == Phase.PLACEMENT)
+      throw CantGiveUpInThePlacementPhase()
+    playersQueue.first.active = false
+  }
+
+  override fun moveBuilder(player: Int, from: Position, to: Position) {
+    // TODO implement and test
+  }
+
+  override fun isFinished(): Boolean {
+    return playersQueue.count { it.active } == 1
+  }
 }
