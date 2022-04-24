@@ -1,9 +1,7 @@
 package net.lab0.skyscrapers
 
 import net.lab0.skyscrapers.actions.PlayerDSL
-import net.lab0.skyscrapers.exception.CantGiveUpInThePlacementPhase
-import net.lab0.skyscrapers.exception.CellUsedByAnotherBuilder
-import net.lab0.skyscrapers.exception.PlayerDoesntExist
+import net.lab0.skyscrapers.exception.*
 import java.util.LinkedList
 
 class GameImpl(
@@ -67,18 +65,48 @@ class GameImpl(
     if (hasBuilder(position))
       throw CellUsedByAnotherBuilder(position)
 
+    if(currentPlayer != player)
+      throw WrongPlayerTurn(player, currentPlayer)
+
     val builders = builders[player] ?: throw PlayerDoesntExist(player)
     builders.add(position)
   }
 
   override fun giveUp(player: Int) {
+    if(currentPlayer != player)
+      throw WrongPlayerTurn(player, currentPlayer)
+
     if (phase == Phase.PLACEMENT)
       throw CantGiveUpInThePlacementPhase()
     playersQueue.first.active = false
   }
 
-  override fun moveBuilder(player: Int, from: Position, to: Position) {
-    // TODO implement and test
+  override fun moveBuilder(player: Int, from: Position, target: Position) {
+    if(phase != Phase.BUILD)
+      throw IllegalMove(from, target, "this is the placement phase")
+
+    if(currentPlayer != player)
+      throw WrongPlayerTurn(player, currentPlayer)
+
+    val positions = builders[player]!!
+
+    if (!positions.contains(from))
+      throw IllegalMove(from, target, "there is no builder in the starting position")
+
+    if(hasBuilder(target))
+      throw IllegalMove(from, target, "there is a builder at the target position")
+
+    if(from == target)
+      throw IllegalMove(from, target, "the position must be different")
+
+    if(!from.nextTo(target))
+        throw IllegalMove(from, target, "too far away")
+
+    if(target.x < 0 || target.x >= width || target.y < 0 || target.y >= height)
+      throw IllegalMove(from, target, "the target position can't be outside of the board")
+
+    positions.remove(from)
+    positions.add(target)
   }
 
   override fun isFinished(): Boolean {

@@ -11,7 +11,7 @@ import org.junit.jupiter.api.assertThrows
 internal class GameImplTest {
 
   companion object {
-    fun gameWithSequentiallyPlacedBuilders(
+    fun newGameWithSequentiallyPlacedBuilders(
       width: Int = 5,
       height: Int = 5,
       playerCount: Int = 2,
@@ -126,7 +126,7 @@ internal class GameImplTest {
 
       g.play {
         player(0) {
-          placement{
+          placement {
             addBuilder(0, 0)
           }
         }
@@ -244,6 +244,43 @@ internal class GameImplTest {
         }
       }
     }
+
+    @Test
+    fun `can't move during placement phase`() {
+      val g = Game.new()
+
+      // put a builder at 0,0
+      g.play {
+        player(0) {
+          placement {
+            addBuilder(0, 0)
+          }
+        }
+      }
+
+      // the opponent plays
+      g.play {
+        player(1) {
+          placement {
+            addBuilder(5, 5)
+          }
+        }
+      }
+
+      // can't move the first builder before placing them all
+      assertThrows<IllegalMove> {
+        g.play {
+          player(0) {
+            building {
+              moveBuilder {
+                from(0, 0)
+                to(0, 1)
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   @Nested
@@ -251,7 +288,11 @@ internal class GameImplTest {
 
     @Test
     fun `when a player gives up, he can't play anymore`() {
-      val g = gameWithSequentiallyPlacedBuilders(playerCount = 3, buildersPerPlayer = 2)
+      val g = newGameWithSequentiallyPlacedBuilders(
+        playerCount = 3,
+        buildersPerPlayer = 2,
+        width = 100
+      )
 
       assertThat(g.turn).isEqualTo(6)
       assertThat(g.currentPlayer).isEqualTo(0)
@@ -269,7 +310,10 @@ internal class GameImplTest {
       g.play {
         player(1) {
           building {
-            moveBuilder(Position(1,0), Position(5,5))
+            moveBuilder {
+              from(1, 0)
+              to(1, 1)
+            }
           }
         }
       }
@@ -280,7 +324,10 @@ internal class GameImplTest {
       g.play {
         player(2) {
           building {
-            moveBuilder(Position(2,0), Position(4,5))
+            moveBuilder {
+              from(2, 0)
+              to(2, 1)
+            }
           }
         }
       }
@@ -290,13 +337,159 @@ internal class GameImplTest {
       assertThat(g.turn).isEqualTo(9)
       assertThat(g.currentPlayer).isEqualTo(1)
     }
+
+    @Test
+    fun `the player can move a builder`() {
+      val g = newGameWithSequentiallyPlacedBuilders()
+
+      g.play {
+        player(0) {
+          building {
+            moveBuilder {
+              from(0, 0)
+              to(0, 1)
+            }
+          }
+        }
+      }
+
+      assertThat(g.getBuilders(0))
+        .contains(Position(0, 1), Position(2, 0))
+
+    }
+
+    @Test
+    fun `the movement range of a builder is limited to the 8 cells around its initial position`() {
+      val g = newGameWithSequentiallyPlacedBuilders()
+
+      assertThrows<IllegalMove> {
+        g.play {
+          player(0) {
+            building {
+              moveBuilder {
+                from(0, 0)
+                to(0, 2)
+              }
+            }
+          }
+        }
+      }
+    }
+
+    @Test
+    fun `the player must move, it can't stay at the same place`() {
+      val g = newGameWithSequentiallyPlacedBuilders()
+
+      assertThrows<IllegalMove> {
+        g.play {
+          player(0) {
+            building {
+              moveBuilder {
+                from(0, 0)
+                to(0, 0)
+              }
+            }
+          }
+        }
+      }
+    }
+
+    @Test
+    fun `can't move another player's builder`() {
+      val g = newGameWithSequentiallyPlacedBuilders()
+
+      assertThrows<IllegalMove> {
+        g.play {
+          player(0) {
+            building {
+              moveBuilder {
+                from(1, 0)
+                to(1, 1)
+              }
+            }
+          }
+        }
+      }
+    }
+
+    @Test
+    fun `can't move a builder that doesn't exist`() {
+      val g = newGameWithSequentiallyPlacedBuilders()
+
+      assertThrows<IllegalMove> {
+        g.play {
+          player(0) {
+            building {
+              moveBuilder {
+                from(5, 5)
+                to(4, 4)
+              }
+            }
+          }
+        }
+      }
+    }
+
+    @Test
+    fun `can't play as a player that doesn't exist`() {
+      val g = newGameWithSequentiallyPlacedBuilders()
+
+      assertThrows<WrongPlayerTurn> {
+        g.play {
+          player(99) {
+            building {
+              moveBuilder {
+                from(0, 0)
+                to(0, 1)
+              }
+            }
+          }
+        }
+      }
+    }
+
+    @Test
+    fun `can't move on top of another player's builder`() {
+      val g = newGameWithSequentiallyPlacedBuilders()
+
+      assertThrows<IllegalMove> {
+        g.play {
+          player(0) {
+            building {
+              moveBuilder {
+                from(0, 0)
+                to(1, 0)
+              }
+            }
+          }
+        }
+      }
+    }
+
+    @Test
+    fun `can't move out of bounds`() {
+      val g = newGameWithSequentiallyPlacedBuilders()
+
+      assertThrows<IllegalMove> {
+        g.play {
+          player(0) {
+            building {
+              moveBuilder {
+                from(0, 0)
+                to(-1, -1)
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   @Nested
   inner class Finished {
     @Test
     fun `when there is only 1 player remaining, the game is finished`() {
-      val g = gameWithSequentiallyPlacedBuilders()
+      val g = newGameWithSequentiallyPlacedBuilders()
 
       assertThat(g.isFinished()).isFalse
 
