@@ -222,7 +222,7 @@ internal class GameImplTest {
   }
 
   @Nested
-  inner class Building {
+  inner class Movement {
 
     @Test
     fun `when a player gives up, he can't play anymore`() {
@@ -346,6 +346,29 @@ internal class GameImplTest {
           DSL.player(0).building.move().from(0, 0).to(-1, -1).andBuild(0, 0)
         )
       }
+    }
+  }
+
+  @Nested
+  inner class Building {
+    @Test
+    fun `can build where there is no builder`() {
+      val g = newGameWithSequentiallyPlacedBuilders()
+
+      val buildPosition = Position(0,0)
+
+      g.play (
+        DSL.player(0).building.move().from(0,0).to(0,1).andBuild(buildPosition)
+      )
+
+      assertThat(g[buildPosition]).isEqualTo(1)
+
+      g.play (
+        DSL.player(1).building.move().from(1,0).to(1,1).andBuild(buildPosition)
+      )
+
+      // building stacks
+      assertThat(g[buildPosition]).isEqualTo(2)
     }
   }
 

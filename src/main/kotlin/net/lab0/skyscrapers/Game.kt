@@ -1,7 +1,5 @@
 package net.lab0.skyscrapers
 
-import net.lab0.skyscrapers.actions.Action
-
 /**
  * Represents a game.
  *
@@ -69,7 +67,12 @@ interface Game {
    * Moves a builder of a player from a position to another
    * and checks for the validity of that action
    */
-  fun moveBuilder(player: Int, from: Position, to: Position)
+  fun moveAndBuild(
+    player: Int,
+    from: Position,
+    to: Position,
+    build: Position
+  )
 
   val phase: Phase
   fun isFinished(): Boolean

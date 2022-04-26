@@ -1,5 +1,3 @@
-package net.lab0.skyscrapers.actions
-
-import net.lab0.skyscrapers.Game
+package net.lab0.skyscrapers
 
 typealias Action = (Game) -> Unit

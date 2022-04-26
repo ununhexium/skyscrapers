@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.actions
 
+import net.lab0.skyscrapers.Action
 import net.lab0.skyscrapers.Position
 
 object DSL {
@@ -19,16 +20,12 @@ data class PlacementStepDSL(val player: Int) {
   }
 }
 
-class MoveBuilderDSL() {
-  lateinit var from: Position
-  lateinit var to: Position
+data class BuildingStepDSL(val player: Int) {
+  fun giveUp(): Action = { game ->
+    game.giveUp(player)
+  }
 
-  fun from(x: Int, y: Int) {
-    from = Position(x,y)
-  }
-  fun to(x: Int, y: Int) {
-    to = Position(x,y)
-  }
+  fun move() = MoveStepFromDSL(player)
 }
 
 data class MoveStepFromDSL(val player: Int) {
@@ -39,10 +36,15 @@ data class MoveStepToDSL(val player: Int, val from: Position) {
   fun to(x:Int, y:Int) = BuildDSL(player, from, Position(x,y))
 }
 
-data class BuildingStepDSL(val player: Int) {
-  fun giveUp(): Action = { game ->
-    game.giveUp(player)
-  }
+data class BuildDSL(
+  val player: Int,
+  val from: Position,
+  val to: Position
+) {
+  fun andBuild(x: Int, y: Int) =
+    andBuild(Position(x, y))
 
-  fun move() = MoveStepFromDSL(player)
+  fun andBuild(pos:Position): Action =  { game ->
+    game.moveAndBuild(player, from, to, pos)
+  }
 }
