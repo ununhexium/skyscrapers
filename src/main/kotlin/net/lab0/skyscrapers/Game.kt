@@ -47,8 +47,14 @@ interface Game {
   val totalBuilders: Int
     get() = playerCount * maxBuildersPerPlayer
 
-  operator fun get(x: Int, y: Int): Int
-  operator fun get(pos: Position): Int =
+  /**
+   * The number of blocks available for each height
+   */
+  val blocks: Map<Height, Int>
+
+  operator fun get(x: Int, y: Int): Height
+
+  operator fun get(pos: Position): Height =
     this[pos.x, pos.y]
 
   fun getBuilders(player: Int): List<Position>
@@ -71,7 +77,7 @@ interface Game {
     player: Int,
     from: Position,
     to: Position,
-    build: Position
+    building: Position
   )
 
   val phase: Phase

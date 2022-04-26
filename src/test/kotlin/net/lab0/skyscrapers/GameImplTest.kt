@@ -13,11 +13,12 @@ internal class GameImplTest {
 
   companion object {
     fun newGameWithSequentiallyPlacedBuilders(
-      width: Int = 5,
-      height: Int = 5,
-      playerCount: Int = 2,
-      buildersPerPlayer: Int = 2
-    ) = Game.new(width, height, playerCount, buildersPerPlayer).also { it ->
+      width: Int = Defaults.WIDTH,
+      height: Int = Defaults.HEIGHT,
+      playerCount: Int = Defaults.PLAYER_COUNT,
+      buildersPerPlayer: Int = Defaults.BUILDERS_PER_PLAYER,
+      blocks: Map<Height,Int> = Defaults.BLOCKS,
+    ) = Game.new(width, height, playerCount, buildersPerPlayer, blocks).also {
       (0 until playerCount * buildersPerPlayer).forEach { turn ->
         val player = turn % playerCount
         val x = turn % width
@@ -27,8 +28,6 @@ internal class GameImplTest {
         )
       }
     }
-
-
   }
 
   @Nested
@@ -72,7 +71,7 @@ internal class GameImplTest {
       return (0 until width).flatMap { x ->
         (0 until height).map { y ->
           DynamicTest.dynamicTest("g[$x,$y] == 0") {
-            assertThat(g[x, y]).isEqualTo(0)
+            assertThat(g[x, y]).isEqualTo(Height(0))
           }
         }
       }
@@ -90,6 +89,10 @@ internal class GameImplTest {
       assertThat(g.getBuilders(0)).hasSize(0)
       assertThat(g.getBuilders(1)).hasSize(0)
     }
+
+    // TOOD: there must be some blocks
+    // TODO: there must be no gap the the blocks height
+    // TODO: there should be more block or lower height than higher height
   }
 
   @Nested
@@ -347,6 +350,8 @@ internal class GameImplTest {
         )
       }
     }
+
+    // TODO can only move 1 step up at a time
   }
 
   @Nested
@@ -355,21 +360,121 @@ internal class GameImplTest {
     fun `can build where there is no builder`() {
       val g = newGameWithSequentiallyPlacedBuilders()
 
-      val buildPosition = Position(0,0)
+      val buildPosition = Position(0, 0)
 
-      g.play (
-        DSL.player(0).building.move().from(0,0).to(0,1).andBuild(buildPosition)
+      g.play(
+        DSL.player(0).building
+          .move()
+          .from(0, 0)
+          .to(0, 1)
+          .andBuild(buildPosition)
       )
 
-      assertThat(g[buildPosition]).isEqualTo(1)
+      assertThat(g[buildPosition]).isEqualTo(Height(0))
 
-      g.play (
-        DSL.player(1).building.move().from(1,0).to(1,1).andBuild(buildPosition)
+      g.play(
+        DSL.player(1).building
+          .move()
+          .from(1, 0)
+          .to(1, 1)
+          .andBuild(buildPosition)
       )
 
       // building stacks
-      assertThat(g[buildPosition]).isEqualTo(2)
+      assertThat(g[buildPosition]).isEqualTo(Height(0))
     }
+
+    @Test
+    fun `can't build outside of the board`() {
+      val g = newGameWithSequentiallyPlacedBuilders()
+
+      val builderStartPosition = Position(0, 0)
+      val builderTargetPosition = Position(0, 1)
+      val buildingPosition = Position(-1, 1)
+
+      assertThat(
+        assertThrows<IllegalBuilding> {
+          g.play(
+            DSL.player(0).building
+              .move()
+              .from(builderStartPosition)
+              .to(builderTargetPosition)
+              .andBuild(buildingPosition)
+          )
+        }
+      ).isEqualTo(
+        IllegalBuilding(
+          builderTargetPosition,
+          buildingPosition,
+          "outside of the board"
+        )
+      )
+    }
+
+    @Test
+    fun `can't build where there is another builder`() {
+      val g = newGameWithSequentiallyPlacedBuilders()
+
+      val builderStartPosition = Position(0, 0)
+      val builderTargetPosition = Position(0, 1)
+      val opponentPosition = Position(1, 0)
+
+      assertThat(
+        assertThrows<IllegalBuilding> {
+          g.play(
+            DSL.player(0).building
+              .move()
+              .from(builderStartPosition)
+              .to(builderTargetPosition)
+              .andBuild(opponentPosition)
+          )
+        }
+      ).isEqualTo(
+        IllegalBuilding(
+          builderTargetPosition,
+          opponentPosition,
+          "builder is present at build location"
+        )
+      )
+    }
+
+    @Test
+    fun `can't build if there is no building block remaining`() {
+      val g = newGameWithSequentiallyPlacedBuilders(blocks = mapOf(Height(1) to 1, Height(2) to 1))
+
+      // can play once as the is exactly 1 block available
+
+      g.play(
+        DSL.player(0).building.move().from(0,0).to(0,1).andBuild(0,0)
+      )
+
+      // can't play a block for height 1 as there is none remaining
+
+      val builderStartPosition = Position(1, 0)
+      val builderTargetPosition = Position(1, 1)
+      val buildingPosition = Position(1, 0)
+
+      assertThat(
+        assertThrows<IllegalBuilding> {
+          g.play(
+            DSL.player(1).building
+              .move()
+              .from(builderStartPosition)
+              .to(builderTargetPosition)
+              .andBuild(buildingPosition)
+          )
+        }
+      ).isEqualTo(
+        IllegalBuilding(
+          builderTargetPosition,
+          buildingPosition,
+          "no block of height 1 remaining"
+        )
+      )
+    }
+
+    // TODO build roof
+    // can't go above the max height -> no exception there
   }
 
   @Nested
@@ -386,5 +491,7 @@ internal class GameImplTest {
 
       assertThat(g.isFinished()).isTrue
     }
+
+    // TODO reach max level
   }
 }

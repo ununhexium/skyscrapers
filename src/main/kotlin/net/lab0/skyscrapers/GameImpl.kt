@@ -8,7 +8,16 @@ class GameImpl(
   override val height: Int,
   override val playerCount: Int,
   override val maxBuildersPerPlayer: Int,
-  private val buildings: Array<Array<Int>> = Array(width) { Array(height) { 0 } },
+
+  val initialBlocks: Map<Height, Int>,
+
+  private val buildings: Array<Array<Height>> = Array(width) {
+    Array(height) {
+      Height(
+        0
+      )
+    }
+  },
   private val builders: Map<Int, MutableSet<Position>> = (0 until playerCount)
     .toList().associateWith { mutableSetOf<Position>() }
     .toMutableMap(),
@@ -28,6 +37,12 @@ class GameImpl(
 
   override val currentPlayer: Int
     get() = playersQueue.first.id
+
+  private val currentBlocks: MutableMap<Height, Int> =
+    initialBlocks.toMutableMap()
+
+  override val blocks: Map<Height, Int>
+    get() = currentBlocks
 
   override fun get(x: Int, y: Int) = buildings[x][y]
 
@@ -78,11 +93,17 @@ class GameImpl(
     playersQueue.first.active = false
   }
 
+  /**
+   * @return true if the position is inside the board
+   */
+  private fun outsideTheBoard(pos: Position) =
+    pos.x < 0 || pos.x >= width || pos.y < 0 || pos.y >= height
+
   override fun moveAndBuild(
     player: Int,
     from: Position,
     to: Position,
-    build: Position
+    building: Position
   ) {
     if (phase != Phase.BUILD)
       throw IllegalMove(from, to, "this is the placement phase")
@@ -108,7 +129,7 @@ class GameImpl(
     if (!from.nextTo(to))
       throw IllegalMove(from, to, "too far away")
 
-    if (to.x < 0 || to.x >= width || to.y < 0 || to.y >= height)
+    if (outsideTheBoard(to))
       throw IllegalMove(
         from,
         to,
@@ -118,10 +139,33 @@ class GameImpl(
     positions.remove(from)
     positions.add(to)
 
-    this.buildings[build.x][build.y]++
+    if (outsideTheBoard(building))
+      throw IllegalBuilding(to, building, "outside of the board")
+
+    if (hasBuilder(building))
+      throw IllegalBuilding(
+        to,
+        building,
+        "builder is present at build location"
+      )
+
+    val nextHeight = buildings[building] + 1
+    val availableBlocks = blocks[nextHeight]!!
+    if (availableBlocks == 0)
+      throw IllegalBuilding(
+        to,
+        building,
+        "no block of height ${nextHeight.value} remaining"
+      )
+
+    // remove the block that will be used to increase the height
+    currentBlocks[nextHeight] = availableBlocks - 1
+
+    buildings[building.x][building.y] = buildings[building.x][building.y]++
   }
 
   override fun isFinished(): Boolean {
     return playersQueue.count { it.active } == 1
   }
 }
+

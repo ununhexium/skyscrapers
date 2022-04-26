@@ -29,11 +29,13 @@ data class BuildingStepDSL(val player: Int) {
 }
 
 data class MoveStepFromDSL(val player: Int) {
-  fun from(x:Int, y:Int) = MoveStepToDSL(player, Position(x,y))
+  fun from(x: Int, y: Int) = from(Position(x, y))
+  fun from(pos: Position) = MoveStepToDSL(player, pos)
 }
 
 data class MoveStepToDSL(val player: Int, val from: Position) {
-  fun to(x:Int, y:Int) = BuildDSL(player, from, Position(x,y))
+  fun to(x: Int, y: Int) = to(Position(x, y))
+  fun to(pos: Position) = BuildDSL(player, from, pos)
 }
 
 data class BuildDSL(
@@ -44,7 +46,7 @@ data class BuildDSL(
   fun andBuild(x: Int, y: Int) =
     andBuild(Position(x, y))
 
-  fun andBuild(pos:Position): Action =  { game ->
+  fun andBuild(pos: Position): Action = { game ->
     game.moveAndBuild(player, from, to, pos)
   }
 }

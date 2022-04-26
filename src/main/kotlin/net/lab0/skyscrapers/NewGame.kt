@@ -5,10 +5,11 @@ import net.lab0.skyscrapers.exception.InvalidPlayersCount
 
 interface NewGame {
   fun new(
-    width: Int = 5,
-    height: Int = 5,
-    playerCount: Int = 2,
-    buildersPerPlayer: Int = 2,
+    width: Int = Defaults.WIDTH,
+    height: Int = Defaults.HEIGHT,
+    playerCount: Int = Defaults.PLAYER_COUNT,
+    buildersPerPlayer: Int = Defaults.BUILDERS_PER_PLAYER,
+    blocks: Map<Height,Int> = Defaults.BLOCKS,
   ): Game {
     if (playerCount < 1)
       throw InvalidPlayersCount(playerCount)
@@ -24,6 +25,7 @@ interface NewGame {
       height = height,
       playerCount = playerCount,
       maxBuildersPerPlayer = buildersPerPlayer,
+      initialBlocks = blocks,
     )
   }
 }
