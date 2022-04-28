@@ -13,7 +13,9 @@ class GameImpl(
 
   private val buildings: Array<Array<Height>> =
     Array(width) { Array(height) { Height(0) } },
-  private val builders: Map<Int, MutableSet<Position>> = (0 until playerCount)
+  private val roofs: Array<Array<Boolean>> =
+    Array(width) { Array(height) { false } },
+  private val builders: MutableMap<Int, Set<Position>> = (0 until playerCount)
     .toList().associateWith { mutableSetOf<Position>() }
     .toMutableMap(),
 ) : Game {
@@ -114,8 +116,7 @@ class GameImpl(
     if (currentPlayer != player)
       throw WrongPlayerTurn(player, currentPlayer)
 
-    val builders = builders[player] ?: throw PlayerDoesntExist(player)
-    builders.add(position)
+    builders[player] = builders[player]!! + position
   }
 
   override fun giveUp(player: Int) {
@@ -142,15 +143,56 @@ class GameImpl(
 
     // POSITIONING
 
+    checkMovement(from, to, player)
+
+    // BUILDING
+
+    if (outsideTheBoard(building))
+      throw IllegalBuilding(to, building, "outside of the board")
+
+    val nextHeight = buildings[building] + 1
+    val availableBlocks = blocks[nextHeight]!!
+    if (availableBlocks == 0)
+      throw IllegalBuilding(
+        to,
+        building,
+        "no block of height ${nextHeight.value} remaining"
+      )
+
+    val nextBuildersPosition = builders[player]!!.toMutableSet() // copy
+    nextBuildersPosition.remove(from)
+    nextBuildersPosition.add(to)
+
+    val allNextBuildersPositions: Collection<Position> =
+      builders.filterKeys { it != player }.values.flatten() + nextBuildersPosition
+
+    if (allNextBuildersPositions.contains(building))
+      throw IllegalBuilding(
+        to,
+        building,
+        "builder is present at build location"
+      )
+
+    builders[player] = nextBuildersPosition
+
+    // remove the block that will be used to increase the height
+    currentBlocks[nextHeight] = availableBlocks - 1
+
+    buildings[building.x][building.y] = buildings[building.x][building.y]++
+  }
+
+  private fun checkMovement(
+    from: Position,
+    to: Position,
+    player: Int
+  ) {
     if (phase != Phase.BUILD)
       throw IllegalMove(from, to, "this is the placement phase")
 
     if (currentPlayer != player)
       throw WrongPlayerTurn(player, currentPlayer)
 
-    val positions = builders[player]!!
-
-    if (!positions.contains(from))
+    if (!builders[player]!!.contains(from))
       throw IllegalMove(
         from,
         to,
@@ -181,35 +223,6 @@ class GameImpl(
         to,
         "can't move more than 1 level each step. You tried to move up by ${heightDifference.value} levels"
       )
-
-    positions.remove(from)
-    positions.add(to)
-
-    // BUILDING
-
-    if (outsideTheBoard(building))
-      throw IllegalBuilding(to, building, "outside of the board")
-
-    if (hasBuilder(building))
-      throw IllegalBuilding(
-        to,
-        building,
-        "builder is present at build location"
-      )
-
-    val nextHeight = buildings[building] + 1
-    val availableBlocks = blocks[nextHeight]!!
-    if (availableBlocks == 0)
-      throw IllegalBuilding(
-        to,
-        building,
-        "no block of height ${nextHeight.value} remaining"
-      )
-
-    // remove the block that will be used to increase the height
-    currentBlocks[nextHeight] = availableBlocks - 1
-
-    buildings[building.x][building.y] = buildings[building.x][building.y]++
   }
 
   override fun isFinished(): Boolean {
@@ -223,5 +236,14 @@ class GameImpl(
   }
 
   val backdoor = GameBackdoor(this)
+
+  override fun moveAndBuildRoof(
+    player: Int,
+    from: Position,
+    to: Position,
+    roof: Position
+  ) {
+
+  }
 }
 

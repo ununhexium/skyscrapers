@@ -80,6 +80,13 @@ interface Game {
     building: Position
   )
 
+  fun moveAndBuildRoof(
+    player: Int,
+    from: Position,
+    to: Position,
+    roof: Position
+  )
+
   val phase: Phase
   fun isFinished(): Boolean
 }

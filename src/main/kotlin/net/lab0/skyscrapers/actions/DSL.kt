@@ -49,4 +49,11 @@ data class BuildDSL(
   fun andBuild(pos: Position): Action = { game ->
     game.moveAndBuild(player, from, to, pos)
   }
+
+  fun andBuildRoof(x: Int, y: Int) =
+    andBuildRoof(Position(x, y))
+
+  fun andBuildRoof(pos: Position): Action = { game ->
+    game.moveAndBuildRoof(player, from, to, pos)
+  }
 }

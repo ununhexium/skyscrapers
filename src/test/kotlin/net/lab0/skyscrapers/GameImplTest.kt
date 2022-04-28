@@ -275,6 +275,7 @@ internal class GameImplTest {
   @Nested
   inner class Movement {
 
+    // TODO: should the eliminated player keep their builders on the board?
     @Test
     fun `when a player gives up, he can't play anymore`() {
       val g = newGameWithSequentiallyPlacedBuilders(
@@ -480,6 +481,10 @@ internal class GameImplTest {
           "outside of the board"
         )
       )
+
+      // the player's movement didn't occur either
+      assertThat(g.hasBuilder(builderStartPosition)).isTrue()
+      assertThat(g.hasBuilder(builderTargetPosition)).isFalse()
     }
 
     @Test
@@ -555,7 +560,9 @@ internal class GameImplTest {
 
     @Test
     fun `can build a roof`() {
-      
+      val g = newGameWithSequentiallyPlacedBuilders()
+
+      g.play(DSL.player(0).building.move().from(0,0).to(0,1).andBuildRoof(0,0))
     }
 
     // TODO: build roof can't go above the max height -> no exception there
