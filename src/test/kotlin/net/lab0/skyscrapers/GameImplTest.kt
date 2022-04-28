@@ -17,7 +17,7 @@ internal class GameImplTest {
       height: Int = Defaults.HEIGHT,
       playerCount: Int = Defaults.PLAYER_COUNT,
       buildersPerPlayer: Int = Defaults.BUILDERS_PER_PLAYER,
-      blocks: Map<Height,Int> = Defaults.BLOCKS,
+      blocks: Map<Height, Int> = Defaults.BLOCKS,
     ) = Game.new(width, height, playerCount, buildersPerPlayer, blocks).also {
       (0 until playerCount * buildersPerPlayer).forEach { turn ->
         val player = turn % playerCount
@@ -90,9 +90,57 @@ internal class GameImplTest {
       assertThat(g.getBuilders(1)).hasSize(0)
     }
 
-    // TOOD: there must be some blocks
-    // TODO: there must be no gap the the blocks height
-    // TODO: there should be more block or lower height than higher height
+    @Test
+    fun `some blocks to build must be present`() {
+      assertThat(
+        assertThrows<InvalidBlocksConfiguration> {
+          Game.new(blocks = mapOf())
+        }
+      ).hasMessage("There must be at least 1 block for the game to make sense")
+
+      assertThat(
+        assertThrows<InvalidBlocksConfiguration> {
+          Game.new(
+            blocks = mapOf(Height(1) to 0, Height(2) to 0)
+          )
+        }
+      ).hasMessage("There must be at least 1 block for the game to make sense")
+    }
+
+    @Test
+    fun `there must be no gap the the blocks heights`() {
+      assertThat(
+        assertThrows<InvalidBlocksConfiguration> {
+          Game.new(
+            blocks = mapOf(Height(1) to 10, Height(3) to 5)
+          )
+        }
+      ).hasMessage("There must no gap in the blocks heights")
+    }
+
+    @Test
+    fun `there must be more block of lower height than higher height`() {
+      assertThat(
+        assertThrows<InvalidBlocksConfiguration> {
+          Game.new(
+            blocks = mapOf(Height(1) to 1, Height(2) to 99)
+          )
+        }
+      ).hasMessage("The lower blocks must be in larger quantity than the higher blocks")
+    }
+
+    @Test
+    fun `each block must be proposed at least once`() {
+      assertThat(
+        assertThrows<InvalidBlocksConfiguration> {
+          Game.new(
+            blocks = mapOf(Height(1) to 1, Height(2) to 0, Height(3) to 0)
+          )
+        }
+      ).hasMessage(
+        "If a block is proposed, its initial quantity must be at least 1. No block of for the following heights: 2, 3"
+      )
+    }
   }
 
   @Nested
@@ -351,7 +399,30 @@ internal class GameImplTest {
       }
     }
 
-    // TODO can only move 1 step up at a time
+    @Test
+    fun `can only move up 1 step at a time`() {
+      val g = newGameWithSequentiallyPlacedBuilders() as GameImpl
+
+      val start = Position(0, 0)
+      val end = Position(1, 1)
+      val build = Position(0, 0)
+
+      g.backdoor.setHeight(end, 2) // too high
+
+      assertThat(
+        assertThrows<IllegalMove> {
+          g.play(
+            DSL.player(0).building.move().from(start).to(end).andBuild(build)
+          )
+        }
+      ).isEqualTo(
+        IllegalMove(
+          start,
+          end,
+          "can't move more than 1 level each step. You tried to move up by 2 levels"
+        )
+      )
+    }
   }
 
   @Nested
@@ -412,7 +483,7 @@ internal class GameImplTest {
     }
 
     @Test
-    fun `can't build where there is another builder`() {
+    fun `can't build where there is a builder on that tile`() {
       val g = newGameWithSequentiallyPlacedBuilders()
 
       val builderStartPosition = Position(0, 0)
@@ -440,12 +511,17 @@ internal class GameImplTest {
 
     @Test
     fun `can't build if there is no building block remaining`() {
-      val g = newGameWithSequentiallyPlacedBuilders(blocks = mapOf(Height(1) to 1, Height(2) to 1))
+      val g = newGameWithSequentiallyPlacedBuilders(
+        blocks = mapOf(
+          Height(1) to 1,
+          Height(2) to 1
+        )
+      )
 
       // can play once as the is exactly 1 block available
 
       g.play(
-        DSL.player(0).building.move().from(0,0).to(0,1).andBuild(0,0)
+        DSL.player(0).building.move().from(0, 0).to(0, 1).andBuild(0, 0)
       )
 
       // can't play a block for height 1 as there is none remaining
@@ -472,9 +548,20 @@ internal class GameImplTest {
         )
       )
     }
+  }
 
-    // TODO build roof
-    // can't go above the max height -> no exception there
+  @Nested
+  inner class BuildingRoof {
+
+    @Test
+    fun `can build a roof`() {
+      
+    }
+
+    // TODO: build roof can't go above the max height -> no exception there
+    // TODO: can't move to tile with a roof
+    // TODO: can't build under a roof
+    // TODO:
   }
 
   @Nested

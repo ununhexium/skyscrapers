@@ -11,19 +11,53 @@ class GameImpl(
 
   val initialBlocks: Map<Height, Int>,
 
-  private val buildings: Array<Array<Height>> = Array(width) {
-    Array(height) {
-      Height(
-        0
-      )
-    }
-  },
+  private val buildings: Array<Array<Height>> =
+    Array(width) { Array(height) { Height(0) } },
   private val builders: Map<Int, MutableSet<Position>> = (0 until playerCount)
     .toList().associateWith { mutableSetOf<Position>() }
     .toMutableMap(),
 ) : Game {
 
   companion object : NewGame
+
+  init {
+    if (initialBlocks.keys.isEmpty() || initialBlocks.entries.sumOf { it.value } == 0)
+      throw InvalidBlocksConfiguration(
+        "There must be at least 1 block for the game to make sense"
+      )
+
+    // all the blocks from 1 to N must be present
+    // therefore the keys must be [1, 2, 3, 4, .. N]
+    if (initialBlocks.keys.maxOf { it.value } != initialBlocks.keys.size)
+      throw InvalidBlocksConfiguration(
+        "There must no gap in the blocks heights"
+      )
+
+    // checks that the block amounts are decreasing as the height increases
+    val amounts = initialBlocks.toSortedMap(Height::compareTo).map { it.value }
+    val sortedAmounts = amounts.sortedDescending()
+    if (amounts != sortedAmounts)
+      throw InvalidBlocksConfiguration(
+        "The lower blocks must be in larger quantity than the higher blocks"
+      )
+
+    /*
+     * If a block is proposed, it must be present at least once,
+     * otherwise it's not possible to reach the highest level to
+     * finish the game.
+     *
+     * Given the previous tests, checking for an amount of 0 at the top
+     * position is enough, but still checking everything at it's cheap.
+     */
+    val missingBlocks = initialBlocks.filter { it.value == 0 }
+    if (missingBlocks.isNotEmpty()) {
+      val heights =
+        missingBlocks.keys.joinToString(", ") { it.value.toString() }
+      throw InvalidBlocksConfiguration(
+        "If a block is proposed, its initial quantity must be at least 1. No block of for the following heights: $heights"
+      )
+    }
+  }
 
   private var internalTurns = 0
 
@@ -105,6 +139,9 @@ class GameImpl(
     to: Position,
     building: Position
   ) {
+
+    // POSITIONING
+
     if (phase != Phase.BUILD)
       throw IllegalMove(from, to, "this is the placement phase")
 
@@ -136,8 +173,19 @@ class GameImpl(
         "the target position can't be outside of the board"
       )
 
+    val heightDifference = this[to] - this[from]
+
+    if (heightDifference > 1)
+      throw IllegalMove(
+        from,
+        to,
+        "can't move more than 1 level each step. You tried to move up by ${heightDifference.value} levels"
+      )
+
     positions.remove(from)
     positions.add(to)
+
+    // BUILDING
 
     if (outsideTheBoard(building))
       throw IllegalBuilding(to, building, "outside of the board")
@@ -167,5 +215,13 @@ class GameImpl(
   override fun isFinished(): Boolean {
     return playersQueue.count { it.active } == 1
   }
+
+  class GameBackdoor(private val game: GameImpl) {
+    fun setHeight(pos: Position, height: Int) {
+      game.buildings[pos] = height
+    }
+  }
+
+  val backdoor = GameBackdoor(this)
 }
 
