@@ -50,10 +50,10 @@ data class BuildDSL(
     game.moveAndBuild(player, from, to, pos)
   }
 
-  fun andBuildRoof(x: Int, y: Int) =
-    andBuildRoof(Position(x, y))
+  fun andBuildSeal(x: Int, y: Int) =
+    andBuildSeal(Position(x, y))
 
-  fun andBuildRoof(pos: Position): Action = { game ->
-    game.moveAndBuildRoof(player, from, to, pos)
+  fun andBuildSeal(pos: Position): Action = { game ->
+    game.moveAndBuildSeal(player, from, to, pos)
   }
 }

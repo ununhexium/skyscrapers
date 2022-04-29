@@ -1,5 +1,7 @@
 package net.lab0.skyscrapers
 
+import net.lab0.skyscrapers.state.GameStateData
+
 /**
  * Represents a game.
  *
@@ -80,13 +82,18 @@ interface Game {
     building: Position
   )
 
-  fun moveAndBuildRoof(
+  fun moveAndBuildSeal(
     player: Int,
     from: Position,
     to: Position,
-    roof: Position
+    seal: Position
   )
 
+  fun hasSeal(seal: Position): Boolean
+
   val phase: Phase
+
   fun isFinished(): Boolean
+
+  fun getState(): GameStateData
 }

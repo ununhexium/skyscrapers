@@ -1,6 +1,7 @@
 package net.lab0.skyscrapers
 
 import net.lab0.skyscrapers.exception.*
+import net.lab0.skyscrapers.state.GameStateData
 import java.util.LinkedList
 
 class GameImpl(
@@ -13,7 +14,7 @@ class GameImpl(
 
   private val buildings: Array<Array<Height>> =
     Array(width) { Array(height) { Height(0) } },
-  private val roofs: Array<Array<Boolean>> =
+  private val seals: Array<Array<Boolean>> =
     Array(width) { Array(height) { false } },
   private val builders: MutableMap<Int, Set<Position>> = (0 until playerCount)
     .toList().associateWith { mutableSetOf<Position>() }
@@ -140,13 +141,40 @@ class GameImpl(
     to: Position,
     building: Position
   ) {
+    checkMovement(player, from, to)
 
-    // POSITIONING
+    val (nextHeight, nextBuildersPosition) = checkBuilding(
+      building,
+      to,
+      player,
+      from
+    )
 
-    checkMovement(from, to, player)
+    builders[player] = nextBuildersPosition
 
-    // BUILDING
+    // remove the block that will be used to increase the height
+    currentBlocks[nextHeight] = currentBlocks[nextHeight]!! - 1
 
+    buildings[building.x][building.y] = buildings[building.x][building.y]++
+  }
+
+  override fun moveAndBuildSeal(
+    player: Int,
+    from: Position,
+    to: Position,
+    seal: Position
+  ) {
+    checkMovement(player, from, to)
+
+    seals[seal.x][seal.y] = true
+  }
+
+  private fun checkBuilding(
+    building: Position,
+    to: Position,
+    player: Int,
+    from: Position
+  ): Pair<Height, MutableSet<Position>> {
     if (outsideTheBoard(building))
       throw IllegalBuilding(to, building, "outside of the board")
 
@@ -172,19 +200,13 @@ class GameImpl(
         building,
         "builder is present at build location"
       )
-
-    builders[player] = nextBuildersPosition
-
-    // remove the block that will be used to increase the height
-    currentBlocks[nextHeight] = availableBlocks - 1
-
-    buildings[building.x][building.y] = buildings[building.x][building.y]++
+    return Pair(nextHeight, nextBuildersPosition)
   }
 
   private fun checkMovement(
+    player: Int,
     from: Position,
-    to: Position,
-    player: Int
+    to: Position
   ) {
     if (phase != Phase.BUILD)
       throw IllegalMove(from, to, "this is the placement phase")
@@ -223,6 +245,9 @@ class GameImpl(
         to,
         "can't move more than 1 level each step. You tried to move up by ${heightDifference.value} levels"
       )
+
+    if (seals[to.x][to.y])
+      throw IllegalMove(from, to, "the position [${to.x}, ${to.y}] is sealed")
   }
 
   override fun isFinished(): Boolean {
@@ -237,13 +262,26 @@ class GameImpl(
 
   val backdoor = GameBackdoor(this)
 
-  override fun moveAndBuildRoof(
-    player: Int,
-    from: Position,
-    to: Position,
-    roof: Position
-  ) {
+  override fun hasSeal(pos: Position): Boolean =
+    seals[pos.x][pos.y]
 
+  override fun getState(): GameStateData {
+    val buildersList = (0 until width).map {
+      (0 until height).map { null as Int? }.toMutableList()
+    }.toMutableList()
+
+    builders.forEach { (player, builders) ->
+      builders.forEach { (x, y) ->
+        println("buildersList[$x][$y] = $player")
+        buildersList[x][y] = player
+      }
+    }
+
+    return GameStateData(
+      buildings.map { it.map { it.value } },
+      seals.map { it.toList() },
+      buildersList
+    )
   }
 }
 

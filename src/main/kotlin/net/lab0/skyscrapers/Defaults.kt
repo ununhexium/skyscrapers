@@ -11,6 +11,6 @@ object Defaults {
     Height(1) to 21,
     Height(2) to 19,
     Height(3) to 14,
-    // roofs: ~17
+    // seals: ~17
   )
 }

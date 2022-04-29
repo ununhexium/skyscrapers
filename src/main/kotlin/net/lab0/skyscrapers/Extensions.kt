@@ -7,3 +7,13 @@ operator fun Array<Array<Height>>.set(pos: Position, value: Int) {
   this[pos.x][pos.y] = Height(value)
 }
 
+/**
+ * Flips a NxM matrix into MxN matrix
+ */
+fun <T> List<List<T>>.flip(): List<List<T>> =
+  (0 until this.first().size).map { x ->
+    (0 until this.size).map { y ->
+      this[y][x]
+    }
+  }
+

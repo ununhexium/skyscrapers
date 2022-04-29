@@ -2,12 +2,14 @@ package net.lab0.skyscrapers
 
 import net.lab0.skyscrapers.actions.DSL
 import net.lab0.skyscrapers.exception.*
+import net.lab0.skyscrapers.state.GameStateData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
 import org.junit.jupiter.api.assertThrows
+import net.lab0.skyscrapers.Position as P
 
 internal class GameImplTest {
 
@@ -24,9 +26,45 @@ internal class GameImplTest {
         val x = turn % width
         val y = turn / height
         it.play(
-          DSL.player(player).placement.addBuilder(Position(x, y))
+          DSL.player(player).placement.addBuilder(P(x, y))
         )
       }
+    }
+  }
+
+  @Nested
+  inner class State {
+    @Test
+    fun `newGameWithSequentiallyPlacedBuilders generates this specific game by default`() {
+      val g = newGameWithSequentiallyPlacedBuilders()
+
+      assertThat(g.getState()).isEqualTo(
+        GameStateData.from(
+          """
+            0 0 0 0 0
+            0 0 0 0 0
+            0 0 0 0 0
+            0 0 0 0 0
+            0 0 0 0 0
+          """.trimIndent(),
+
+          """
+            0 0 0 0 0
+            0 0 0 0 0
+            0 0 0 0 0
+            0 0 0 0 0
+            0 0 0 0 0
+          """.trimIndent(),
+
+          """
+            0 1 0 1 .
+            . . . . .
+            . . . . .
+            . . . . .
+            . . . . .
+          """.trimIndent()
+        )
+      )
     }
   }
 
@@ -158,10 +196,10 @@ internal class GameImplTest {
       val player = 0
 
       g.play(
-        DSL.player(player).placement.addBuilder(Position(1, 2))
+        DSL.player(player).placement.addBuilder(P(1, 2))
       )
 
-      assertThat(g.getBuilders(player)).isEqualTo(listOf(Position(1, 2)))
+      assertThat(g.getBuilders(player)).isEqualTo(listOf(P(1, 2)))
     }
 
     @Test
@@ -319,7 +357,7 @@ internal class GameImplTest {
       )
 
       assertThat(g.getBuilders(0))
-        .contains(Position(0, 1), Position(2, 0))
+        .contains(P(0, 1), P(2, 0))
 
     }
 
@@ -404,9 +442,9 @@ internal class GameImplTest {
     fun `can only move up 1 step at a time`() {
       val g = newGameWithSequentiallyPlacedBuilders() as GameImpl
 
-      val start = Position(0, 0)
-      val end = Position(1, 1)
-      val build = Position(0, 0)
+      val start = P(0, 0)
+      val end = P(1, 1)
+      val build = P(0, 0)
 
       g.backdoor.setHeight(end, 2) // too high
 
@@ -432,7 +470,7 @@ internal class GameImplTest {
     fun `can build where there is no builder`() {
       val g = newGameWithSequentiallyPlacedBuilders()
 
-      val buildPosition = Position(0, 0)
+      val buildPosition = P(0, 0)
 
       g.play(
         DSL.player(0).building
@@ -460,9 +498,9 @@ internal class GameImplTest {
     fun `can't build outside of the board`() {
       val g = newGameWithSequentiallyPlacedBuilders()
 
-      val builderStartPosition = Position(0, 0)
-      val builderTargetPosition = Position(0, 1)
-      val buildingPosition = Position(-1, 1)
+      val builderStartPosition = P(0, 0)
+      val builderTargetPosition = P(0, 1)
+      val buildingPosition = P(-1, 1)
 
       assertThat(
         assertThrows<IllegalBuilding> {
@@ -491,9 +529,9 @@ internal class GameImplTest {
     fun `can't build where there is a builder on that tile`() {
       val g = newGameWithSequentiallyPlacedBuilders()
 
-      val builderStartPosition = Position(0, 0)
-      val builderTargetPosition = Position(0, 1)
-      val opponentPosition = Position(1, 0)
+      val builderStartPosition = P(0, 0)
+      val builderTargetPosition = P(0, 1)
+      val opponentPosition = P(1, 0)
 
       assertThat(
         assertThrows<IllegalBuilding> {
@@ -531,9 +569,9 @@ internal class GameImplTest {
 
       // can't play a block for height 1 as there is none remaining
 
-      val builderStartPosition = Position(1, 0)
-      val builderTargetPosition = Position(1, 1)
-      val buildingPosition = Position(1, 0)
+      val builderStartPosition = P(1, 0)
+      val builderTargetPosition = P(1, 1)
+      val buildingPosition = P(1, 0)
 
       assertThat(
         assertThrows<IllegalBuilding> {
@@ -556,23 +594,90 @@ internal class GameImplTest {
   }
 
   @Nested
-  inner class BuildingRoof {
+  inner class Seal {
 
     @Test
-    fun `can build a roof`() {
+    fun `can build a seal`() {
       val g = newGameWithSequentiallyPlacedBuilders()
 
-      g.play(DSL.player(0).building.move().from(0,0).to(0,1).andBuildRoof(0,0))
+      val seal = P(0, 0)
+
+      g.play(
+        DSL.player(0).building
+          .move()
+          .from(0, 0)
+          .to(0, 1)
+          .andBuildSeal(seal)
+      )
+
+      assertThat(g.hasSeal(seal)).isTrue()
     }
 
-    // TODO: build roof can't go above the max height -> no exception there
-    // TODO: can't move to tile with a roof
-    // TODO: can't build under a roof
-    // TODO:
+    @Test
+    fun `can't move to tile with a seal`() {
+      val g = newGameWithSequentiallyPlacedBuilders()
+
+      val start = P(1, 0)
+      val seal = P(0, 0)
+
+      g.play(
+        DSL.player(0).building
+          .move()
+          .from(0, 0)
+          .to(0, 1)
+          .andBuildSeal(seal)
+      )
+
+      assertThat(        g.getState()      ).isEqualTo(
+        GameStateData.from(
+          """
+            0 0 0 0 0
+            0 0 0 0 0
+            0 0 0 0 0
+            0 0 0 0 0
+            0 0 0 0 0
+          """.trimIndent(),
+
+          """
+            1 0 0 0 0
+            0 0 0 0 0
+            0 0 0 0 0
+            0 0 0 0 0
+            0 0 0 0 0
+          """.trimIndent(),
+
+          """
+            0 2 1 2 0
+            1 0 0 0 0 
+            0 0 0 0 0
+            0 0 0 0 0
+            0 0 0 0 0
+          """.trimIndent()
+        )
+      )
+
+      assertThat(
+        assertThrows<IllegalMove> {
+          g.play(
+            DSL.player(1).building
+              .move()
+              .from(start)
+              .to(seal)
+              .andBuild(start)
+          )
+        }
+      ).isEqualTo(
+        IllegalMove(start, seal, "the position [0, 0] is sealed")
+      )
+    }
+
+    // TODO: can't build under a seal
+    // TODO: can't build a seal on top of a seal
   }
 
   @Nested
   inner class Finished {
+
     @Test
     fun `when there is only 1 player remaining, the game is finished`() {
       val g = newGameWithSequentiallyPlacedBuilders()
