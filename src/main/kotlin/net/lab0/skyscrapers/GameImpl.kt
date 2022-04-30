@@ -3,6 +3,7 @@ package net.lab0.skyscrapers
 import net.lab0.skyscrapers.api.*
 import net.lab0.skyscrapers.exception.*
 import net.lab0.skyscrapers.rule.BuildingRangeRule
+import net.lab0.skyscrapers.rule.SealsPreventAnyMoveAndAction
 import net.lab0.skyscrapers.structure.*
 import java.util.LinkedList
 
@@ -23,8 +24,9 @@ class GameImpl(
   private var builders: Matrix<Int?> =
     Matrix(height, width) { null },
 
-  private val moveRules: List<Rule<Move>> = listOf(
-    BuildingRangeRule()
+  private val moveRules: List<Rule<TurnType.MoveTurn>> = listOf(
+    BuildingRangeRule(),
+    SealsPreventAnyMoveAndAction(),
   )
 ) : Game {
 
@@ -120,12 +122,12 @@ class GameImpl(
       is TurnType.MoveTurn -> {
         // apply move rules
         val violations = moveRules.flatMap { it.checkRule(getState(), turn) }
-        if(violations.isNotEmpty())
-          throw GameRuleViolatedException(violations)
+        if (violations.isNotEmpty())
+          throw GameRuleViolationException(violations)
 
         when (turn) {
           is TurnType.MoveTurn.MoveAndBuildTurn -> moveAndBuild(turn)
-          is TurnType.MoveTurn.SealMoveTurn -> moveAndSeal(turn)
+          is TurnType.MoveTurn.MoveAndSealTurn -> moveAndSeal(turn)
         }
       }
     }
@@ -312,8 +314,11 @@ class GameImpl(
       game.buildings = game.buildings.copyAndSet(pos, Height(height))
     }
 
-    fun addSeal(p: Position) {
-      game.seals = game.seals.copyAndSet(p, true)
+    fun addSeal(p: Position) =
+      addSeal(p.y, p.x)
+
+    fun addSeal(x: Int, y: Int) {
+      game.seals = game.seals.copyAndSet(y, x, true)
     }
   }
 

@@ -5,7 +5,6 @@ import net.lab0.skyscrapers.action.DSL
 import net.lab0.skyscrapers.api.Game
 import net.lab0.skyscrapers.exception.*
 import org.assertj.core.api.Assertions.assertThat
-import net.lab0.skyscrapers.assertj.GameStateAssert.Companion.assertThat as atg
 import net.lab0.skyscrapers.structure.*
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Nested
@@ -602,7 +601,7 @@ internal class GameImplTest {
     fun `can't build more than 1 tile away from the moved builder`() {
       val g = newGameWithSequentiallyPlacedBuilders()
 
-      assertThrows<GameRuleViolatedException> {
+      assertThrows<GameRuleViolationException> {
         g.play(
           DSL.player(0).building
             .move()
@@ -676,19 +675,16 @@ internal class GameImplTest {
 
       val state1 = g.getState()
 
-      assertThat(
-        assertThrows<IllegalMove> {
-          g.play(
-            DSL.player(1).building
-              .move()
-              .from(start)
-              .to(seal)
-              .andBuild(start)
-          )
-        }
-      ).isEqualTo(
-        IllegalMove(start, seal, "the position [0, 0] is sealed")
-      )
+      assertThrows<GameRuleViolationException> {
+        g.play(
+          DSL.player(1).building
+            .move()
+            .from(start)
+            .to(seal)
+            .andBuild(start)
+        )
+      }
+
       assertThat(g.getState())
         .describedAs("Check no state change")
         .isEqualTo(state1)
@@ -706,19 +702,15 @@ internal class GameImplTest {
 
       val state0 = g.getState()
 
-      assertThat(
-        assertThrows<IllegalBuilding> {
-          g.play(
-            DSL.player(0).building
-              .move()
-              .from(start)
-              .to(target)
-              .andBuild(building)
-          )
-        }
-      ).isEqualTo(
-        IllegalBuilding(target, building, "the position [0, 0] is sealed")
-      )
+      assertThrows<GameRuleViolationException> {
+        g.play(
+          DSL.player(0).building
+            .move()
+            .from(start)
+            .to(target)
+            .andBuild(building)
+        )
+      }
 
       assertThat(g.getState())
         .describedAs("Check no state change")
@@ -737,19 +729,15 @@ internal class GameImplTest {
 
       val state0 = g.getState()
 
-      assertThat(
-        assertThrows<IllegalSealing> {
-          g.play(
-            DSL.player(0).building
-              .move()
-              .from(start)
-              .to(target)
-              .andSeal(seal)
-          )
-        }
-      ).isEqualTo(
-        IllegalSealing(target, seal, "the position [0, 0] is sealed")
-      )
+      assertThrows<GameRuleViolationException> {
+        g.play(
+          DSL.player(0).building
+            .move()
+            .from(start)
+            .to(target)
+            .andSeal(seal)
+        )
+      }
 
       assertThat(g.getState())
         .describedAs("Check no state change")

@@ -1,6 +1,5 @@
 package net.lab0.skyscrapers.action
 
-import net.lab0.skyscrapers.api.Turn
 import net.lab0.skyscrapers.api.TurnType
 import net.lab0.skyscrapers.structure.Position
 
@@ -52,5 +51,5 @@ data class BuildDSL(
     andSeal(Position(x, y))
 
   fun andSeal(pos: Position) =
-    TurnType.MoveTurn.SealMoveTurn(player, start, target, pos)
+    TurnType.MoveTurn.MoveAndSealTurn(player, start, target, pos)
 }

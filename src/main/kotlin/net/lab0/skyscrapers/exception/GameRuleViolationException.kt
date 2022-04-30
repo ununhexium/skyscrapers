@@ -2,7 +2,7 @@ package net.lab0.skyscrapers.exception
 
 import net.lab0.skyscrapers.api.GameRuleViolation
 
-data class GameRuleViolatedException(val violation: List<GameRuleViolation>) :
+data class GameRuleViolationException(val violation: List<GameRuleViolation>) :
   Exception(
     """
       |${violation.size} rule${if(violation.size > 1) "s were" else " was"} violated:
