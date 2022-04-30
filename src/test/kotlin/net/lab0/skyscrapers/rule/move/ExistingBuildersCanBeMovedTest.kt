@@ -1,20 +1,18 @@
-package net.lab0.skyscrapers.rule
+package net.lab0.skyscrapers.rule.move
 
 import net.lab0.skyscrapers.DefaultGames
+import net.lab0.skyscrapers.GameImpl
+import net.lab0.skyscrapers.rule.GameRuleViolationImpl
 import net.lab0.skyscrapers.api.TurnType
-import net.lab0.skyscrapers.rule.move.BoardMoveContainmentRule
 import net.lab0.skyscrapers.structure.Position
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class BoardMoveContainmentRuleTest {
+internal class ExistingBuildersCanBeMovedTest {
   @Test
-  fun `can play inside the board`() {
+  fun `can move a builder`() {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
-    val rule = BoardMoveContainmentRule
-
-    g.getState()
-
+    val rule = ExistingBuildersCanBeMoved
     val turn = TurnType.MoveTurn.MoveAndBuildTurn(
       0,
       Position(0, 0),
@@ -26,92 +24,68 @@ internal class BoardMoveContainmentRuleTest {
   }
 
   @Test
-  fun `can't move from outside the board`() {
+  fun `can't move a builder that doesn't exist`() {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
-
+    val rule = ExistingBuildersCanBeMoved
     val turn = TurnType.MoveTurn.MoveAndBuildTurn(
       0,
-      Position(-1, -1),
-      Position(0, 0),
-      Position(1, 1)
+      Position(1, 1),
+      Position(1, 2),
+      Position(2, 2)
     )
-
-    val rule = BoardMoveContainmentRule
 
     assertThat(rule.checkRule(g.getState(), turn)).isEqualTo(
       listOf(
         GameRuleViolationImpl(
           rule,
-          "Can't move from outside [-1, -1] the board"
+          "There is no builder that belongs to player#0 at [1, 1]"
         )
       )
     )
   }
 
   @Test
-  fun `can't move outside of the board`() {
+  fun `can't move a builder on top of another builder`() {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
+    val rule = ExistingBuildersCanBeMoved
+    val target = Position(1, 2)
 
     val turn = TurnType.MoveTurn.MoveAndBuildTurn(
       0,
       Position(0, 0),
-      Position(-1, -1),
-      Position(0, 0)
+      target,
+      Position(2, 2)
     )
 
-    val rule = BoardMoveContainmentRule
+    (g as GameImpl).backdoor.addBuilder(0, target)
 
     assertThat(rule.checkRule(g.getState(), turn)).isEqualTo(
       listOf(
         GameRuleViolationImpl(
           rule,
-          "Can't move outside [-1, -1] of the board"
+          "There is already a builder from player#0 at [1, 2]"
         )
       )
     )
   }
 
   @Test
-  fun `can't build outside of the board`() {
+  fun `can't move a builder that doesn't belong to the player`() {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
+    val rule = ExistingBuildersCanBeMoved
 
     val turn = TurnType.MoveTurn.MoveAndBuildTurn(
       0,
-      Position(0, 0),
       Position(1, 0),
-      Position(1, -1)
+      Position(1, 2),
+      Position(2, 2)
     )
-
-    val rule = BoardMoveContainmentRule
 
     assertThat(rule.checkRule(g.getState(), turn)).isEqualTo(
       listOf(
         GameRuleViolationImpl(
           rule,
-          "Can't build outside [1, -1] of the board"
-        )
-      )
-    )
-  }
-
-  @Test
-  fun `can't seal outside of the board`() {
-    val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
-
-    val turn = TurnType.MoveTurn.MoveAndSealTurn(
-      0,
-      Position(0, 0),
-      Position(1, 0),
-      Position(1, -1)
-    )
-
-    val rule = BoardMoveContainmentRule
-
-    assertThat(rule.checkRule(g.getState(), turn)).isEqualTo(
-      listOf(
-        GameRuleViolationImpl(
-          rule,
-          "Can't seal outside [1, -1] of the board"
+          "The builder at [1, 0] doesn't belong to player#0. It belongs to player#1"
         )
       )
     )

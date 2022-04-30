@@ -352,7 +352,7 @@ internal class GameImplTest {
     fun `the player must move, it can't stay at the same place`() {
       val g = newGameWithSequentiallyPlacedBuilders()
 
-      assertThrows<IllegalMove> {
+      assertThrows<GameRuleViolationException> {
         g.play(
           DSL.player(0).building.move().from(0, 0).to(0, 0).andBuild(0, 1)
         )
@@ -366,15 +366,11 @@ internal class GameImplTest {
       val from = P(1, 0)
       val to = P(1, 1)
 
-      assertThat(
-        assertThrows<IllegalMove> {
-          g.play(
-            DSL.player(0).building.move().from(from).to(to).andBuild(1, 0)
-          )
-        }
-      ).isEqualTo(
-        IllegalMove(from, to, "can't move another player's builder")
-      )
+      assertThrows<GameRuleViolationException> {
+        g.play(
+          DSL.player(0).building.move().from(from).to(to).andBuild(1, 0)
+        )
+      }
     }
 
     @Test
@@ -384,15 +380,11 @@ internal class GameImplTest {
       val from = P(4, 4)
       val to = P(3, 3)
 
-      assertThat(
-        assertThrows<IllegalMove> {
-          g.play(
-            DSL.player(0).building.move().from(from).to(to).andBuild(4, 4)
-          )
-        }
-      ).isEqualTo(
-        IllegalMove(from, to, "there is no builder in the starting position")
-      )
+      assertThrows<GameRuleViolationException> {
+        g.play(
+          DSL.player(0).building.move().from(from).to(to).andBuild(4, 4)
+        )
+      }
     }
 
     @Test
@@ -410,7 +402,7 @@ internal class GameImplTest {
     fun `can't move on top of another player's builder`() {
       val g = newGameWithSequentiallyPlacedBuilders()
 
-      assertThrows<IllegalMove> {
+      assertThrows<GameRuleViolationException> {
         g.play(
           DSL.player(0).building.move().from(0, 0).to(1, 0).andBuild(0, 0)
         )

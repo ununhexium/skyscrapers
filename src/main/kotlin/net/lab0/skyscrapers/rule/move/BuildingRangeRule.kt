@@ -1,6 +1,7 @@
-package net.lab0.skyscrapers.rule
+package net.lab0.skyscrapers.rule.move
 
 import net.lab0.skyscrapers.api.*
+import net.lab0.skyscrapers.rule.GameRuleViolationImpl
 
 /**
  * Limit the building range of the player

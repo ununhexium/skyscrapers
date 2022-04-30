@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.exception
 
 import net.lab0.skyscrapers.api.GameRuleViolation
-import net.lab0.skyscrapers.api.GameRuleViolationImpl
+import net.lab0.skyscrapers.rule.GameRuleViolationImpl
 import net.lab0.skyscrapers.structure.Position
 
 data class IllegalRange(

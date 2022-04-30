@@ -3,6 +3,10 @@ package net.lab0.skyscrapers
 import net.lab0.skyscrapers.api.*
 import net.lab0.skyscrapers.exception.*
 import net.lab0.skyscrapers.rule.*
+import net.lab0.skyscrapers.rule.move.BoardMoveContainmentRule
+import net.lab0.skyscrapers.rule.move.BuildingRangeRule
+import net.lab0.skyscrapers.rule.move.ExistingBuildersCanBeMoved
+import net.lab0.skyscrapers.rule.move.SealsPreventAnyMoveAndAction
 import net.lab0.skyscrapers.rule.placement.PlaceBuilderOnEmptyCell
 import net.lab0.skyscrapers.structure.*
 import java.util.LinkedList
@@ -35,6 +39,7 @@ class GameImpl(
 
   private val moveRules: List<Rule<TurnType.MoveTurn>> = listOf(
     BoardMoveContainmentRule,
+    ExistingBuildersCanBeMoved,
     BuildingRangeRule(),
     SealsPreventAnyMoveAndAction,
   ),
@@ -263,27 +268,6 @@ class GameImpl(
     start: Position,
     target: Position
   ) {
-    val originatingBuilder = builders[start]
-      ?: throw IllegalMove(
-        start,
-        target,
-        "there is no builder in the starting position"
-      )
-
-    if (originatingBuilder != player)
-      throw IllegalMove(
-        start,
-        target,
-        "can't move another player's builder"
-      )
-
-    if (hasBuilder(target))
-      throw IllegalMove(
-        start,
-        target,
-        "there is a builder at the target position"
-      )
-
     if (start == target)
       throw IllegalMove(start, target, "the position must be different")
 

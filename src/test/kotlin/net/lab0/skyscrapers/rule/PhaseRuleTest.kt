@@ -2,11 +2,9 @@ package net.lab0.skyscrapers.rule
 
 import net.lab0.skyscrapers.DefaultGames
 import net.lab0.skyscrapers.api.Game
-import net.lab0.skyscrapers.api.GameRuleViolationImpl
 import net.lab0.skyscrapers.api.TurnType
 import net.lab0.skyscrapers.structure.Position
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 internal class PhaseRuleTest {
