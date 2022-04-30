@@ -444,19 +444,11 @@ internal class GameImplTest {
 
       g.backdoor.setHeight(end, 2) // too high
 
-      assertThat(
-        assertThrows<IllegalMove> {
-          g.play(
-            DSL.player(0).building.move().from(start).to(end).andBuild(build)
-          )
-        }
-      ).isEqualTo(
-        IllegalMove(
-          start,
-          end,
-          "can't move more than 1 level each step. You tried to move up by 2 levels"
+      assertThrows<GameRuleViolationException> {
+        g.play(
+          DSL.player(0).building.move().from(start).to(end).andBuild(build)
         )
-      )
+      }
     }
   }
 

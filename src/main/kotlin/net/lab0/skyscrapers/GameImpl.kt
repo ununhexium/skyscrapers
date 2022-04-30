@@ -38,6 +38,7 @@ class GameImpl(
     BoardMoveContainmentRule,
     DefaultBuildersMovementRules,
     MovementRangeRule(),
+    ClimbingRule(),
     BuildingRangeRule(),
     SealsPreventAnyMoveAndAction,
   ),
@@ -189,8 +190,6 @@ class GameImpl(
   override fun moveAndBuild(
     turn: MoveAndBuild
   ) {
-    checkMovement(turn.start, turn.target)
-
     val (nextHeight, nextBuildersPosition) = checkBuilding(
       turn.build,
       turn.target,
@@ -206,8 +205,6 @@ class GameImpl(
   }
 
   override fun moveAndSeal(turn: MoveAndSeal) {
-    checkMovement(turn.start, turn.target)
-
     val nextBuilderPosition = builders.copyAndSwap(turn.start, turn.target)
 
     if (seals[turn.target])
@@ -226,9 +223,6 @@ class GameImpl(
     to: Position,
     from: Position
   ): Pair<Height, Matrix<Int?>> {
-    if (outsideTheBoard(building))
-      throw IllegalBuilding(to, building, "outside of the board")
-
     val nextHeight = buildings[building] + 1
     val availableBlocks = blocks[nextHeight]!!
     if (availableBlocks == 0)
@@ -255,27 +249,6 @@ class GameImpl(
       )
 
     return Pair(nextHeight, nextBuildersPosition)
-  }
-
-  private fun checkMovement(
-    start: Position,
-    target: Position
-  ) {
-    val heightDifference = getHeight(target) - getHeight(start)
-
-    if (heightDifference > 1)
-      throw IllegalMove(
-        start,
-        target,
-        "can't move more than 1 level each step. You tried to move up by ${heightDifference.value} levels"
-      )
-
-    if (seals[target])
-      throw IllegalMove(
-        start,
-        target,
-        "the position [${target.x}, ${target.y}] is sealed"
-      )
   }
 
   override fun isFinished(): Boolean {
