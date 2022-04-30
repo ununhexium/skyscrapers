@@ -5,6 +5,7 @@ import net.lab0.skyscrapers.exception.*
 import net.lab0.skyscrapers.state.GameStateData
 import net.lab0.skyscrapers.state.Matrix
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -614,6 +615,8 @@ internal class GameImplTest {
       assertThat(g.hasSeal(seal)).isTrue()
     }
 
+    // TODO: resume here
+    @Disabled("TODO")
     @Test
     fun `can't move to tile with a seal`() {
       val g = newGameWithSequentiallyPlacedBuilders()

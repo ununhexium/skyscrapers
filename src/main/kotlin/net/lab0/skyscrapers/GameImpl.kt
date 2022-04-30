@@ -15,8 +15,10 @@ class GameImpl(
 
   private var buildings: Matrix<Height> =
     Matrix(height, width) { Height(0) },
-  private val seals: Array<Array<Boolean>> =
-    Array(width) { Array(height) { false } },
+
+  private var seals: Matrix<Boolean> =
+    Matrix(width, height) { false },
+
   private val builders: MutableMap<Int, Set<Position>> = (0 until playerCount)
     .toList().associateWith { mutableSetOf<Position>() }
     .toMutableMap(),
@@ -168,7 +170,7 @@ class GameImpl(
   ) {
     checkMovement(player, from, to)
 
-    seals[seal.x][seal.y] = true
+    seals = seals.copyAndSet(seal, true)
   }
 
   private fun checkBuilding(
@@ -248,7 +250,7 @@ class GameImpl(
         "can't move more than 1 level each step. You tried to move up by ${heightDifference.value} levels"
       )
 
-    if (seals[to.x][to.y])
+    if (seals[to])
       throw IllegalMove(from, to, "the position [${to.x}, ${to.y}] is sealed")
   }
 
@@ -265,7 +267,7 @@ class GameImpl(
   val backdoor = GameBackdoor(this)
 
   override fun hasSeal(pos: Position): Boolean =
-    seals[pos.x][pos.y]
+    seals[pos]
 
   override fun getState(): GameStateData {
     val buildersList = (0 until width).map {
@@ -280,7 +282,7 @@ class GameImpl(
 
     return GameStateData(
       buildings.map { it.value },
-      Matrix(seals.map { it.toList() }),
+      seals.copy(),
       Matrix(buildersList)
     )
   }
