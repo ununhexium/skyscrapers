@@ -1,6 +1,7 @@
 package net.lab0.skyscrapers
 
-import net.lab0.skyscrapers.actions.DSL
+import net.lab0.skyscrapers.action.DSL
+import net.lab0.skyscrapers.api.Game
 
 fun main() {
   val g = Game.new(5, 5, 2, 1)

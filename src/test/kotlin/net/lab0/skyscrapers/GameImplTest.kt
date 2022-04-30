@@ -1,40 +1,20 @@
 package net.lab0.skyscrapers
 
-import net.lab0.skyscrapers.actions.DSL
+import net.lab0.skyscrapers.DefaultGames.newGameWithSequentiallyPlacedBuilders
+import net.lab0.skyscrapers.action.DSL
+import net.lab0.skyscrapers.api.Game
 import net.lab0.skyscrapers.exception.*
-import net.lab0.skyscrapers.state.BuildersMatrix
-import net.lab0.skyscrapers.state.GameStateData
-import net.lab0.skyscrapers.state.Matrix
 import org.assertj.core.api.Assertions.assertThat
 import net.lab0.skyscrapers.assertj.GameStateAssert.Companion.assertThat
-import net.lab0.skyscrapers.state.BuildingsMatrix
+import net.lab0.skyscrapers.structure.*
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
 import org.junit.jupiter.api.assertThrows
-import net.lab0.skyscrapers.Position as P
+import net.lab0.skyscrapers.structure.Position as P
 
 internal class GameImplTest {
-
-  companion object {
-    fun newGameWithSequentiallyPlacedBuilders(
-      width: Int = Defaults.WIDTH,
-      height: Int = Defaults.HEIGHT,
-      playerCount: Int = Defaults.PLAYER_COUNT,
-      buildersPerPlayer: Int = Defaults.BUILDERS_PER_PLAYER,
-      blocks: Map<Height, Int> = Defaults.BLOCKS,
-    ) = Game.new(width, height, playerCount, buildersPerPlayer, blocks).also {
-      (0 until playerCount * buildersPerPlayer).forEach { turn ->
-        val player = turn % playerCount
-        val x = turn % width
-        val y = turn / height
-        it.play(
-          DSL.player(player).placement.addBuilder(P(x, y))
-        )
-      }
-    }
-  }
 
   @Nested
   inner class State {
@@ -699,8 +679,69 @@ internal class GameImplTest {
         .isEqualTo(state1)
     }
 
-    // TODO: can't build under a seal
-    // TODO: can't build a seal on top of a seal
+    @Test
+    fun `can't build under a seal`() {
+      val g = newGameWithSequentiallyPlacedBuilders()
+
+      val start = P(0, 0)
+      val target = P(0, 1)
+      val building = P(0, 0)
+
+      (g as GameImpl).backdoor.addSeal(building)
+
+      val state0 = g.getState()
+
+      assertThat(
+        assertThrows<IllegalBuilding> {
+          g.play(
+            DSL.player(0).building
+              .move()
+              .from(start)
+              .to(target)
+              .andBuild(building)
+          )
+        }
+      ).isEqualTo(
+        IllegalBuilding(target, building, "the position [0, 0] is sealed")
+      )
+
+      assertThat(g.getState())
+        .describedAs("Check no state change")
+        .isEqualTo(state0)
+    }
+
+    @Test
+    fun `can't build a seal on top of a seal`() {
+      val g = newGameWithSequentiallyPlacedBuilders()
+
+      val start = P(0, 0)
+      val target = P(0, 1)
+      val seal = P(0, 0)
+
+      (g as GameImpl).backdoor.addSeal(seal)
+
+      val state0 = g.getState()
+
+      assertThat(
+        assertThrows<IllegalSealing> {
+          g.play(
+            DSL.player(0).building
+              .move()
+              .from(start)
+              .to(target)
+              .andSeal(seal)
+          )
+        }
+      ).isEqualTo(
+        IllegalSealing(target, seal, "the position [0, 0] is sealed")
+      )
+
+      assertThat(g.getState())
+        .describedAs("Check no state change")
+        .isEqualTo(state0)
+    }
+
+    // TODO: assert construction rules distances
   }
 
   @Nested

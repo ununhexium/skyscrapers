@@ -1,6 +1,6 @@
-package net.lab0.skyscrapers.state
+package net.lab0.skyscrapers.structure
 
-import net.lab0.skyscrapers.flip
+import net.lab0.skyscrapers.api.GameState
 
 data class GameStateData(
   // TODO make more typesafe with value classes

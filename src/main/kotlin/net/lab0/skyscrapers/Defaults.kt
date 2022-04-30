@@ -1,5 +1,7 @@
 package net.lab0.skyscrapers
 
+import net.lab0.skyscrapers.structure.Height
+
 object Defaults {
   const val WIDTH = 5
   const val HEIGHT = 5

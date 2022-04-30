@@ -1,5 +1,8 @@
 package net.lab0.skyscrapers
 
+import net.lab0.skyscrapers.structure.Height
+import net.lab0.skyscrapers.structure.Position
+
 operator fun Array<Array<Height>>.get(pos: Position): Height =
   this[pos.x][pos.y]
 

@@ -1,7 +1,7 @@
-package net.lab0.skyscrapers.actions
+package net.lab0.skyscrapers.action
 
 import net.lab0.skyscrapers.Action
-import net.lab0.skyscrapers.Position
+import net.lab0.skyscrapers.structure.Position
 
 object DSL {
   fun player(player: Int) = PhaseStepDSL(player)

@@ -1,8 +1,8 @@
 package net.lab0.skyscrapers
 
+import net.lab0.skyscrapers.api.Game
 import net.lab0.skyscrapers.exception.*
-import net.lab0.skyscrapers.state.GameStateData
-import net.lab0.skyscrapers.state.Matrix
+import net.lab0.skyscrapers.structure.*
 import java.util.LinkedList
 
 class GameImpl(
@@ -215,6 +215,14 @@ class GameImpl(
         building,
         "builder is present at build location"
       )
+
+    if (seals[building])
+      throw IllegalBuilding(
+        to,
+        building,
+        "the position [${building.x}, ${building.y}] is sealed"
+      )
+
     return Pair(nextHeight, nextBuildersPosition)
   }
 
@@ -290,6 +298,10 @@ class GameImpl(
   class GameBackdoor(private val game: GameImpl) {
     fun setHeight(pos: Position, height: Int) {
       game.buildings = game.buildings.copyAndSet(pos, Height(height))
+    }
+
+    fun addSeal(p: Position) {
+      game.seals = game.seals.copyAndSet(p, true)
     }
   }
 

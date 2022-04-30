@@ -1,4 +1,4 @@
-package net.lab0.skyscrapers.state
+package net.lab0.skyscrapers.structure
 
 @JvmInline
 value class BuildingsMatrix(val matrix: Matrix<Int>) {

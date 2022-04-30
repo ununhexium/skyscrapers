@@ -1,6 +1,6 @@
 package net.lab0.skyscrapers.assertj
 
-import net.lab0.skyscrapers.state.GameState
+import net.lab0.skyscrapers.api.GameState
 import org.assertj.core.api.AbstractAssert
 import org.assertj.core.api.Assertions.assertThat as at
 

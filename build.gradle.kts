@@ -13,13 +13,11 @@ repositories {
 
 dependencies {
 
-    implementation("org.assertj:assertj-core:3.22.0")
-
-    implementation("org.junit.jupiter:junit-jupiter:5.8.1")
-
     // TEST
 
-    testImplementation(kotlin("test"))
+    testImplementation("org.assertj:assertj-core:3.22.0")
+
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 }
 
 tasks.test {

@@ -1,4 +1,4 @@
-package net.lab0.skyscrapers
+package net.lab0.skyscrapers.structure
 
 import kotlin.math.abs
 
@@ -13,4 +13,7 @@ data class Position(
     if(this == other) return false // same position not accepted
     return abs(this.x - other.x) <= 1 && abs(this.y - other.y) <= 1
   }
+
+  override fun toString() =
+    "[$x, $y]"
 }

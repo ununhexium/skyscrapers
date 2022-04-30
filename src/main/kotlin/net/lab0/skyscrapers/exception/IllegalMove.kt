@@ -1,6 +1,6 @@
 package net.lab0.skyscrapers.exception
 
-import net.lab0.skyscrapers.Position
+import net.lab0.skyscrapers.structure.Position
 
 data class IllegalMove(
   val start: Position,

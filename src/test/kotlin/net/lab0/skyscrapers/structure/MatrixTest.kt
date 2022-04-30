@@ -1,6 +1,5 @@
-package net.lab0.skyscrapers.state
+package net.lab0.skyscrapers.structure
 
-import net.lab0.skyscrapers.Position
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

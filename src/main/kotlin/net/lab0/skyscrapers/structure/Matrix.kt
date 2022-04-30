@@ -1,6 +1,4 @@
-package net.lab0.skyscrapers.state
-
-import net.lab0.skyscrapers.Position
+package net.lab0.skyscrapers.structure
 
 
 /**

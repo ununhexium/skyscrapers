@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers
 
-import net.lab0.skyscrapers.state.GameStateData
-import net.lab0.skyscrapers.state.Matrix
+import net.lab0.skyscrapers.structure.GameStateData
+import net.lab0.skyscrapers.structure.Matrix
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

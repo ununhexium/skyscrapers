@@ -1,6 +1,11 @@
-package net.lab0.skyscrapers
+package net.lab0.skyscrapers.api
 
-import net.lab0.skyscrapers.state.GameStateData
+import net.lab0.skyscrapers.Action
+import net.lab0.skyscrapers.NewGame
+import net.lab0.skyscrapers.structure.GameStateData
+import net.lab0.skyscrapers.structure.Height
+import net.lab0.skyscrapers.structure.Phase
+import net.lab0.skyscrapers.structure.Position
 
 /**
  * Represents a game.
