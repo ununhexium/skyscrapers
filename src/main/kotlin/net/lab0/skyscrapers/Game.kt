@@ -54,7 +54,7 @@ interface Game {
    */
   val blocks: Map<Height, Int>
 
-  fun getHeight(x: Int, y: Int): Height
+  fun getHeight(column: Int, row: Int): Height
 
   fun getHeight(pos: Position): Height =
     this.getHeight(pos.x, pos.y)

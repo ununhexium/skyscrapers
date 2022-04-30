@@ -8,17 +8,25 @@ import net.lab0.skyscrapers.Position
  */
 data class Matrix<T>(
   val data: List<List<T>>,
-  val M: Int = data.size,
-  val N: Int = data.first().size,
+  val rows: Int = data.size,
+  val columns: Int = data.first().size,
 ) {
+  constructor(rows: Int, columns: Int, generator: (Position) -> T) : this(
+    (0 until rows).map { r ->
+      (0 until columns).map { c ->
+        generator(Position(c, r))
+      }
+    }
+  )
+
   init {
     // check that the properties are correct
-    if (data.size != M)
-      throw IllegalArgumentException("The provided data size (${data.size}) doesn't match the expected N dimension ($N)")
+    if (data.size != rows)
+      throw IllegalArgumentException("The provided data size (${data.size}) doesn't match the expected N dimension ($columns)")
 
-    val problem = data.firstOrNull { it.size != N }
+    val problem = data.firstOrNull { it.size != columns }
     if (problem != null)
-      throw IllegalArgumentException("The provided data size (${problem.size}) doesn't match the expected M dimension ($M)")
+      throw IllegalArgumentException("The provided data size (${problem.size}) doesn't match the expected M dimension ($rows)")
   }
 
   companion object {
@@ -63,4 +71,22 @@ data class Matrix<T>(
 
   override fun toString() =
     toString { element -> element.toString() }
+
+  /**
+   * @return The same matrix but with the given value set at (row, column)
+   */
+  fun copyAndSet(row: Int, column: Int, value: T) =
+    Matrix(
+      data.mapIndexed { r, internalRow ->
+        internalRow.mapIndexed { c, cell ->
+          if (c == column && r == row) value else cell
+        }
+      }
+    )
+
+  fun copyAndSet(pos: Position, value: T) =
+    copyAndSet(pos.y, pos.x, value)
+
+  fun <R> map(transform: (T) -> R) =
+    Matrix(data.map { row -> row.map { transform(it) } })
 }

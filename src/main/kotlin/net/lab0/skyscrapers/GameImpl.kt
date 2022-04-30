@@ -13,8 +13,8 @@ class GameImpl(
 
   val initialBlocks: Map<Height, Int>,
 
-  private val buildings: Array<Array<Height>> =
-    Array(width) { Array(height) { Height(0) } },
+  private var buildings: Matrix<Height> =
+    Matrix(height, width) { Height(0) },
   private val seals: Array<Array<Boolean>> =
     Array(width) { Array(height) { false } },
   private val builders: MutableMap<Int, Set<Position>> = (0 until playerCount)
@@ -82,7 +82,8 @@ class GameImpl(
   override val blocks: Map<Height, Int>
     get() = currentBlocks
 
-  override fun getHeight(x: Int, y: Int) = buildings[x][y]
+  // TODO: flip to row, column
+  override fun getHeight(column: Int, row: Int) = buildings[row, column]
 
   override fun getBuilders(player: Int) =
     builders[player]?.toList()
@@ -156,7 +157,7 @@ class GameImpl(
     // remove the block that will be used to increase the height
     currentBlocks[nextHeight] = currentBlocks[nextHeight]!! - 1
 
-    buildings[building.x][building.y] = buildings[building.x][building.y]++
+    buildings = buildings.copyAndSet(building, buildings[building] + 1)
   }
 
   override fun moveAndBuildSeal(
@@ -257,7 +258,7 @@ class GameImpl(
 
   class GameBackdoor(private val game: GameImpl) {
     fun setHeight(pos: Position, height: Int) {
-      game.buildings[pos] = height
+      game.buildings = game.buildings.copyAndSet(pos, Height(height))
     }
   }
 
@@ -278,7 +279,7 @@ class GameImpl(
     }
 
     return GameStateData(
-      Matrix(buildings.map { it.map { it.value } }),
+      buildings.map { it.value },
       Matrix(seals.map { it.toList() }),
       Matrix(buildersList)
     )

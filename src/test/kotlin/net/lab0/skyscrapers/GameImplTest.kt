@@ -481,7 +481,7 @@ internal class GameImplTest {
           .andBuild(buildPosition)
       )
 
-      assertThat(g.getHeight(buildPosition)).isEqualTo(Height(0))
+      assertThat(g.getHeight(buildPosition)).isEqualTo(Height(1))
 
       g.play(
         DSL.player(1).building
@@ -492,7 +492,7 @@ internal class GameImplTest {
       )
 
       // building stacks
-      assertThat(g.getHeight(buildPosition)).isEqualTo(Height(0))
+      assertThat(g.getHeight(buildPosition)).isEqualTo(Height(2))
     }
 
     @Test
