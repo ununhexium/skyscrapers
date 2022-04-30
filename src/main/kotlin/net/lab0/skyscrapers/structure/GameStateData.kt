@@ -14,6 +14,7 @@ data class GameStateData(
       seals: String,
       builders: String
     ): GameStateData {
+      // TODO check that all the matrices has the same size
       val buildingsData = Matrix.from(buildings) { it.toInt() }
 
       val sealsData = Matrix.from(seals) { it == "1" }
@@ -39,4 +40,7 @@ data class GameStateData(
       |${builders.toString { it?.toString() ?: "." }}
     """.trimMargin()
   }
+
+  override fun isWithinBounds(pos: Position) =
+    pos.inBounds(0, buildings.columns, 0, buildings.rows)
 }

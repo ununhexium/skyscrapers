@@ -2,6 +2,7 @@ package net.lab0.skyscrapers
 
 import net.lab0.skyscrapers.api.*
 import net.lab0.skyscrapers.exception.*
+import net.lab0.skyscrapers.rule.BoardMoveContainmentRule
 import net.lab0.skyscrapers.rule.BuildingRangeRule
 import net.lab0.skyscrapers.rule.SealsPreventAnyMoveAndAction
 import net.lab0.skyscrapers.structure.*
@@ -25,6 +26,7 @@ class GameImpl(
     Matrix(height, width) { null },
 
   private val moveRules: List<Rule<TurnType.MoveTurn>> = listOf(
+    BoardMoveContainmentRule,
     BuildingRangeRule(),
     SealsPreventAnyMoveAndAction(),
   )
@@ -121,9 +123,15 @@ class GameImpl(
       is TurnType.GiveUpTurn -> giveUp(turn)
       is TurnType.MoveTurn -> {
         // apply move rules
-        val violations = moveRules.flatMap { it.checkRule(getState(), turn) }
-        if (violations.isNotEmpty())
-          throw GameRuleViolationException(violations)
+        val violatedRule = moveRules.firstOrNull {
+          it.checkRule(getState(), turn).isNotEmpty()
+        }
+
+        if(violatedRule != null) {
+          throw GameRuleViolationException(
+            violatedRule.checkRule(getState(), turn)
+          )
+        }
 
         when (turn) {
           is TurnType.MoveTurn.MoveAndBuildTurn -> moveAndBuild(turn)

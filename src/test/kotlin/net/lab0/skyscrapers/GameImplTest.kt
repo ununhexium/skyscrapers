@@ -418,7 +418,7 @@ internal class GameImplTest {
     fun `can't move out of bounds`() {
       val g = newGameWithSequentiallyPlacedBuilders()
 
-      assertThrows<IllegalMove> {
+      assertThrows<GameRuleViolationException> {
         g.play(
           DSL.player(0).building.move().from(0, 0).to(-1, -1).andBuild(0, 0)
         )
@@ -432,15 +432,11 @@ internal class GameImplTest {
       val start = P(-1, 0)
       val target = P(0, 0)
 
-      assertThat(
-        assertThrows<IllegalMove> {
-          g.play(
-            DSL.player(0).building.move().from(start).to(target).andBuild(1, 1)
-          )
-        }
-      ).isEqualTo(
-        IllegalMove(start, target, "can't move from out of bounds")
-      )
+      assertThrows<GameRuleViolationException> {
+        g.play(
+          DSL.player(0).building.move().from(start).to(target).andBuild(1, 1)
+        )
+      }
     }
 
     @Test
