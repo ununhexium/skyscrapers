@@ -8,11 +8,11 @@ import net.lab0.skyscrapers.structure.Position
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class ExistingBuildersCanBeMovedTest {
+internal class DefaultBuildersMovementRulesTest {
   @Test
   fun `can move a builder`() {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
-    val rule = ExistingBuildersCanBeMoved
+    val rule = DefaultBuildersMovementRules
     val turn = TurnType.MoveTurn.MoveAndBuildTurn(
       0,
       Position(0, 0),
@@ -26,7 +26,7 @@ internal class ExistingBuildersCanBeMovedTest {
   @Test
   fun `can't move a builder that doesn't exist`() {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
-    val rule = ExistingBuildersCanBeMoved
+    val rule = DefaultBuildersMovementRules
     val turn = TurnType.MoveTurn.MoveAndBuildTurn(
       0,
       Position(1, 1),
@@ -47,7 +47,7 @@ internal class ExistingBuildersCanBeMovedTest {
   @Test
   fun `can't move a builder on top of another builder`() {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
-    val rule = ExistingBuildersCanBeMoved
+    val rule = DefaultBuildersMovementRules
     val target = Position(1, 2)
 
     val turn = TurnType.MoveTurn.MoveAndBuildTurn(
@@ -72,7 +72,7 @@ internal class ExistingBuildersCanBeMovedTest {
   @Test
   fun `can't move a builder that doesn't belong to the player`() {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
-    val rule = ExistingBuildersCanBeMoved
+    val rule = DefaultBuildersMovementRules
 
     val turn = TurnType.MoveTurn.MoveAndBuildTurn(
       0,
@@ -90,5 +90,4 @@ internal class ExistingBuildersCanBeMovedTest {
       )
     )
   }
-
 }

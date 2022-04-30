@@ -5,7 +5,7 @@ import net.lab0.skyscrapers.exception.*
 import net.lab0.skyscrapers.rule.*
 import net.lab0.skyscrapers.rule.move.BoardMoveContainmentRule
 import net.lab0.skyscrapers.rule.move.BuildingRangeRule
-import net.lab0.skyscrapers.rule.move.ExistingBuildersCanBeMoved
+import net.lab0.skyscrapers.rule.move.DefaultBuildersMovementRules
 import net.lab0.skyscrapers.rule.move.SealsPreventAnyMoveAndAction
 import net.lab0.skyscrapers.rule.placement.PlaceBuilderOnEmptyCell
 import net.lab0.skyscrapers.structure.*
@@ -39,7 +39,7 @@ class GameImpl(
 
   private val moveRules: List<Rule<TurnType.MoveTurn>> = listOf(
     BoardMoveContainmentRule,
-    ExistingBuildersCanBeMoved,
+    DefaultBuildersMovementRules,
     BuildingRangeRule(),
     SealsPreventAnyMoveAndAction,
   ),
@@ -106,10 +106,6 @@ class GameImpl(
     get() = currentBlocks
 
   override fun getHeight(column: Int, row: Int) = buildings[column, row]
-
-//  override fun getBuilders(player: Int) =
-//    builders[player]?.toList()
-//      ?: throw Exception("The player #$player doesn't exist")
 
   override fun getBuilders(player: Int): List<Position> {
     val result = mutableListOf<Position?>()
@@ -195,7 +191,7 @@ class GameImpl(
   override fun moveAndBuild(
     turn: MoveAndBuild
   ) {
-    checkMovement(turn.player, turn.start, turn.target)
+    checkMovement(turn.start, turn.target)
 
     val (nextHeight, nextBuildersPosition) = checkBuilding(
       turn.build,
@@ -212,7 +208,7 @@ class GameImpl(
   }
 
   override fun moveAndSeal(turn: MoveAndSeal) {
-    checkMovement(turn.player, turn.start, turn.target)
+    checkMovement(turn.start, turn.target)
 
     val nextBuilderPosition = builders.copyAndSwap(turn.start, turn.target)
 
@@ -264,7 +260,6 @@ class GameImpl(
   }
 
   private fun checkMovement(
-    player: Int,
     start: Position,
     target: Position
   ) {

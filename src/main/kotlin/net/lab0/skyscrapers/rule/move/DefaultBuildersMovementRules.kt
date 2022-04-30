@@ -3,7 +3,7 @@ package net.lab0.skyscrapers.rule.move
 import net.lab0.skyscrapers.api.*
 import net.lab0.skyscrapers.rule.GameRuleViolationImpl
 
-object ExistingBuildersCanBeMoved : Rule<TurnType.MoveTurn> {
+object DefaultBuildersMovementRules : Rule<TurnType.MoveTurn> {
   override val name = "Check builders are moved"
   override val description =
     "Enforces that the player moves an existing builder of their own and that it's moved to an empty cell"
@@ -34,6 +34,14 @@ object ExistingBuildersCanBeMoved : Rule<TurnType.MoveTurn> {
         GameRuleViolationImpl(
           this,
           "There is already a builder from player#${turn.player} at ${turn.target}"
+        )
+      )
+
+    if (turn.start == turn.target)
+      return listOf(
+        GameRuleViolationImpl(
+          this,
+          "The builder at ${turn.start} didn't move"
         )
       )
 
