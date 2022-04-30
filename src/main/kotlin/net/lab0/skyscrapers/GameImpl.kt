@@ -4,6 +4,7 @@ import net.lab0.skyscrapers.api.*
 import net.lab0.skyscrapers.exception.*
 import net.lab0.skyscrapers.rule.*
 import net.lab0.skyscrapers.rule.move.*
+import net.lab0.skyscrapers.rule.placement.CantGiveUpDuringPlacementRule
 import net.lab0.skyscrapers.rule.placement.PlaceBuilderOnEmptyCell
 import net.lab0.skyscrapers.structure.*
 import java.util.LinkedList
@@ -28,10 +29,11 @@ class GameImpl(
   private val turnRules: List<Rule<TurnType>> = listOf(
     PhaseRule,
     CheckCurrentPlayer,
+    CantGiveUpDuringPlacementRule,
   ),
 
   private val placementRules: List<Rule<TurnType.PlacementTurn>> = listOf(
-    PlaceBuilderOnEmptyCell
+    PlaceBuilderOnEmptyCell,
   ),
 
   private val moveRules: List<Rule<TurnType.MoveTurn>> = listOf(
@@ -176,8 +178,6 @@ class GameImpl(
   }
 
   override fun giveUp(turn: GiveUp) {
-    if (phase == Phase.PLACEMENT)
-      throw CantGiveUpInThePlacementPhase()
     playersQueue.first.active = false
   }
 
