@@ -54,10 +54,10 @@ interface Game {
    */
   val blocks: Map<Height, Int>
 
-  operator fun get(x: Int, y: Int): Height
+  fun getHeight(x: Int, y: Int): Height
 
-  operator fun get(pos: Position): Height =
-    this[pos.x, pos.y]
+  fun getHeight(pos: Position): Height =
+    this.getHeight(pos.x, pos.y)
 
   fun getBuilders(player: Int): List<Position>
 

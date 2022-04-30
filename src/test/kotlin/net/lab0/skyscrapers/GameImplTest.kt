@@ -110,7 +110,7 @@ internal class GameImplTest {
       return (0 until width).flatMap { x ->
         (0 until height).map { y ->
           DynamicTest.dynamicTest("g[$x,$y] == 0") {
-            assertThat(g[x, y]).isEqualTo(Height(0))
+            assertThat(g.getHeight(x, y)).isEqualTo(Height(0))
           }
         }
       }
@@ -481,7 +481,7 @@ internal class GameImplTest {
           .andBuild(buildPosition)
       )
 
-      assertThat(g[buildPosition]).isEqualTo(Height(0))
+      assertThat(g.getHeight(buildPosition)).isEqualTo(Height(0))
 
       g.play(
         DSL.player(1).building
@@ -492,7 +492,7 @@ internal class GameImplTest {
       )
 
       // building stacks
-      assertThat(g[buildPosition]).isEqualTo(Height(0))
+      assertThat(g.getHeight(buildPosition)).isEqualTo(Height(0))
     }
 
     @Test

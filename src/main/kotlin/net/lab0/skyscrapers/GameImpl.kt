@@ -82,7 +82,7 @@ class GameImpl(
   override val blocks: Map<Height, Int>
     get() = currentBlocks
 
-  override fun get(x: Int, y: Int) = buildings[x][y]
+  override fun getHeight(x: Int, y: Int) = buildings[x][y]
 
   override fun getBuilders(player: Int) =
     builders[player]?.toList()
@@ -238,7 +238,7 @@ class GameImpl(
         "the target position can't be outside of the board"
       )
 
-    val heightDifference = this[to] - this[from]
+    val heightDifference = getHeight(to) - getHeight(from)
 
     if (heightDifference > 1)
       throw IllegalMove(
