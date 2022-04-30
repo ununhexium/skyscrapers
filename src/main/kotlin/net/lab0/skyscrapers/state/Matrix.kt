@@ -84,9 +84,50 @@ data class Matrix<T>(
       }
     )
 
+  fun copyAndSwap(pos0: Position, pos1: Position) =
+    copyAndSwap(pos0.y, pos0.x, pos1.y, pos1.x)
+
+  fun copyAndSwap(row0: Int, column0: Int, row1: Int, column1: Int) =
+    Matrix(
+      data.map { it.toMutableList() }.toMutableList().also {
+        val tmp = it[row0][column0]
+        it[row0][column0] = it[row1][column1]
+        it[row1][column1] = tmp
+      }
+    )
+
   fun copyAndSet(pos: Position, value: T) =
     copyAndSet(pos.y, pos.x, value)
 
   fun <R> map(transform: (T) -> R) =
     Matrix(data.map { row -> row.map { transform(it) } })
+
+  fun <R> mapIndexed(transform: (Position, T) -> R) =
+    Matrix(
+      data.mapIndexed { r, row ->
+        row.mapIndexed { c, cell ->
+          transform(Position(c, r), cell)
+        }
+      }
+    )
+
+  fun <R> mapIndexedTo(
+    collection: MutableCollection<R>,
+    transform: (Position, T) -> R
+  ) {
+    collection.addAll(
+      data.flatMapIndexed { r, row ->
+        row.mapIndexed { c, cell ->
+          transform(Position(c, r), cell)
+        }
+      }
+    )
+  }
+
+  fun count(function: (T) -> Boolean) =
+    data.sumOf { row ->
+      row.count { cell ->
+        function(cell)
+      }
+    }
 }

@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.state
 
+import net.lab0.skyscrapers.Position
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -76,6 +77,34 @@ internal class MatrixTest {
         listOf(
           listOf(1, 1),
           listOf(99, 99),
+        )
+      )
+    )
+  }
+
+  @Test
+  fun `can swap elements`() {
+    val data = listOf(
+      listOf(1, 2),
+      listOf(4, 5),
+    )
+
+    val matrix = Matrix(data)
+    val reference = Matrix(data)
+
+    val onePosition = Position(0, 0)
+    val fourPosition = Position(0, 1)
+
+    val swapped = matrix.copyAndSwap(onePosition, fourPosition)
+
+    // matrix is immutable
+    assertThat(matrix).isEqualTo(reference)
+
+    assertThat(swapped).isEqualTo(
+      Matrix(
+        listOf(
+          listOf(4, 2),
+          listOf(1, 5),
         )
       )
     )

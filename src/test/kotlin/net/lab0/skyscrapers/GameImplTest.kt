@@ -300,7 +300,7 @@ internal class GameImplTest {
 
       // the opponent plays
       g.play(
-        DSL.player(1).placement.addBuilder(5, 5)
+        DSL.player(1).placement.addBuilder(4, 4)
       )
 
       // can't move the first builder before placing them all
@@ -314,41 +314,6 @@ internal class GameImplTest {
 
   @Nested
   inner class Movement {
-
-    // TODO: should the eliminated player keep their builders on the board?
-    @Test
-    fun `when a player gives up, he can't play anymore`() {
-      val g = newGameWithSequentiallyPlacedBuilders(
-        playerCount = 3,
-        buildersPerPlayer = 2,
-        width = 100
-      )
-
-      assertThat(g.turn).isEqualTo(6)
-      assertThat(g.currentPlayer).isEqualTo(0)
-
-      g.play(
-        DSL.player(0).building.giveUp()
-      )
-      assertThat(g.turn).isEqualTo(7)
-      assertThat(g.currentPlayer).isEqualTo(1)
-
-      g.play(
-        DSL.player(1).building.move().from(1, 0).to(1, 1).andBuild(1, 0)
-      )
-
-      assertThat(g.turn).isEqualTo(8)
-      assertThat(g.currentPlayer).isEqualTo(2)
-
-      g.play(
-        DSL.player(2).building.move().from(2, 0).to(2, 1).andBuild(2, 0)
-      )
-
-      // now the player 0 doesn't play because it gave up
-
-      assertThat(g.turn).isEqualTo(9)
-      assertThat(g.currentPlayer).isEqualTo(1)
-    }
 
     @Test
     fun `the player can move a builder`() {
@@ -389,22 +354,36 @@ internal class GameImplTest {
     fun `can't move another player's builder`() {
       val g = newGameWithSequentiallyPlacedBuilders()
 
-      assertThrows<IllegalMove> {
-        g.play(
-          DSL.player(0).building.move().from(1, 0).to(1, 1).andBuild(1, 0)
-        )
-      }
+      val from = P(1, 0)
+      val to = P(1, 1)
+
+      assertThat(
+        assertThrows<IllegalMove> {
+          g.play(
+            DSL.player(0).building.move().from(from).to(to).andBuild(1, 0)
+          )
+        }
+      ).isEqualTo(
+        IllegalMove(from, to, "can't move another player's builder")
+      )
     }
 
     @Test
     fun `can't move a builder that doesn't exist`() {
       val g = newGameWithSequentiallyPlacedBuilders()
 
-      assertThrows<IllegalMove> {
-        g.play(
-          DSL.player(0).building.move().from(5, 5).to(4, 4).andBuild(5, 5)
-        )
-      }
+      val from = P(4, 4)
+      val to = P(3, 3)
+
+      assertThat(
+        assertThrows<IllegalMove> {
+          g.play(
+            DSL.player(0).building.move().from(from).to(to).andBuild(4, 4)
+          )
+        }
+      ).isEqualTo(
+        IllegalMove(from, to, "there is no builder in the starting position")
+      )
     }
 
     @Test
@@ -438,6 +417,24 @@ internal class GameImplTest {
           DSL.player(0).building.move().from(0, 0).to(-1, -1).andBuild(0, 0)
         )
       }
+    }
+
+    @Test
+    fun `can't move from out of bounds`() {
+      val g = newGameWithSequentiallyPlacedBuilders()
+
+      val start = P(-1, 0)
+      val target = P(0, 0)
+
+      assertThat(
+        assertThrows<IllegalMove> {
+          g.play(
+            DSL.player(0).building.move().from(start).to(target).andBuild(1, 1)
+          )
+        }
+      ).isEqualTo(
+        IllegalMove(start, target, "can't move from out of bounds")
+      )
     }
 
     @Test
@@ -653,7 +650,7 @@ internal class GameImplTest {
             |. . . . .
             |. . . . .
           """.trimMargin(),
-          ) { if(it == ".") null else it.toInt() }
+          ) { if (it == ".") null else it.toInt() }
         )
       )
 
@@ -678,6 +675,41 @@ internal class GameImplTest {
 
   @Nested
   inner class Finished {
+
+    // TODO: should the eliminated player keep their builders on the board?
+    @Test
+    fun `when a player gives up, he can't play anymore`() {
+      val g = newGameWithSequentiallyPlacedBuilders(
+        playerCount = 3,
+        buildersPerPlayer = 2,
+        width = 100
+      )
+
+      assertThat(g.turn).isEqualTo(6)
+      assertThat(g.currentPlayer).isEqualTo(0)
+
+      g.play(
+        DSL.player(0).building.giveUp()
+      )
+      assertThat(g.turn).isEqualTo(7)
+      assertThat(g.currentPlayer).isEqualTo(1)
+
+      g.play(
+        DSL.player(1).building.move().from(1, 0).to(1, 1).andBuild(1, 0)
+      )
+
+      assertThat(g.turn).isEqualTo(8)
+      assertThat(g.currentPlayer).isEqualTo(2)
+
+      g.play(
+        DSL.player(2).building.move().from(2, 0).to(2, 1).andBuild(2, 0)
+      )
+
+      // now the player 0 doesn't play because it gave up
+
+      assertThat(g.turn).isEqualTo(9)
+      assertThat(g.currentPlayer).isEqualTo(1)
+    }
 
     @Test
     fun `when there is only 1 player remaining, the game is finished`() {

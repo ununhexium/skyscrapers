@@ -17,11 +17,10 @@ class GameImpl(
     Matrix(height, width) { Height(0) },
 
   private var seals: Matrix<Boolean> =
-    Matrix(width, height) { false },
+    Matrix(height, width) { false },
 
-  private val builders: MutableMap<Int, Set<Position>> = (0 until playerCount)
-    .toList().associateWith { mutableSetOf<Position>() }
-    .toMutableMap(),
+  private var builders: Matrix<Int?> =
+    Matrix(height, width) { null },
 ) : Game {
 
   companion object : NewGame
@@ -87,16 +86,26 @@ class GameImpl(
   // TODO: flip to row, column
   override fun getHeight(column: Int, row: Int) = buildings[row, column]
 
-  override fun getBuilders(player: Int) =
-    builders[player]?.toList()
-      ?: throw Exception("The player #$player doesn't exist")
+//  override fun getBuilders(player: Int) =
+//    builders[player]?.toList()
+//      ?: throw Exception("The player #$player doesn't exist")
+
+  override fun getBuilders(player: Int): List<Position> {
+    val result = mutableListOf<Position?>()
+
+    builders.mapIndexedTo(result) { position, cell ->
+      if (cell == player) position else null
+    }
+
+    return result.filterNotNull()
+  }
 
   override fun hasBuilder(position: Position) =
-    builders.values.any { it.contains(position) }
+    builders[position] != null
 
   override val phase: Phase
     get() {
-      val placedBuilders = builders.values.sumOf { it.size }
+      val placedBuilders = builders.count { it != null }
       return if (placedBuilders < totalBuilders) Phase.PLACEMENT else Phase.BUILD
     }
 
@@ -121,7 +130,7 @@ class GameImpl(
     if (currentPlayer != player)
       throw WrongPlayerTurn(player, currentPlayer)
 
-    builders[player] = builders[player]!! + position
+    builders = builders.copyAndSet(position, player)
   }
 
   override fun giveUp(player: Int) {
@@ -147,14 +156,9 @@ class GameImpl(
   ) {
     checkMovement(player, from, to)
 
-    val (nextHeight, nextBuildersPosition) = checkBuilding(
-      building,
-      to,
-      player,
-      from
-    )
+    val (nextHeight, nextBuildersPosition) = checkBuilding(building, to, from)
 
-    builders[player] = nextBuildersPosition
+    builders = nextBuildersPosition
 
     // remove the block that will be used to increase the height
     currentBlocks[nextHeight] = currentBlocks[nextHeight]!! - 1
@@ -176,9 +180,8 @@ class GameImpl(
   private fun checkBuilding(
     building: Position,
     to: Position,
-    player: Int,
     from: Position
-  ): Pair<Height, MutableSet<Position>> {
+  ): Pair<Height, Matrix<Int?>> {
     if (outsideTheBoard(building))
       throw IllegalBuilding(to, building, "outside of the board")
 
@@ -191,14 +194,9 @@ class GameImpl(
         "no block of height ${nextHeight.value} remaining"
       )
 
-    val nextBuildersPosition = builders[player]!!.toMutableSet() // copy
-    nextBuildersPosition.remove(from)
-    nextBuildersPosition.add(to)
+    val nextBuildersPosition = builders.copyAndSwap(from, to)
 
-    val allNextBuildersPositions: Collection<Position> =
-      builders.filterKeys { it != player }.values.flatten() + nextBuildersPosition
-
-    if (allNextBuildersPositions.contains(building))
+    if (nextBuildersPosition[building] != null)
       throw IllegalBuilding(
         to,
         building,
@@ -209,49 +207,59 @@ class GameImpl(
 
   private fun checkMovement(
     player: Int,
-    from: Position,
-    to: Position
+    start: Position,
+    target: Position
   ) {
     if (phase != Phase.BUILD)
-      throw IllegalMove(from, to, "this is the placement phase")
+      throw IllegalMove(start, target, "this is the placement phase")
 
     if (currentPlayer != player)
       throw WrongPlayerTurn(player, currentPlayer)
 
-    if (!builders[player]!!.contains(from))
-      throw IllegalMove(
-        from,
-        to,
+    if (outsideTheBoard(start))
+      throw IllegalMove(start, target, "can't move from out of bounds")
+
+    val originatingBuilder = builders[start]
+      ?: throw IllegalMove(
+        start,
+        target,
         "there is no builder in the starting position"
       )
 
-    if (hasBuilder(to))
-      throw IllegalMove(from, to, "there is a builder at the target position")
-
-    if (from == to)
-      throw IllegalMove(from, to, "the position must be different")
-
-    if (!from.nextTo(to))
-      throw IllegalMove(from, to, "too far away")
-
-    if (outsideTheBoard(to))
+    if (originatingBuilder != player)
       throw IllegalMove(
-        from,
-        to,
+        start,
+        target,
+        "can't move another player's builder"
+      )
+
+    if (outsideTheBoard(target))
+      throw IllegalMove(
+        start,
+        target,
         "the target position can't be outside of the board"
       )
 
-    val heightDifference = getHeight(to) - getHeight(from)
+    if (hasBuilder(target))
+      throw IllegalMove(start, target, "there is a builder at the target position")
+
+    if (start == target)
+      throw IllegalMove(start, target, "the position must be different")
+
+    if (!start.nextTo(target))
+      throw IllegalMove(start, target, "too far away")
+
+    val heightDifference = getHeight(target) - getHeight(start)
 
     if (heightDifference > 1)
       throw IllegalMove(
-        from,
-        to,
+        start,
+        target,
         "can't move more than 1 level each step. You tried to move up by ${heightDifference.value} levels"
       )
 
-    if (seals[to])
-      throw IllegalMove(from, to, "the position [${to.x}, ${to.y}] is sealed")
+    if (seals[target])
+      throw IllegalMove(start, target, "the position [${target.x}, ${target.y}] is sealed")
   }
 
   override fun isFinished(): Boolean {
@@ -270,20 +278,10 @@ class GameImpl(
     seals[pos]
 
   override fun getState(): GameStateData {
-    val buildersList = (0 until width).map {
-      (0 until height).map { null as Int? }.toMutableList()
-    }.toMutableList()
-
-    builders.forEach { (player, builders) ->
-      builders.forEach { (x, y) ->
-        buildersList[y][x] = player
-      }
-    }
-
     return GameStateData(
       buildings.map { it.value },
       seals.copy(),
-      Matrix(buildersList)
+      builders.copy(),
     )
   }
 }
