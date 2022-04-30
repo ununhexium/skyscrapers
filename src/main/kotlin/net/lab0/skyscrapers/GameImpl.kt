@@ -3,10 +3,7 @@ package net.lab0.skyscrapers
 import net.lab0.skyscrapers.api.*
 import net.lab0.skyscrapers.exception.*
 import net.lab0.skyscrapers.rule.*
-import net.lab0.skyscrapers.rule.move.BoardMoveContainmentRule
-import net.lab0.skyscrapers.rule.move.BuildingRangeRule
-import net.lab0.skyscrapers.rule.move.DefaultBuildersMovementRules
-import net.lab0.skyscrapers.rule.move.SealsPreventAnyMoveAndAction
+import net.lab0.skyscrapers.rule.move.*
 import net.lab0.skyscrapers.rule.placement.PlaceBuilderOnEmptyCell
 import net.lab0.skyscrapers.structure.*
 import java.util.LinkedList
@@ -40,6 +37,7 @@ class GameImpl(
   private val moveRules: List<Rule<TurnType.MoveTurn>> = listOf(
     BoardMoveContainmentRule,
     DefaultBuildersMovementRules,
+    MovementRangeRule(),
     BuildingRangeRule(),
     SealsPreventAnyMoveAndAction,
   ),
@@ -263,12 +261,6 @@ class GameImpl(
     start: Position,
     target: Position
   ) {
-    if (start == target)
-      throw IllegalMove(start, target, "the position must be different")
-
-    if (!start.nextTo(target))
-      throw IllegalMove(start, target, "too far away")
-
     val heightDifference = getHeight(target) - getHeight(start)
 
     if (heightDifference > 1)
@@ -309,8 +301,8 @@ class GameImpl(
 
   val backdoor = GameBackdoor(this)
 
-  override fun hasSeal(pos: Position): Boolean =
-    seals[pos]
+  override fun hasSeal(seal: Position) =
+    seals[seal]
 
   override fun getState(): GameStateData {
     return GameStateData(
@@ -322,4 +314,3 @@ class GameImpl(
     )
   }
 }
-

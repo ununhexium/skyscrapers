@@ -341,7 +341,7 @@ internal class GameImplTest {
     fun `the movement range of a builder is limited to the 8 cells around its initial position`() {
       val g = newGameWithSequentiallyPlacedBuilders()
 
-      assertThrows<IllegalMove> {
+      assertThrows<GameRuleViolationException> {
         g.play(
           DSL.player(0).building.move().from(0, 0).to(0, 2).andBuild(0, 1)
         )
