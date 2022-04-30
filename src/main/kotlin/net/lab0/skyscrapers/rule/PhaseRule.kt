@@ -13,8 +13,8 @@ object PhaseRule : Rule<TurnType> {
     turn: TurnType
   ): List<GameRuleViolation> {
     val phase = when(turn) {
-      is TurnType.MoveTurn.MoveAndBuildTurn -> Phase.MOVEMENT
-      is TurnType.MoveTurn.MoveAndSealTurn -> Phase.MOVEMENT
+      is TurnType.MoveTurn.BuildTurn -> Phase.MOVEMENT
+      is TurnType.MoveTurn.SealTurn -> Phase.MOVEMENT
       is TurnType.PlacementTurn -> Phase.PLACEMENT
       is TurnType.GiveUpTurn -> return listOf()
     }

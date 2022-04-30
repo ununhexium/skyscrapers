@@ -34,8 +34,8 @@ object BoardMoveContainmentRule : Rule<TurnType.MoveTurn> {
 
     if(!state.isWithinBounds(turn.sealOrBuild)) {
       val verb = when(turn) {
-        is TurnType.MoveTurn.MoveAndBuildTurn -> "build"
-        is TurnType.MoveTurn.MoveAndSealTurn -> "seal"
+        is TurnType.MoveTurn.BuildTurn -> "build"
+        is TurnType.MoveTurn.SealTurn -> "seal"
       }
       return listOf(
         GameRuleViolationImpl(

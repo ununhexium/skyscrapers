@@ -4,6 +4,7 @@ import net.lab0.skyscrapers.api.GameState
 
 data class GameStateData(
   override val phase: Phase,
+  override val blocks: Map<Height, Int>,
   override val currentPlayer: Int,
   override val buildings: Matrix<Int>,
   override val seals: Matrix<Boolean>,
@@ -11,10 +12,11 @@ data class GameStateData(
 ) : GameState {
   companion object {
     fun from(
+      phase: Phase? = null,
+      blocks: Map<Height, Int>,
       buildings: String,
       seals: String,
       builders: String,
-      phase: Phase? = null
     ): GameStateData {
       // TODO check that all the matrices has the same size
       val buildingsData = Matrix.from(buildings) { it.toInt() }
@@ -31,8 +33,9 @@ data class GameStateData(
         ?: if (buildingsData.data.sumOf { it.sumOf { it } } > 0) Phase.MOVEMENT else Phase.PLACEMENT
 
       // TODO: guess current player
+      // TODO: set blocks
 
-      return GameStateData(actualPhase, 0, buildingsData, sealsData, playersData)
+      return GameStateData(actualPhase, blocks,0, buildingsData, sealsData, playersData)
     }
   }
 

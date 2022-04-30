@@ -20,13 +20,13 @@ object SealsPreventAnyMoveAndAction : Rule<TurnType.MoveTurn> {
       )
     } else if (state.seals[turn.sealOrBuild]) {
       when (turn) {
-        is TurnType.MoveTurn.MoveAndBuildTurn -> listOf(
+        is TurnType.MoveTurn.BuildTurn -> listOf(
           GameRuleViolationImpl(
             this,
             "Can't build at ${turn.build} because it is sealed"
           )
         )
-        is TurnType.MoveTurn.MoveAndSealTurn -> listOf(
+        is TurnType.MoveTurn.SealTurn -> listOf(
           GameRuleViolationImpl(
             this,
             "Can't seal at ${turn.seal} because it is already sealed"

@@ -10,6 +10,7 @@ internal class GameStateDataTest {
   companion object {
     val state = GameStateData(
       Phase.MOVEMENT,
+      mapOf(),
       0,
       Matrix(
         listOf(
@@ -38,6 +39,8 @@ internal class GameStateDataTest {
   @Test
   fun `can store the initial state from strings`() {
     val parsed = GameStateData.from(
+      Phase.MOVEMENT,
+      mapOf(),
       """
           1 0 3 4
           0 2 0 0

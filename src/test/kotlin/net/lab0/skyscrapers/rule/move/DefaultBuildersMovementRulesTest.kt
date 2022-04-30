@@ -13,7 +13,7 @@ internal class DefaultBuildersMovementRulesTest {
   fun `can move a builder`() {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
     val rule = DefaultBuildersMovementRules
-    val turn = TurnType.MoveTurn.MoveAndBuildTurn(
+    val turn = TurnType.MoveTurn.BuildTurn(
       0,
       Position(0, 0),
       Position(1, 1),
@@ -27,7 +27,7 @@ internal class DefaultBuildersMovementRulesTest {
   fun `can't move a builder that doesn't exist`() {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
     val rule = DefaultBuildersMovementRules
-    val turn = TurnType.MoveTurn.MoveAndBuildTurn(
+    val turn = TurnType.MoveTurn.BuildTurn(
       0,
       Position(1, 1),
       Position(1, 2),
@@ -50,7 +50,7 @@ internal class DefaultBuildersMovementRulesTest {
     val rule = DefaultBuildersMovementRules
     val target = Position(1, 2)
 
-    val turn = TurnType.MoveTurn.MoveAndBuildTurn(
+    val turn = TurnType.MoveTurn.BuildTurn(
       0,
       Position(0, 0),
       target,
@@ -74,7 +74,7 @@ internal class DefaultBuildersMovementRulesTest {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
     val rule = DefaultBuildersMovementRules
 
-    val turn = TurnType.MoveTurn.MoveAndBuildTurn(
+    val turn = TurnType.MoveTurn.BuildTurn(
       0,
       Position(1, 0),
       Position(1, 2),

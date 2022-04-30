@@ -15,7 +15,7 @@ internal class BoardMoveContainmentRuleTest {
 
     g.getState()
 
-    val turn = TurnType.MoveTurn.MoveAndBuildTurn(
+    val turn = TurnType.MoveTurn.BuildTurn(
       0,
       Position(0, 0),
       Position(1, 1),
@@ -29,7 +29,7 @@ internal class BoardMoveContainmentRuleTest {
   fun `can't move from outside the board`() {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
 
-    val turn = TurnType.MoveTurn.MoveAndBuildTurn(
+    val turn = TurnType.MoveTurn.BuildTurn(
       0,
       Position(-1, -1),
       Position(0, 0),
@@ -52,7 +52,7 @@ internal class BoardMoveContainmentRuleTest {
   fun `can't move outside of the board`() {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
 
-    val turn = TurnType.MoveTurn.MoveAndBuildTurn(
+    val turn = TurnType.MoveTurn.BuildTurn(
       0,
       Position(0, 0),
       Position(-1, -1),
@@ -75,7 +75,7 @@ internal class BoardMoveContainmentRuleTest {
   fun `can't build outside of the board`() {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
 
-    val turn = TurnType.MoveTurn.MoveAndBuildTurn(
+    val turn = TurnType.MoveTurn.BuildTurn(
       0,
       Position(0, 0),
       Position(1, 0),
@@ -98,7 +98,7 @@ internal class BoardMoveContainmentRuleTest {
   fun `can't seal outside of the board`() {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
 
-    val turn = TurnType.MoveTurn.MoveAndSealTurn(
+    val turn = TurnType.MoveTurn.SealTurn(
       0,
       Position(0, 0),
       Position(1, 0),

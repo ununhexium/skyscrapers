@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 internal class BuildingRangeRuleTest {
   @Test
   fun `the player can build in the 8 cells around where it moved`() {
-    val turn = TurnType.MoveTurn.MoveAndBuildTurn(
+    val turn = TurnType.MoveTurn.BuildTurn(
       0, Position(0, 0), Position(0, 1), Position(0, 0)
     )
 
@@ -28,7 +28,7 @@ internal class BuildingRangeRuleTest {
     val target = Position(0, 1)
     val build = Position(0, 3)
 
-    val turn = TurnType.MoveTurn.MoveAndBuildTurn(
+    val turn = TurnType.MoveTurn.BuildTurn(
       0, start, target, build
     )
 

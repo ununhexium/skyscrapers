@@ -79,9 +79,9 @@ interface Game {
    * Moves a builder of a player from a position to another
    * and checks for the validity of that action
    */
-  fun moveAndBuild(turn: MoveAndBuild)
+  fun moveAndBuild(turn: Build)
 
-  fun moveAndSeal(turn: MoveAndSeal)
+  fun moveAndSeal(turn: Seal)
 
   fun hasSeal(seal: Position): Boolean
 

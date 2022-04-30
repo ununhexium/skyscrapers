@@ -45,11 +45,11 @@ data class BuildDSL(
     andBuild(Position(x, y))
 
   fun andBuild(pos: Position) =
-    TurnType.MoveTurn.MoveAndBuildTurn(player, start, target, pos)
+    TurnType.MoveTurn.BuildTurn(player, start, target, pos)
 
   fun andSeal(x: Int, y: Int) =
     andSeal(Position(x, y))
 
   fun andSeal(pos: Position) =
-    TurnType.MoveTurn.MoveAndSealTurn(player, start, target, pos)
+    TurnType.MoveTurn.SealTurn(player, start, target, pos)
 }

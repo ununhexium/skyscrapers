@@ -23,6 +23,8 @@ internal class GameImplTest {
 
       assertThat(g.getState()).isEqualTo(
         GameStateData.from(
+          Phase.MOVEMENT,
+          Defaults.BLOCKS,
           """
             0 0 0 0 0
             0 0 0 0 0
@@ -46,8 +48,6 @@ internal class GameImplTest {
             . . . . .
             . . . . .
           """.trimIndent(),
-
-          phase = Phase.MOVEMENT
         )
       )
     }
@@ -314,6 +314,9 @@ internal class GameImplTest {
       assertThat(g.getState()).isEqualTo(
         state0.copy(
           currentPlayer = 1,
+          blocks = state0.blocks
+            .toMutableMap()
+            .also { it[Height(1)] = it[Height(1)]!! - 1 },
           buildings = BuildingsMatrix.from(
             """
               |1 0 0 0 0
@@ -553,8 +556,7 @@ internal class GameImplTest {
       val builderTargetPosition = P(1, 1)
       val buildingPosition = P(1, 0)
 
-      assertThat(
-        assertThrows<IllegalBuilding> {
+        assertThrows<GameRuleViolationException> {
           g.play(
             DSL.player(1).building
               .move()
@@ -563,13 +565,6 @@ internal class GameImplTest {
               .andBuild(buildingPosition)
           )
         }
-      ).isEqualTo(
-        IllegalBuilding(
-          builderTargetPosition,
-          buildingPosition,
-          "no block of height 1 remaining"
-        )
-      )
     }
 
     @Test

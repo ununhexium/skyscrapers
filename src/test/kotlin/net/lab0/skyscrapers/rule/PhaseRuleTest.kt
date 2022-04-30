@@ -37,7 +37,7 @@ internal class PhaseRuleTest {
   @Test
   fun `can move builders during the movement phase`() {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
-    val turn = TurnType.MoveTurn.MoveAndSealTurn(
+    val turn = TurnType.MoveTurn.SealTurn(
       0,
       Position(0, 0),
       Position(1, 0),
@@ -51,7 +51,7 @@ internal class PhaseRuleTest {
   @Test
   fun `can't move builders during the placement phase`() {
     val g = Game.new()
-    val turn = TurnType.MoveTurn.MoveAndSealTurn(
+    val turn = TurnType.MoveTurn.SealTurn(
       0,
       Position(0, 0),
       Position(1, 0),

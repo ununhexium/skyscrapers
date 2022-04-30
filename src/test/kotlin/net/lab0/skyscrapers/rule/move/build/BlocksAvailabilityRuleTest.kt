@@ -1,50 +1,53 @@
-package net.lab0.skyscrapers.rule.move
+package net.lab0.skyscrapers.rule.move.build
 
 import net.lab0.skyscrapers.DefaultGames
 import net.lab0.skyscrapers.GameImpl
 import net.lab0.skyscrapers.api.TurnType
 import net.lab0.skyscrapers.rule.GameRuleViolationImpl
+import net.lab0.skyscrapers.structure.Height
 import net.lab0.skyscrapers.structure.Position
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class ClimbingRuleTest {
+internal class BlocksAvailabilityRuleTest {
   @Test
-  fun `can climb up 1 step at a time`() {
+  fun `can build`() {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
-    val target = Position(1, 1)
     val turn = TurnType.MoveTurn.BuildTurn(
       0,
       Position(0, 0),
-      target,
+      Position(1, 1),
       Position(2, 2)
     )
-    val rule = ClimbingRule()
-
-    (g as GameImpl).backdoor.setHeight(target, 1)
+    val rule = BlocksAvailabilityRule()
 
     assertThat(rule.checkRule(g.getState(), turn)).isEmpty()
   }
 
   @Test
-  fun `can't climb up 2 steps at a time`() {
-    val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
-    val target = Position(1, 1)
+  fun `can't build when there is no block available`() {
+    val g =
+      DefaultGames.newGameWithSequentiallyPlacedBuilders(
+        blocks = mapOf(Height(1) to 1)
+      )
+
+    val build = Position(2, 2)
     val turn = TurnType.MoveTurn.BuildTurn(
       0,
       Position(0, 0),
-      target,
-      Position(2, 2)
+      Position(1, 1),
+      build,
     )
-    val rule = ClimbingRule()
 
-    (g as GameImpl).backdoor.setHeight(target, 2)
+    val rule = BlocksAvailabilityRule()
+
+    (g as GameImpl).backdoor.setHeight(build, 1)
 
     assertThat(rule.checkRule(g.getState(), turn)).isEqualTo(
       listOf(
         GameRuleViolationImpl(
           rule,
-          "Can't climb from [0, 0] height=0 to [1, 1] height = 2"
+          "There is no block of height 2 available anymore"
         )
       )
     )

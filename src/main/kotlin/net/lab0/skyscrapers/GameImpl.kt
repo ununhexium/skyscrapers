@@ -4,6 +4,7 @@ import net.lab0.skyscrapers.api.*
 import net.lab0.skyscrapers.exception.*
 import net.lab0.skyscrapers.rule.*
 import net.lab0.skyscrapers.rule.move.*
+import net.lab0.skyscrapers.rule.move.build.BlocksAvailabilityRule
 import net.lab0.skyscrapers.rule.placement.CantGiveUpDuringPlacementRule
 import net.lab0.skyscrapers.rule.placement.PlaceBuilderOnEmptyCell
 import net.lab0.skyscrapers.structure.*
@@ -43,6 +44,10 @@ class GameImpl(
     ClimbingRule(),
     BuildingRangeRule(),
     SealsPreventAnyMoveAndAction,
+  ),
+
+  private val buildRules: List<Rule<TurnType.MoveTurn.BuildTurn>> = listOf(
+    BlocksAvailabilityRule(),
   ),
 ) : Game {
 
@@ -104,7 +109,7 @@ class GameImpl(
     initialBlocks.toMutableMap()
 
   override val blocks: Map<Height, Int>
-    get() = currentBlocks
+    get() = currentBlocks.toMap()
 
   override fun getHeight(column: Int, row: Int) = buildings[column, row]
 
@@ -141,8 +146,11 @@ class GameImpl(
         throwIfViolatedRule(moveRules, turn)
 
         when (turn) {
-          is TurnType.MoveTurn.MoveAndBuildTurn -> moveAndBuild(turn)
-          is TurnType.MoveTurn.MoveAndSealTurn -> moveAndSeal(turn)
+          is TurnType.MoveTurn.BuildTurn -> {
+            throwIfViolatedRule(buildRules, turn)
+            moveAndBuild(turn)
+          }
+          is TurnType.MoveTurn.SealTurn -> moveAndSeal(turn)
         }
       }
     }
@@ -188,7 +196,7 @@ class GameImpl(
     pos.x < 0 || pos.x >= width || pos.y < 0 || pos.y >= height
 
   override fun moveAndBuild(
-    turn: MoveAndBuild
+    turn: Build
   ) {
     val (nextHeight, nextBuildersPosition) = checkBuilding(
       turn.build,
@@ -204,7 +212,7 @@ class GameImpl(
     buildings = buildings.copyAndSet(turn.build, buildings[turn.build] + 1)
   }
 
-  override fun moveAndSeal(turn: MoveAndSeal) {
+  override fun moveAndSeal(turn: Seal) {
     val nextBuilderPosition = builders.copyAndSwap(turn.start, turn.target)
 
     if (seals[turn.target])
@@ -224,13 +232,6 @@ class GameImpl(
     from: Position
   ): Pair<Height, Matrix<Int?>> {
     val nextHeight = buildings[building] + 1
-    val availableBlocks = blocks[nextHeight]!!
-    if (availableBlocks == 0)
-      throw IllegalBuilding(
-        to,
-        building,
-        "no block of height ${nextHeight.value} remaining"
-      )
 
     val nextBuildersPosition = builders.copyAndSwap(from, to)
 
@@ -280,6 +281,7 @@ class GameImpl(
   override fun getState(): GameStateData {
     return GameStateData(
       phase,
+      blocks,
       currentPlayer,
       buildings.map { it.value },
       seals.copy(),
