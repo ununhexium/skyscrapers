@@ -1,7 +1,8 @@
 package net.lab0.skyscrapers
 
-import net.lab0.skyscrapers.api.Game
+import net.lab0.skyscrapers.api.*
 import net.lab0.skyscrapers.exception.*
+import net.lab0.skyscrapers.rule.BuildingRangeRule
 import net.lab0.skyscrapers.structure.*
 import java.util.LinkedList
 
@@ -21,6 +22,10 @@ class GameImpl(
 
   private var builders: Matrix<Int?> =
     Matrix(height, width) { null },
+
+  private val moveRules: List<Rule<Move>> = listOf(
+    BuildingRangeRule()
+  )
 ) : Game {
 
   companion object : NewGame
@@ -108,8 +113,22 @@ class GameImpl(
       return if (placedBuilders < totalBuilders) Phase.PLACEMENT else Phase.BUILD
     }
 
-  override fun play(action: Action) {
-    action(this)
+  override fun play(turn: TurnType) {
+    when (turn) {
+      is TurnType.PlacementTurn -> addBuilder(turn)
+      is TurnType.GiveUpTurn -> giveUp(turn)
+      is TurnType.MoveTurn -> {
+        // apply move rules
+        val violations = moveRules.flatMap { it.checkRule(getState(), turn) }
+        if(violations.isNotEmpty())
+          throw GameRuleViolatedException(violations)
+
+        when (turn) {
+          is TurnType.MoveTurn.MoveAndBuildTurn -> moveAndBuild(turn)
+          is TurnType.MoveTurn.SealMoveTurn -> moveAndSeal(turn)
+        }
+      }
+    }
 
     internalTurns++
 
@@ -122,19 +141,20 @@ class GameImpl(
     }
   }
 
-  override fun addBuilder(player: Int, position: Position) {
-    if (hasBuilder(position))
-      throw CellUsedByAnotherBuilder(position)
+  override fun addBuilder(turn: Placement) {
+    // TODO: implement as rules
+    if (hasBuilder(turn.position))
+      throw CellUsedByAnotherBuilder(turn.position)
 
-    if (currentPlayer != player)
-      throw WrongPlayerTurn(player, currentPlayer)
+    if (currentPlayer != turn.player)
+      throw WrongPlayerTurn(turn.player, currentPlayer)
 
-    builders = builders.copyAndSet(position, player)
+    builders = builders.copyAndSet(turn.position, turn.player)
   }
 
-  override fun giveUp(player: Int) {
-    if (currentPlayer != player)
-      throw WrongPlayerTurn(player, currentPlayer)
+  override fun giveUp(turn: GiveUp) {
+    if (currentPlayer != turn.player)
+      throw WrongPlayerTurn(turn.player, currentPlayer)
 
     if (phase == Phase.PLACEMENT)
       throw CantGiveUpInThePlacementPhase()
@@ -148,17 +168,14 @@ class GameImpl(
     pos.x < 0 || pos.x >= width || pos.y < 0 || pos.y >= height
 
   override fun moveAndBuild(
-    player: Int,
-    start: Position,
-    target: Position,
-    building: Position
+    turn: MoveAndBuild
   ) {
-    checkMovement(player, start, target)
+    checkMovement(turn.player, turn.start, turn.target)
 
     val (nextHeight, nextBuildersPosition) = checkBuilding(
-      building,
-      target,
-      start
+      turn.build,
+      turn.target,
+      turn.start
     )
 
     builders = nextBuildersPosition
@@ -166,28 +183,23 @@ class GameImpl(
     // remove the block that will be used to increase the height
     currentBlocks[nextHeight] = currentBlocks[nextHeight]!! - 1
 
-    buildings = buildings.copyAndSet(building, buildings[building] + 1)
+    buildings = buildings.copyAndSet(turn.build, buildings[turn.build] + 1)
   }
 
-  override fun moveAndBuildSeal(
-    player: Int,
-    start: Position,
-    target: Position,
-    seal: Position
-  ) {
-    checkMovement(player, start, target)
+  override fun moveAndSeal(turn: MoveAndSeal) {
+    checkMovement(turn.player, turn.start, turn.target)
 
-    val nextBuilderPosition = builders.copyAndSwap(start, target)
+    val nextBuilderPosition = builders.copyAndSwap(turn.start, turn.target)
 
-    if (seals[target])
+    if (seals[turn.target])
       throw IllegalMove(
-        start,
-        target,
-        "the position [${target.x}, ${target.y}] is sealed"
+        turn.start,
+        turn.target,
+        "the position [${turn.target.x}, ${turn.target.y}] is sealed"
       )
 
     builders = nextBuilderPosition
-    seals = seals.copyAndSet(seal, true)
+    seals = seals.copyAndSet(turn.seal, true)
   }
 
   private fun checkBuilding(

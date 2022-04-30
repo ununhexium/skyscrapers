@@ -1,6 +1,7 @@
 package net.lab0.skyscrapers.action
 
-import net.lab0.skyscrapers.Action
+import net.lab0.skyscrapers.api.Turn
+import net.lab0.skyscrapers.api.TurnType
 import net.lab0.skyscrapers.structure.Position
 
 object DSL {
@@ -15,15 +16,13 @@ data class PhaseStepDSL(val player: Int) {
 data class PlacementStepDSL(val player: Int) {
   fun addBuilder(x: Int, y: Int) = addBuilder(Position(x, y))
 
-  fun addBuilder(pos: Position): Action = { game ->
-    game.addBuilder(player, pos)
-  }
+  fun addBuilder(pos: Position) =
+    TurnType.PlacementTurn(player, pos)
 }
 
 data class BuildingStepDSL(val player: Int) {
-  fun giveUp(): Action = { game ->
-    game.giveUp(player)
-  }
+  fun giveUp() =
+    TurnType.GiveUpTurn(player)
 
   fun move() = MoveStepFromDSL(player)
 }
@@ -40,20 +39,18 @@ data class MoveStepToDSL(val player: Int, val from: Position) {
 
 data class BuildDSL(
   val player: Int,
-  val from: Position,
-  val to: Position
+  val start: Position,
+  val target: Position
 ) {
   fun andBuild(x: Int, y: Int) =
     andBuild(Position(x, y))
 
-  fun andBuild(pos: Position): Action = { game ->
-    game.moveAndBuild(player, from, to, pos)
-  }
+  fun andBuild(pos: Position) =
+    TurnType.MoveTurn.MoveAndBuildTurn(player, start, target, pos)
 
   fun andSeal(x: Int, y: Int) =
     andSeal(Position(x, y))
 
-  fun andSeal(pos: Position): Action = { game ->
-    game.moveAndBuildSeal(player, from, to, pos)
-  }
+  fun andSeal(pos: Position) =
+    TurnType.MoveTurn.SealMoveTurn(player, start, target, pos)
 }

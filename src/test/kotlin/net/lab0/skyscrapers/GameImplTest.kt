@@ -5,7 +5,7 @@ import net.lab0.skyscrapers.action.DSL
 import net.lab0.skyscrapers.api.Game
 import net.lab0.skyscrapers.exception.*
 import org.assertj.core.api.Assertions.assertThat
-import net.lab0.skyscrapers.assertj.GameStateAssert.Companion.assertThat
+import net.lab0.skyscrapers.assertj.GameStateAssert.Companion.assertThat as atg
 import net.lab0.skyscrapers.structure.*
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Nested
@@ -341,7 +341,7 @@ internal class GameImplTest {
 
       assertThrows<IllegalMove> {
         g.play(
-          DSL.player(0).building.move().from(0, 0).to(0, 2).andBuild(0, 0)
+          DSL.player(0).building.move().from(0, 0).to(0, 2).andBuild(0, 1)
         )
       }
     }
@@ -352,7 +352,7 @@ internal class GameImplTest {
 
       assertThrows<IllegalMove> {
         g.play(
-          DSL.player(0).building.move().from(0, 0).to(0, 0).andBuild(0, 0)
+          DSL.player(0).building.move().from(0, 0).to(0, 0).andBuild(0, 1)
         )
       }
     }
@@ -596,6 +596,21 @@ internal class GameImplTest {
           "no block of height 1 remaining"
         )
       )
+    }
+
+    @Test
+    fun `can't build more than 1 tile away from the moved builder`() {
+      val g = newGameWithSequentiallyPlacedBuilders()
+
+      assertThrows<GameRuleViolatedException> {
+        g.play(
+          DSL.player(0).building
+            .move()
+            .from(P(0, 0))
+            .to(P(0, 1))
+            .andBuild(P(4, 4))
+        )
+      }
     }
   }
 

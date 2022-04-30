@@ -1,6 +1,5 @@
 package net.lab0.skyscrapers.api
 
-import net.lab0.skyscrapers.Action
 import net.lab0.skyscrapers.NewGame
 import net.lab0.skyscrapers.structure.GameStateData
 import net.lab0.skyscrapers.structure.Height
@@ -66,33 +65,23 @@ interface Game {
 
   fun getBuilders(player: Int): List<Position>
 
-  fun play(action: Action)
-  fun addBuilder(player: Int, position: Position)
+  fun play(turn: TurnType)
+  fun addBuilder(turn: Placement)
   fun hasBuilder(position: Position): Boolean
 
   /**
    * The player abandons the game.
    * The other players continue playing until there is only 1 remaining.
    */
-  fun giveUp(player: Int)
+  fun giveUp(turn: GiveUp)
 
   /**
    * Moves a builder of a player from a position to another
    * and checks for the validity of that action
    */
-  fun moveAndBuild(
-    player: Int,
-    start: Position,
-    target: Position,
-    building: Position
-  )
+  fun moveAndBuild(turn: MoveAndBuild)
 
-  fun moveAndBuildSeal(
-    player: Int,
-    start: Position,
-    target: Position,
-    seal: Position
-  )
+  fun moveAndSeal(turn: MoveAndSeal)
 
   fun hasSeal(seal: Position): Boolean
 
