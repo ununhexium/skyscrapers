@@ -2,6 +2,7 @@ package net.lab0.skyscrapers
 
 import net.lab0.skyscrapers.exception.*
 import net.lab0.skyscrapers.state.GameStateData
+import net.lab0.skyscrapers.state.Matrix
 import java.util.LinkedList
 
 class GameImpl(
@@ -272,15 +273,14 @@ class GameImpl(
 
     builders.forEach { (player, builders) ->
       builders.forEach { (x, y) ->
-        println("buildersList[$x][$y] = $player")
-        buildersList[x][y] = player
+        buildersList[y][x] = player
       }
     }
 
     return GameStateData(
-      buildings.map { it.map { it.value } },
-      seals.map { it.toList() },
-      buildersList
+      Matrix(buildings.map { it.map { it.value } }),
+      Matrix(seals.map { it.toList() }),
+      Matrix(buildersList)
     )
   }
 }

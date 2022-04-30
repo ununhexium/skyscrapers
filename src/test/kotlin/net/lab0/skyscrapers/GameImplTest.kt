@@ -3,6 +3,7 @@ package net.lab0.skyscrapers
 import net.lab0.skyscrapers.actions.DSL
 import net.lab0.skyscrapers.exception.*
 import net.lab0.skyscrapers.state.GameStateData
+import net.lab0.skyscrapers.state.Matrix
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Nested
@@ -620,6 +621,8 @@ internal class GameImplTest {
       val start = P(1, 0)
       val seal = P(0, 0)
 
+      val state0 = g.getState()
+
       g.play(
         DSL.player(0).building
           .move()
@@ -628,31 +631,26 @@ internal class GameImplTest {
           .andBuildSeal(seal)
       )
 
-      assertThat(        g.getState()      ).isEqualTo(
-        GameStateData.from(
-          """
-            0 0 0 0 0
-            0 0 0 0 0
-            0 0 0 0 0
-            0 0 0 0 0
-            0 0 0 0 0
-          """.trimIndent(),
-
-          """
-            1 0 0 0 0
-            0 0 0 0 0
-            0 0 0 0 0
-            0 0 0 0 0
-            0 0 0 0 0
-          """.trimIndent(),
-
-          """
-            0 2 1 2 0
-            1 0 0 0 0 
-            0 0 0 0 0
-            0 0 0 0 0
-            0 0 0 0 0
-          """.trimIndent()
+      assertThat(g.getState()).isEqualTo(
+        state0.copy(
+          seals = Matrix.from(
+            """
+            |1 0 0 0 0
+            |0 0 0 0 0
+            |0 0 0 0 0
+            |0 0 0 0 0
+            |0 0 0 0 0
+          """.trimMargin(),
+          ) { it == "1" },
+          builders = Matrix.from(
+            """
+            |. 1 0 1 .
+            |0 . . . .
+            |. . . . .
+            |. . . . .
+            |. . . . .
+          """.trimMargin(),
+          ) { if(it == ".") null else it.toInt() }
         )
       )
 

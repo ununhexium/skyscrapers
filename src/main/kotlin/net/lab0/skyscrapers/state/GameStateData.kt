@@ -3,9 +3,9 @@ package net.lab0.skyscrapers.state
 import net.lab0.skyscrapers.flip
 
 data class GameStateData(
-  override val buildings: List<List<Int>>,
-  override val seals: List<List<Boolean>>,
-  override val builders: List<List<Int?>>,
+  override val buildings: Matrix<Int>,
+  override val seals: Matrix<Boolean>,
+  override val builders: Matrix<Int?>,
 ) : GameState {
   companion object {
     fun from(
@@ -13,56 +13,29 @@ data class GameStateData(
       seals: String,
       builders: String
     ): GameStateData {
-      val buildingsData = buildings
-        .filter { it.isDigit() || it == '\n' }
-        .split("\n")
-        .map { it.map { char -> char.toString().toInt() } }
-        .flip()
+      val buildingsData = Matrix.from(buildings) { it.toInt() }
 
-      val sealsData = seals
-        .filter { it.isDigit() || it == '\n' }
-        .split("\n")
-        .map { it.map { char -> char == '1' } }
-        .flip()
+      val sealsData = Matrix.from(seals) { it == "1" }
 
-      val playersData = builders
-        .filter { it.isDigit() || it == '\n' || it == '.' }
-        .split("\n")
-        .map {
-          it.map { char ->
-            if (char == '.') null else char.toString().toInt()
-          }
-        }
-        .flip()
+      val playersData = Matrix.from(builders) {
+        if (it == ".") null else it.toInt()
+      }
 
       return GameStateData(buildingsData, sealsData, playersData)
     }
   }
 
   override fun toString(): String {
-    val buildings = buildings.flip().joinToString(separator = "\n") {
-      it.joinToString(separator = " ")
-    }
-
-    val seals = seals.flip().joinToString(separator = "\n") {
-      it.joinToString(separator = " ") { present -> if (present) "1" else "0" }
-    }
-
-    val builders = builders.flip().joinToString(separator = "\n") {
-      it.joinToString(separator = " ") { player ->
-        player?.toString() ?: "."
-      }
-    }
 
     return """
       |Buildings
       |$buildings
       |
       |Seals
-      |$seals
+      |${seals.toString { if (it) "1" else "0" }}
       |
       |Builders
-      |$builders
+      |${builders.toString { it?.toString() ?: "." }}
     """.trimMargin()
   }
 }

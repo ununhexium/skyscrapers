@@ -15,8 +15,10 @@ internal class MatrixTest {
 
   @Test
   fun `can get elements from the matrix`() {
-    assertThat(matrix[0,0]).isEqualTo(1)
-    assertThat(matrix[1,2]).isEqualTo(6)
+    assertThat(matrix[0, 0]).isEqualTo(1)
+    assertThat(matrix[0, 2]).isEqualTo(3)
+    assertThat(matrix[1, 0]).isEqualTo(4)
+    assertThat(matrix[1, 2]).isEqualTo(6)
   }
 
   @Test
@@ -31,11 +33,51 @@ internal class MatrixTest {
 
   @Test
   fun `can parse a string into a matrix`() {
-    Matrix.from(
+    val m = Matrix.from(
       """
         |1 2 3
         |4 5 6
       """.trimMargin()
     ) { it.toInt() }
+
+    assertThat(m).isEqualTo(matrix)
+  }
+
+  @Test
+  fun `can parse matrix with nullable fields`() {
+    val m = Matrix.from(
+      """
+        |1 . .
+        |. . 6
+      """.trimMargin()
+    ) { if (it == ".") null else it.toInt() }
+
+    assertThat(m).isEqualTo(
+      Matrix(
+        listOf(
+          listOf(1, null, null),
+          listOf(null, null, 6),
+        )
+      )
+    )
+  }
+
+  @Test
+  fun `can parse matrix with variable spacing`() {
+    val m = Matrix.from(
+      """
+        |1  1
+        |99 99
+      """.trimMargin()
+    ) { if (it == ".") null else it.toInt() }
+
+    assertThat(m).isEqualTo(
+      Matrix(
+        listOf(
+          listOf(1, 1),
+          listOf(99, 99),
+        )
+      )
+    )
   }
 }

@@ -25,7 +25,7 @@ data class Matrix<T>(
     fun <T> from(
       input: String,
       rowSeparator: String = "\n",
-      columnSeparator: String = " ",
+      columnSeparator: Regex = Regex(" +"),
       converter: (String) -> T,
     ) = Matrix(
       input.split(rowSeparator).map { row ->
@@ -44,19 +44,23 @@ data class Matrix<T>(
    * Prints the matrix as follows
    *
    * ```
-   *   X 0 1 2 3 . . . M
+   *   X   0   1   2   3   .   .   .   N
    * Y
-   * 0
-   * 1
-   * 2
+   * 0     a00 a01 a02 a03 .   .   .   a1N
+   * 1     a10 a11 a12 a13 .   .   .   a1N
+   * 2     a20 a21 a22 a23 .   .   .   a2N
    * .
    * .
-   * .N
+   * .
+   * M     a10 a11 a12 a13 .   .   .   a1N
    *
    * ```
    */
-  override fun toString() =
+  fun toString(converter: (T) -> String) =
     data.joinToString("\n") { row ->
-      row.joinToString(" ") { it.toString() }
+      row.joinToString(" ", transform = converter)
     }
+
+  override fun toString() =
+    toString { element -> element.toString() }
 }
