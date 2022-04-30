@@ -2,12 +2,15 @@ package net.lab0.skyscrapers
 
 import net.lab0.skyscrapers.structure.GameStateData
 import net.lab0.skyscrapers.structure.Matrix
+import net.lab0.skyscrapers.structure.Phase
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 internal class GameStateDataTest {
   companion object {
     val state = GameStateData(
+      Phase.MOVEMENT,
+      0,
       Matrix(
         listOf(
           listOf(1, 0, 3, 4),

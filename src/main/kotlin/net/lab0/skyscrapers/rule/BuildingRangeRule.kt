@@ -2,6 +2,9 @@ package net.lab0.skyscrapers.rule
 
 import net.lab0.skyscrapers.api.*
 
+/**
+ * Limit the building range of the player
+ */
 class BuildingRangeRule : Rule<TurnType.MoveTurn> {
   override val name = "Building range limit"
   override val description =

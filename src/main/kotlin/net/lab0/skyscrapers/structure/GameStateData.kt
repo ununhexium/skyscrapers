@@ -3,7 +3,8 @@ package net.lab0.skyscrapers.structure
 import net.lab0.skyscrapers.api.GameState
 
 data class GameStateData(
-  // TODO make more typesafe with value classes
+  override val phase: Phase,
+  override val currentPlayer: Int,
   override val buildings: Matrix<Int>,
   override val seals: Matrix<Boolean>,
   override val builders: Matrix<Int?>,
@@ -12,7 +13,8 @@ data class GameStateData(
     fun from(
       buildings: String,
       seals: String,
-      builders: String
+      builders: String,
+      phase: Phase? = null
     ): GameStateData {
       // TODO check that all the matrices has the same size
       val buildingsData = Matrix.from(buildings) { it.toInt() }
@@ -23,7 +25,14 @@ data class GameStateData(
         if (it == ".") null else it.toInt()
       }
 
-      return GameStateData(buildingsData, sealsData, playersData)
+      // guess the phase
+
+      val actualPhase = phase
+        ?: if (buildingsData.data.sumOf { it.sumOf { it } } > 0) Phase.MOVEMENT else Phase.PLACEMENT
+
+      // TODO: guess current player
+
+      return GameStateData(actualPhase, 0, buildingsData, sealsData, playersData)
     }
   }
 

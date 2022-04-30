@@ -45,7 +45,9 @@ internal class GameImplTest {
             . . . . .
             . . . . .
             . . . . .
-          """.trimIndent()
+          """.trimIndent(),
+
+          phase = Phase.MOVEMENT
         )
       )
     }
@@ -193,7 +195,7 @@ internal class GameImplTest {
         DSL.player(0).placement.addBuilder(0, 0)
       )
 
-      assertThrows<WrongPlayerTurn> {
+      assertThrows<GameRuleViolationException> {
         g.play(
           DSL.player(0).placement.addBuilder(1, 1)
         )
@@ -203,7 +205,7 @@ internal class GameImplTest {
         DSL.player(1).placement.addBuilder(1, 1)
       )
 
-      assertThrows<WrongPlayerTurn> {
+      assertThrows<GameRuleViolationException> {
         g.play(
           DSL.player(1).placement.addBuilder(2, 2)
         )
@@ -285,7 +287,7 @@ internal class GameImplTest {
       )
 
       // can't move the first builder before placing them all
-      assertThrows<IllegalMove> {
+      assertThrows<GameRuleViolationException> {
         g.play(
           DSL.player(0).building.move().from(0, 0).to(0, 1).andBuild(0, 0)
         )
@@ -311,6 +313,7 @@ internal class GameImplTest {
 
       assertThat(g.getState()).isEqualTo(
         state0.copy(
+          currentPlayer = 1,
           buildings = BuildingsMatrix.from(
             """
               |1 0 0 0 0
@@ -396,7 +399,7 @@ internal class GameImplTest {
     fun `can't play as a player that doesn't exist`() {
       val g = newGameWithSequentiallyPlacedBuilders()
 
-      assertThrows<WrongPlayerTurn> {
+      assertThrows<GameRuleViolationException> {
         g.play(
           DSL.player(99).building.move().from(0, 0).to(0, 1).andBuild(0, 0)
         )
@@ -503,23 +506,15 @@ internal class GameImplTest {
       val builderTargetPosition = P(0, 1)
       val buildingPosition = P(-1, 1)
 
-      assertThat(
-        assertThrows<IllegalBuilding> {
-          g.play(
-            DSL.player(0).building
-              .move()
-              .from(builderStartPosition)
-              .to(builderTargetPosition)
-              .andBuild(buildingPosition)
-          )
-        }
-      ).isEqualTo(
-        IllegalBuilding(
-          builderTargetPosition,
-          buildingPosition,
-          "outside of the board"
+      assertThrows<GameRuleViolationException> {
+        g.play(
+          DSL.player(0).building
+            .move()
+            .from(builderStartPosition)
+            .to(builderTargetPosition)
+            .andBuild(buildingPosition)
         )
-      )
+      }
 
       // the player's movement didn't occur either
       assertThat(g.hasBuilder(builderStartPosition)).isTrue()
@@ -648,6 +643,7 @@ internal class GameImplTest {
 
       assertThat(g.getState()).isEqualTo(
         state0.copy(
+          currentPlayer = 1,
           seals = Matrix.from(
             """
             |1 0 0 0 0

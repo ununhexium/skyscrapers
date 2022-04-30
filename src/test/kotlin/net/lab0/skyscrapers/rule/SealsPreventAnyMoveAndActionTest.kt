@@ -20,7 +20,7 @@ internal class SealsPreventAnyMoveAndActionTest {
       Position(0, 0),
       Position(1, 1)
     )
-    val rule = SealsPreventAnyMoveAndAction()
+    val rule = SealsPreventAnyMoveAndAction
 
     assertThat(rule.checkRule(state, turn)).isEmpty()
   }
@@ -39,7 +39,7 @@ internal class SealsPreventAnyMoveAndActionTest {
       target,
       Position(2, 2),
     )
-    val rule = SealsPreventAnyMoveAndAction()
+    val rule = SealsPreventAnyMoveAndAction
 
     assertThat(rule.checkRule(state, turn)).isEqualTo(
       listOf(
@@ -66,7 +66,7 @@ internal class SealsPreventAnyMoveAndActionTest {
       target,
       build,
     )
-    val rule = SealsPreventAnyMoveAndAction()
+    val rule = SealsPreventAnyMoveAndAction
 
     assertThat(rule.checkRule(state, turn)).isEqualTo(
       listOf(
@@ -93,7 +93,7 @@ internal class SealsPreventAnyMoveAndActionTest {
       target,
       seal,
     )
-    val rule = SealsPreventAnyMoveAndAction()
+    val rule = SealsPreventAnyMoveAndAction
 
     assertThat(rule.checkRule(state, turn)).isEqualTo(
       listOf(

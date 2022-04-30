@@ -2,9 +2,7 @@ package net.lab0.skyscrapers
 
 import net.lab0.skyscrapers.api.*
 import net.lab0.skyscrapers.exception.*
-import net.lab0.skyscrapers.rule.BoardMoveContainmentRule
-import net.lab0.skyscrapers.rule.BuildingRangeRule
-import net.lab0.skyscrapers.rule.SealsPreventAnyMoveAndAction
+import net.lab0.skyscrapers.rule.*
 import net.lab0.skyscrapers.structure.*
 import java.util.LinkedList
 
@@ -25,11 +23,16 @@ class GameImpl(
   private var builders: Matrix<Int?> =
     Matrix(height, width) { null },
 
+  private val turnRules: List<Rule<TurnType>> = listOf(
+    PhaseRule,
+    CheckCurrentPlayer,
+  ),
+
   private val moveRules: List<Rule<TurnType.MoveTurn>> = listOf(
     BoardMoveContainmentRule,
     BuildingRangeRule(),
-    SealsPreventAnyMoveAndAction(),
-  )
+    SealsPreventAnyMoveAndAction,
+  ),
 ) : Game {
 
   companion object : NewGame
@@ -114,24 +117,18 @@ class GameImpl(
   override val phase: Phase
     get() {
       val placedBuilders = builders.count { it != null }
-      return if (placedBuilders < totalBuilders) Phase.PLACEMENT else Phase.BUILD
+      return if (placedBuilders < totalBuilders) Phase.PLACEMENT else Phase.MOVEMENT
     }
 
+  // TODO: add rulesbook to manage all the rules and their application
   override fun play(turn: TurnType) {
+    throwIfViolatedRule(turnRules, turn)
+
     when (turn) {
       is TurnType.PlacementTurn -> addBuilder(turn)
       is TurnType.GiveUpTurn -> giveUp(turn)
       is TurnType.MoveTurn -> {
-        // apply move rules
-        val violatedRule = moveRules.firstOrNull {
-          it.checkRule(getState(), turn).isNotEmpty()
-        }
-
-        if(violatedRule != null) {
-          throw GameRuleViolationException(
-            violatedRule.checkRule(getState(), turn)
-          )
-        }
+        throwIfViolatedRule(moveRules, turn)
 
         when (turn) {
           is TurnType.MoveTurn.MoveAndBuildTurn -> moveAndBuild(turn)
@@ -151,21 +148,30 @@ class GameImpl(
     }
   }
 
+  private inline fun <reified T> throwIfViolatedRule(
+    rules: List<Rule<T>>,
+    turn: T
+  ) where T : TurnType {
+    val violatedRule = rules.firstOrNull {
+      it.checkRule(getState(), turn).isNotEmpty()
+    }
+
+    if (violatedRule != null) {
+      throw GameRuleViolationException(
+        violatedRule.checkRule(getState(), turn)
+      )
+    }
+  }
+
   override fun addBuilder(turn: Placement) {
     // TODO: implement as rules
     if (hasBuilder(turn.position))
       throw CellUsedByAnotherBuilder(turn.position)
 
-    if (currentPlayer != turn.player)
-      throw WrongPlayerTurn(turn.player, currentPlayer)
-
     builders = builders.copyAndSet(turn.position, turn.player)
   }
 
   override fun giveUp(turn: GiveUp) {
-    if (currentPlayer != turn.player)
-      throw WrongPlayerTurn(turn.player, currentPlayer)
-
     if (phase == Phase.PLACEMENT)
       throw CantGiveUpInThePlacementPhase()
     playersQueue.first.active = false
@@ -253,15 +259,6 @@ class GameImpl(
     start: Position,
     target: Position
   ) {
-    if (phase != Phase.BUILD)
-      throw IllegalMove(start, target, "this is the placement phase")
-
-    if (currentPlayer != player)
-      throw WrongPlayerTurn(player, currentPlayer)
-
-    if (outsideTheBoard(start))
-      throw IllegalMove(start, target, "can't move from out of bounds")
-
     val originatingBuilder = builders[start]
       ?: throw IllegalMove(
         start,
@@ -274,13 +271,6 @@ class GameImpl(
         start,
         target,
         "can't move another player's builder"
-      )
-
-    if (outsideTheBoard(target))
-      throw IllegalMove(
-        start,
-        target,
-        "the target position can't be outside of the board"
       )
 
     if (hasBuilder(target))
@@ -337,6 +327,8 @@ class GameImpl(
 
   override fun getState(): GameStateData {
     return GameStateData(
+      phase,
+      currentPlayer,
       buildings.map { it.value },
       seals.copy(),
       builders.copy(),
