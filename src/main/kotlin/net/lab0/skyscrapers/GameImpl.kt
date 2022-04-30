@@ -83,7 +83,6 @@ class GameImpl(
   override val blocks: Map<Height, Int>
     get() = currentBlocks
 
-  // TODO: flip to row, column
   override fun getHeight(column: Int, row: Int) = buildings[column, row]
 
 //  override fun getBuilders(player: Int) =
@@ -150,13 +149,17 @@ class GameImpl(
 
   override fun moveAndBuild(
     player: Int,
-    from: Position,
-    to: Position,
+    start: Position,
+    target: Position,
     building: Position
   ) {
-    checkMovement(player, from, to)
+    checkMovement(player, start, target)
 
-    val (nextHeight, nextBuildersPosition) = checkBuilding(building, to, from)
+    val (nextHeight, nextBuildersPosition) = checkBuilding(
+      building,
+      target,
+      start
+    )
 
     builders = nextBuildersPosition
 
@@ -168,12 +171,22 @@ class GameImpl(
 
   override fun moveAndBuildSeal(
     player: Int,
-    from: Position,
-    to: Position,
+    start: Position,
+    target: Position,
     seal: Position
   ) {
-    checkMovement(player, from, to)
+    checkMovement(player, start, target)
 
+    val nextBuilderPosition = builders.copyAndSwap(start, target)
+
+    if (seals[target])
+      throw IllegalMove(
+        start,
+        target,
+        "the position [${target.x}, ${target.y}] is sealed"
+      )
+
+    builders = nextBuilderPosition
     seals = seals.copyAndSet(seal, true)
   }
 
@@ -241,7 +254,11 @@ class GameImpl(
       )
 
     if (hasBuilder(target))
-      throw IllegalMove(start, target, "there is a builder at the target position")
+      throw IllegalMove(
+        start,
+        target,
+        "there is a builder at the target position"
+      )
 
     if (start == target)
       throw IllegalMove(start, target, "the position must be different")
@@ -259,7 +276,11 @@ class GameImpl(
       )
 
     if (seals[target])
-      throw IllegalMove(start, target, "the position [${target.x}, ${target.y}] is sealed")
+      throw IllegalMove(
+        start,
+        target,
+        "the position [${target.x}, ${target.y}] is sealed"
+      )
   }
 
   override fun isFinished(): Boolean {

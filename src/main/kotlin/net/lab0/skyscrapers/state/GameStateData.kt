@@ -3,6 +3,7 @@ package net.lab0.skyscrapers.state
 import net.lab0.skyscrapers.flip
 
 data class GameStateData(
+  // TODO make more typesafe with value classes
   override val buildings: Matrix<Int>,
   override val seals: Matrix<Boolean>,
   override val builders: Matrix<Int?>,

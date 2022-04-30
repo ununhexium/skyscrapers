@@ -2,10 +2,12 @@ package net.lab0.skyscrapers
 
 import net.lab0.skyscrapers.actions.DSL
 import net.lab0.skyscrapers.exception.*
+import net.lab0.skyscrapers.state.BuildersMatrix
 import net.lab0.skyscrapers.state.GameStateData
 import net.lab0.skyscrapers.state.Matrix
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Disabled
+import net.lab0.skyscrapers.assertj.GameStateAssert.Companion.assertThat
+import net.lab0.skyscrapers.state.BuildingsMatrix
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -319,12 +321,37 @@ internal class GameImplTest {
     fun `the player can move a builder`() {
       val g = newGameWithSequentiallyPlacedBuilders()
 
+      val state0 = g.getState()
+
       g.play(
         DSL.player(0).building.move().from(0, 0).to(0, 1).andBuild(0, 0)
       )
 
       assertThat(g.getBuilders(0))
         .contains(P(0, 1), P(2, 0))
+
+      assertThat(g.getState()).isEqualTo(
+        state0.copy(
+          buildings = BuildingsMatrix.from(
+            """
+              |1 0 0 0 0
+              |0 0 0 0 0
+              |0 0 0 0 0
+              |0 0 0 0 0
+              |0 0 0 0 0
+            """.trimMargin()
+          ).matrix,
+          builders = BuildersMatrix.from(
+            """
+              |. 1 0 1 .
+              |0 . . . .
+              |. . . . .
+              |. . . . .
+              |. . . . .
+            """.trimMargin()
+          ).matrix
+        )
+      )
 
     }
 
@@ -606,16 +633,14 @@ internal class GameImplTest {
           .move()
           .from(0, 0)
           .to(0, 1)
-          .andBuildSeal(seal)
+          .andSeal(seal)
       )
 
       assertThat(g.hasSeal(seal)).isTrue()
     }
 
-    // TODO: resume here
-    @Disabled("TODO")
     @Test
-    fun `can't move to tile with a seal`() {
+    fun `can't move to a tile with a seal`() {
       val g = newGameWithSequentiallyPlacedBuilders()
 
       val start = P(1, 0)
@@ -628,7 +653,7 @@ internal class GameImplTest {
           .move()
           .from(0, 0)
           .to(0, 1)
-          .andBuildSeal(seal)
+          .andSeal(seal)
       )
 
       assertThat(g.getState()).isEqualTo(
@@ -654,6 +679,8 @@ internal class GameImplTest {
         )
       )
 
+      val state1 = g.getState()
+
       assertThat(
         assertThrows<IllegalMove> {
           g.play(
@@ -667,6 +694,9 @@ internal class GameImplTest {
       ).isEqualTo(
         IllegalMove(start, seal, "the position [0, 0] is sealed")
       )
+      assertThat(g.getState())
+        .describedAs("Check no state change")
+        .isEqualTo(state1)
     }
 
     // TODO: can't build under a seal

@@ -77,15 +77,15 @@ interface Game {
    */
   fun moveAndBuild(
     player: Int,
-    from: Position,
-    to: Position,
+    start: Position,
+    target: Position,
     building: Position
   )
 
   fun moveAndBuildSeal(
     player: Int,
-    from: Position,
-    to: Position,
+    start: Position,
+    target: Position,
     seal: Position
   )
 
