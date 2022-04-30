@@ -57,7 +57,7 @@ interface Game {
   fun getHeight(column: Int, row: Int): Height
 
   fun getHeight(pos: Position): Height =
-    this.getHeight(pos.x, pos.y)
+    this.getHeight(pos.y, pos.x)
 
   fun getBuilders(player: Int): List<Position>
 

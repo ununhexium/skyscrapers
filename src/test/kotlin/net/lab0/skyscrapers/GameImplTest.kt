@@ -108,10 +108,10 @@ internal class GameImplTest {
       val height = 4
       val g: Game = Game.new(width, height)
 
-      return (0 until width).flatMap { x ->
-        (0 until height).map { y ->
-          DynamicTest.dynamicTest("g[$x,$y] == 0") {
-            assertThat(g.getHeight(x, y)).isEqualTo(Height(0))
+      return (0 until width).flatMap { column ->
+        (0 until height).map { row ->
+          DynamicTest.dynamicTest("g[$row, $column] == 0") {
+            assertThat(g.getHeight(row, column)).isEqualTo(Height(0))
           }
         }
       }

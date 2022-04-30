@@ -84,7 +84,7 @@ class GameImpl(
     get() = currentBlocks
 
   // TODO: flip to row, column
-  override fun getHeight(column: Int, row: Int) = buildings[row, column]
+  override fun getHeight(column: Int, row: Int) = buildings[column, row]
 
 //  override fun getBuilders(player: Int) =
 //    builders[player]?.toList()
