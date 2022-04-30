@@ -246,7 +246,7 @@ internal class GameImplTest {
         DSL.player(0).placement.addBuilder(0, 0)
       )
 
-      assertThrows<CellUsedByAnotherBuilder> {
+      assertThrows<GameRuleViolationException> {
         g.play(
           DSL.player(1).placement.addBuilder(0, 0)
         )

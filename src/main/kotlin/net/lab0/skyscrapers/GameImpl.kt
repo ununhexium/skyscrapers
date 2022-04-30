@@ -3,6 +3,7 @@ package net.lab0.skyscrapers
 import net.lab0.skyscrapers.api.*
 import net.lab0.skyscrapers.exception.*
 import net.lab0.skyscrapers.rule.*
+import net.lab0.skyscrapers.rule.placement.PlaceBuilderOnEmptyCell
 import net.lab0.skyscrapers.structure.*
 import java.util.LinkedList
 
@@ -26,6 +27,10 @@ class GameImpl(
   private val turnRules: List<Rule<TurnType>> = listOf(
     PhaseRule,
     CheckCurrentPlayer,
+  ),
+
+  private val placementRules: List<Rule<TurnType.PlacementTurn>> = listOf(
+    PlaceBuilderOnEmptyCell
   ),
 
   private val moveRules: List<Rule<TurnType.MoveTurn>> = listOf(
@@ -125,7 +130,10 @@ class GameImpl(
     throwIfViolatedRule(turnRules, turn)
 
     when (turn) {
-      is TurnType.PlacementTurn -> addBuilder(turn)
+      is TurnType.PlacementTurn -> {
+        throwIfViolatedRule(placementRules, turn)
+        addBuilder(turn)
+      }
       is TurnType.GiveUpTurn -> giveUp(turn)
       is TurnType.MoveTurn -> {
         throwIfViolatedRule(moveRules, turn)
@@ -164,10 +172,6 @@ class GameImpl(
   }
 
   override fun addBuilder(turn: Placement) {
-    // TODO: implement as rules
-    if (hasBuilder(turn.position))
-      throw CellUsedByAnotherBuilder(turn.position)
-
     builders = builders.copyAndSet(turn.position, turn.player)
   }
 
@@ -317,6 +321,10 @@ class GameImpl(
 
     fun addSeal(x: Int, y: Int) {
       game.seals = game.seals.copyAndSet(y, x, true)
+    }
+
+    fun addBuilder(player: Int, position: Position) {
+      game.builders = game.builders.copyAndSet(position, player)
     }
   }
 
