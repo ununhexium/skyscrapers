@@ -516,23 +516,15 @@ internal class GameImplTest {
       val builderTargetPosition = P(0, 1)
       val opponentPosition = P(1, 0)
 
-      assertThat(
-        assertThrows<IllegalBuilding> {
-          g.play(
-            DSL.player(0).building
-              .move()
-              .from(builderStartPosition)
-              .to(builderTargetPosition)
-              .andBuild(opponentPosition)
-          )
-        }
-      ).isEqualTo(
-        IllegalBuilding(
-          builderTargetPosition,
-          opponentPosition,
-          "builder is present at build location"
+      assertThrows<GameRuleViolationException> {
+        g.play(
+          DSL.player(0).building
+            .move()
+            .from(builderStartPosition)
+            .to(builderTargetPosition)
+            .andBuild(opponentPosition)
         )
-      )
+      }
     }
 
     @Test
@@ -556,15 +548,15 @@ internal class GameImplTest {
       val builderTargetPosition = P(1, 1)
       val buildingPosition = P(1, 0)
 
-        assertThrows<GameRuleViolationException> {
-          g.play(
-            DSL.player(1).building
-              .move()
-              .from(builderStartPosition)
-              .to(builderTargetPosition)
-              .andBuild(buildingPosition)
-          )
-        }
+      assertThrows<GameRuleViolationException> {
+        g.play(
+          DSL.player(1).building
+            .move()
+            .from(builderStartPosition)
+            .to(builderTargetPosition)
+            .andBuild(buildingPosition)
+        )
+      }
     }
 
     @Test

@@ -5,6 +5,7 @@ import net.lab0.skyscrapers.exception.*
 import net.lab0.skyscrapers.rule.*
 import net.lab0.skyscrapers.rule.move.*
 import net.lab0.skyscrapers.rule.move.build.BlocksAvailabilityRule
+import net.lab0.skyscrapers.rule.move.build.BuilderPreventsBuildingRule
 import net.lab0.skyscrapers.rule.placement.CantGiveUpDuringPlacementRule
 import net.lab0.skyscrapers.rule.placement.PlaceBuilderOnEmptyCell
 import net.lab0.skyscrapers.structure.*
@@ -48,6 +49,7 @@ class GameImpl(
 
   private val buildRules: List<Rule<TurnType.MoveTurn.BuildTurn>> = listOf(
     BlocksAvailabilityRule(),
+    BuilderPreventsBuildingRule,
   ),
 ) : Game {
 
@@ -97,8 +99,6 @@ class GameImpl(
   override val turn: Int
     get() = internalTurns
 
-  data class Player(val id: Int, var active: Boolean)
-
   private val playersQueue =
     (0 until playerCount).mapTo(LinkedList()) { Player(it, true) }
 
@@ -133,21 +133,24 @@ class GameImpl(
     }
 
   // TODO: add rulesbook to manage all the rules and their application
+  @kotlin.jvm.Throws(GameRuleViolationException::class)
   override fun play(turn: TurnType) {
-    throwIfViolatedRule(turnRules, turn)
+    throwIfViolatedRule(turnRules, turn, getState())
 
     when (turn) {
       is TurnType.PlacementTurn -> {
-        throwIfViolatedRule(placementRules, turn)
+        throwIfViolatedRule(placementRules, turn, getState())
         addBuilder(turn)
       }
       is TurnType.GiveUpTurn -> giveUp(turn)
       is TurnType.MoveTurn -> {
-        throwIfViolatedRule(moveRules, turn)
+        throwIfViolatedRule(moveRules, turn, getState())
+
+        val nextState = move(turn, getState())
 
         when (turn) {
           is TurnType.MoveTurn.BuildTurn -> {
-            throwIfViolatedRule(buildRules, turn)
+            throwIfViolatedRule(buildRules, turn, nextState)
             moveAndBuild(turn)
           }
           is TurnType.MoveTurn.SealTurn -> moveAndSeal(turn)
@@ -166,17 +169,23 @@ class GameImpl(
     }
   }
 
+  private fun move(turn: Move, state: GameStateData): GameState =
+    getState().copy(
+      builders = state.builders.copyAndSwap(turn.start, turn.target)
+    )
+
   private inline fun <reified T> throwIfViolatedRule(
     rules: List<Rule<T>>,
-    turn: T
+    turn: T,
+    state:GameState,
   ) where T : TurnType {
     val violatedRule = rules.firstOrNull {
-      it.checkRule(getState(), turn).isNotEmpty()
+      it.checkRule(state, turn).isNotEmpty()
     }
 
     if (violatedRule != null) {
       throw GameRuleViolationException(
-        violatedRule.checkRule(getState(), turn)
+        violatedRule.checkRule(state, turn)
       )
     }
   }
@@ -189,24 +198,13 @@ class GameImpl(
     playersQueue.first.active = false
   }
 
-  /**
-   * @return true if the position is inside the board
-   */
-  private fun outsideTheBoard(pos: Position) =
-    pos.x < 0 || pos.x >= width || pos.y < 0 || pos.y >= height
-
   override fun moveAndBuild(
-    turn: Build
+    turn: Build,
   ) {
-    val (nextHeight, nextBuildersPosition) = checkBuilding(
-      turn.build,
-      turn.target,
-      turn.start
-    )
-
-    builders = nextBuildersPosition
+    builders = move(turn, getState()).builders
 
     // remove the block that will be used to increase the height
+    val nextHeight = buildings[turn.build] + 1
     currentBlocks[nextHeight] = currentBlocks[nextHeight]!! - 1
 
     buildings = buildings.copyAndSet(turn.build, buildings[turn.build] + 1)
@@ -226,37 +224,26 @@ class GameImpl(
     seals = seals.copyAndSet(turn.seal, true)
   }
 
-  private fun checkBuilding(
-    building: Position,
-    to: Position,
-    from: Position
-  ): Pair<Height, Matrix<Int?>> {
-    val nextHeight = buildings[building] + 1
-
-    val nextBuildersPosition = builders.copyAndSwap(from, to)
-
-    if (nextBuildersPosition[building] != null)
-      throw IllegalBuilding(
-        to,
-        building,
-        "builder is present at build location"
-      )
-
-    if (seals[building])
-      throw IllegalBuilding(
-        to,
-        building,
-        "the position [${building.x}, ${building.y}] is sealed"
-      )
-
-    return Pair(nextHeight, nextBuildersPosition)
-  }
-
   override fun isFinished(): Boolean {
     return playersQueue.count { it.active } == 1
   }
 
-  class GameBackdoor(private val game: GameImpl) {
+  override fun hasSeal(seal: Position) =
+    seals[seal]
+
+  override fun getState(): GameStateData {
+    return GameStateData(
+      phase,
+      blocks,
+      currentPlayer,
+      buildings.map { it.value },
+      seals.copy(),
+      builders.copy(),
+    )
+  }
+
+  // For testing only, of course :)
+  inner class GameBackdoor(private val game: GameImpl) {
     fun setHeight(pos: Position, height: Int) {
       game.buildings = game.buildings.copyAndSet(pos, Height(height))
     }
@@ -274,18 +261,4 @@ class GameImpl(
   }
 
   val backdoor = GameBackdoor(this)
-
-  override fun hasSeal(seal: Position) =
-    seals[seal]
-
-  override fun getState(): GameStateData {
-    return GameStateData(
-      phase,
-      blocks,
-      currentPlayer,
-      buildings.map { it.value },
-      seals.copy(),
-      builders.copy(),
-    )
-  }
 }
