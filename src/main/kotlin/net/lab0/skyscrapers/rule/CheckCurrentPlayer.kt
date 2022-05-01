@@ -1,6 +1,7 @@
 package net.lab0.skyscrapers.rule
 
 import net.lab0.skyscrapers.api.*
+import net.lab0.skyscrapers.structure.GameState
 
 /**
  * Only the player's whose turn it is to pay may do so.

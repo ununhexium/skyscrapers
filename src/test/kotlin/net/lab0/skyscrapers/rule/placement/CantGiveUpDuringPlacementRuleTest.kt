@@ -14,7 +14,7 @@ internal class CantGiveUpDuringPlacementRuleTest {
     val rule = CantGiveUpDuringPlacementRule
     val turn = TurnType.GiveUpTurn(0)
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEmpty()
+    assertThat(rule.checkRule(g.state, turn)).isEmpty()
   }
 
   @Test
@@ -23,7 +23,7 @@ internal class CantGiveUpDuringPlacementRuleTest {
     val rule = CantGiveUpDuringPlacementRule
     val turn = TurnType.GiveUpTurn(0)
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEqualTo(
+    assertThat(rule.checkRule(g.state, turn)).isEqualTo(
       listOf(
         GameRuleViolationImpl(rule, "Can't give up during the placement phase")
       )

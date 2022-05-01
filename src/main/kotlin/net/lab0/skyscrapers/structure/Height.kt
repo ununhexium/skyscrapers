@@ -2,6 +2,10 @@ package net.lab0.skyscrapers.structure
 
 @JvmInline
 value class Height(val value: Int) {
+  companion object {
+    val SEAL = Height(0)
+  }
+
   operator fun inc() =
     Height(value + 1)
 

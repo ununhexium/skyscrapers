@@ -12,7 +12,7 @@ internal class CheckCurrentPlayerTest {
     val rule = CheckCurrentPlayer
     val turn = TurnType.GiveUpTurn(0)
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEmpty()
+    assertThat(rule.checkRule(g.state, turn)).isEmpty()
   }
 
   @Test
@@ -21,7 +21,7 @@ internal class CheckCurrentPlayerTest {
     val rule = CheckCurrentPlayer
     val turn = TurnType.GiveUpTurn(1)
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEqualTo(
+    assertThat(rule.checkRule(g.state, turn)).isEqualTo(
       listOf(
         GameRuleViolationImpl(rule, "Can't play now, it's player#0's turn")
       )

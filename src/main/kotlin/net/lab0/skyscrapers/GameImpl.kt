@@ -17,16 +17,7 @@ class GameImpl(
   override val playerCount: Int,
   override val maxBuildersPerPlayer: Int,
 
-  val initialBlocks: Map<Height, Int>,
-
-  private var buildings: Matrix<Height> =
-    Matrix(height, width) { Height(0) },
-
-  private var seals: Matrix<Boolean> =
-    Matrix(height, width) { false },
-
-  private var builders: Matrix<Int?> =
-    Matrix(height, width) { null },
+  initialBlocks: Map<Height, Int>,
 
   private val turnRules: List<Rule<TurnType>> = listOf(
     PhaseRule,
@@ -55,21 +46,34 @@ class GameImpl(
 
   companion object : NewGame
 
+  private val history = mutableListOf<GameState>()
+
   init {
     if (initialBlocks.keys.isEmpty() || initialBlocks.entries.sumOf { it.value } == 0)
       throw InvalidBlocksConfiguration(
         "There must be at least 1 block for the game to make sense"
       )
 
-    // all the blocks from 1 to N must be present
-    // therefore the keys must be [1, 2, 3, 4, .. N]
-    if (initialBlocks.keys.maxOf { it.value } != initialBlocks.keys.size)
+    // all the blocks from 0 (seals) to N must be present
+    // therefore the *filtered* keys must be [1, 2, 3, 4, .. N]
+    val filteredKeys =
+      initialBlocks.keys.filter { it != Height.SEAL }.maxOf { it.value }
+
+    val filteredInitialBlock =
+      initialBlocks.keys.filter { it != Height.SEAL }.size
+
+    if (filteredKeys != filteredInitialBlock)
       throw InvalidBlocksConfiguration(
         "There must no gap in the blocks heights"
       )
 
     // checks that the block amounts are decreasing as the height increases
-    val amounts = initialBlocks.toSortedMap(Height::compareTo).map { it.value }
+    // seals are a separate case, not checking their amount
+    val amounts = initialBlocks
+      .filter { it.key.value != 0 }
+      .toSortedMap(Height::compareTo)
+      .map { it.value }
+
     val sortedAmounts = amounts.sortedDescending()
     if (amounts != sortedAmounts)
       throw InvalidBlocksConfiguration(
@@ -92,6 +96,17 @@ class GameImpl(
         "If a block is proposed, its initial quantity must be at least 1. No block of for the following heights: $heights"
       )
     }
+
+    history.add(
+      GameState(
+        (0 until playerCount).map { Player(it) },
+        maxBuildersPerPlayer,
+        initialBlocks,
+        Matrix(height, width) { 0 },
+        Matrix(height, width) { false },
+        Matrix(height, width) { null },
+      )
+    )
   }
 
   private var internalTurns = 0
@@ -99,54 +114,24 @@ class GameImpl(
   override val turn: Int
     get() = internalTurns
 
-  private val playersQueue =
-    (0 until playerCount).mapTo(LinkedList()) { Player(it, true) }
-
-  override val currentPlayer: Int
-    get() = playersQueue.first.id
-
-  private val currentBlocks: MutableMap<Height, Int> =
-    initialBlocks.toMutableMap()
-
   override val blocks: Map<Height, Int>
-    get() = currentBlocks.toMap()
-
-  override fun getHeight(column: Int, row: Int) = buildings[column, row]
-
-  override fun getBuilders(player: Int): List<Position> {
-    val result = mutableListOf<Position?>()
-
-    builders.mapIndexedTo(result) { position, cell ->
-      if (cell == player) position else null
-    }
-
-    return result.filterNotNull()
-  }
-
-  override fun hasBuilder(position: Position) =
-    builders[position] != null
-
-  override val phase: Phase
-    get() {
-      val placedBuilders = builders.count { it != null }
-      return if (placedBuilders < totalBuilders) Phase.PLACEMENT else Phase.MOVEMENT
-    }
+    get() = state.blocks.toMap()
 
   // TODO: add rulesbook to manage all the rules and their application
   @kotlin.jvm.Throws(GameRuleViolationException::class)
   override fun play(turn: TurnType) {
-    throwIfViolatedRule(turnRules, turn, getState())
+    throwIfViolatedRule(turnRules, turn, state)
 
     when (turn) {
       is TurnType.PlacementTurn -> {
-        throwIfViolatedRule(placementRules, turn, getState())
+        throwIfViolatedRule(placementRules, turn, state)
         addBuilder(turn)
       }
       is TurnType.GiveUpTurn -> giveUp(turn)
       is TurnType.MoveTurn -> {
-        throwIfViolatedRule(moveRules, turn, getState())
+        throwIfViolatedRule(moveRules, turn, state)
 
-        val nextState = move(turn, getState())
+        val nextState = move(turn, state)
 
         when (turn) {
           is TurnType.MoveTurn.BuildTurn -> {
@@ -159,25 +144,17 @@ class GameImpl(
     }
 
     internalTurns++
-
-    // cycle players
-    if (!isFinished()) {
-      do {
-        val current = playersQueue.removeFirst()
-        playersQueue.addLast(current)
-      } while (!playersQueue.first.active)
-    }
   }
 
-  private fun move(turn: Move, state: GameStateData): GameState =
-    getState().copy(
+  private fun move(turn: Move, state: GameState): GameState =
+    state.copy(
       builders = state.builders.copyAndSwap(turn.start, turn.target)
     )
 
   private inline fun <reified T> throwIfViolatedRule(
     rules: List<Rule<T>>,
     turn: T,
-    state:GameState,
+    state: GameState,
   ) where T : TurnType {
     val violatedRule = rules.firstOrNull {
       it.checkRule(state, turn).isNotEmpty()
@@ -191,74 +168,85 @@ class GameImpl(
   }
 
   override fun addBuilder(turn: Placement) {
-    builders = builders.copyAndSet(turn.position, turn.player)
+    history.add(
+      state.copy(
+        builders = state.builders.copyAndSet(turn.position, turn.player),
+        players = rotateToNextPlayer(state.players)
+      )
+    )
+  }
+
+  private fun rotateToNextPlayer(players: List<Player>): List<Player> {
+    val rotatedPlayers = LinkedList(players)
+    // TODO: this should be read from the state
+    if (!state.isFinished()) {
+      do {
+        val current = rotatedPlayers.removeFirst()
+        rotatedPlayers.addLast(current)
+      } while (!rotatedPlayers.first.active)
+    }
+    return rotatedPlayers
   }
 
   override fun giveUp(turn: GiveUp) {
-    playersQueue.first.active = false
+    history.add(
+      state.copy(
+        // disable to current player and rotate
+        players = state.players.drop(1) + state.players
+          .first()
+          .copy(active = false)
+      )
+    )
   }
 
   override fun moveAndBuild(
     turn: Build,
   ) {
-    builders = move(turn, getState()).builders
-
     // remove the block that will be used to increase the height
-    val nextHeight = buildings[turn.build] + 1
-    currentBlocks[nextHeight] = currentBlocks[nextHeight]!! - 1
+    val nextHeight = state.buildings[turn.build] + 1
 
-    buildings = buildings.copyAndSet(turn.build, buildings[turn.build] + 1)
-  }
+    history.add(
+      state.copy(
+        players = rotateToNextPlayer(state.players),
 
-  override fun moveAndSeal(turn: Seal) {
-    val nextBuilderPosition = builders.copyAndSwap(turn.start, turn.target)
+        builders = move(turn, state).builders,
 
-    if (seals[turn.target])
-      throw IllegalMove(
-        turn.start,
-        turn.target,
-        "the position [${turn.target.x}, ${turn.target.y}] is sealed"
+        blocks = state.blocks.mapValues {
+          if (it.key.value == nextHeight) it.value - 1 else it.value
+        },
+
+        buildings = state.buildings.copyAndSet(
+          turn.build,
+          state.buildings[turn.build] + 1
+        )
       )
-
-    builders = nextBuilderPosition
-    seals = seals.copyAndSet(turn.seal, true)
-  }
-
-  override fun isFinished(): Boolean {
-    return playersQueue.count { it.active } == 1
-  }
-
-  override fun hasSeal(seal: Position) =
-    seals[seal]
-
-  override fun getState(): GameStateData {
-    return GameStateData(
-      phase,
-      blocks,
-      currentPlayer,
-      buildings.map { it.value },
-      seals.copy(),
-      builders.copy(),
     )
   }
 
-  // For testing only, of course :)
-  inner class GameBackdoor(private val game: GameImpl) {
-    fun setHeight(pos: Position, height: Int) {
-      game.buildings = game.buildings.copyAndSet(pos, Height(height))
-    }
+  override fun moveAndSeal(turn: Seal) {
+    history.add(
+      state.copy(
+        players = rotateToNextPlayer(state.players),
+        builders = move(turn, state).builders,
+        blocks = state.blocks.mapValues {
+          if (it.key.value == 0) it.value - 1 else it.value
+        },
+        seals = state.seals.copyAndSet(turn.seal, true)
+      )
+    )
+  }
 
-    fun addSeal(p: Position) =
-      addSeal(p.y, p.x)
+  override fun getState(step: Int) =
+    history.reversed()[step]
 
-    fun addSeal(x: Int, y: Int) {
-      game.seals = game.seals.copyAndSet(y, x, true)
-    }
+  override val state
+    get() = history.last()
 
-    fun addBuilder(player: Int, position: Position) {
-      game.builders = game.builders.copyAndSet(position, player)
+  class Backdoor(val game: GameImpl) {
+    fun forceState(state: GameState) {
+      game.history.add(state)
     }
   }
 
-  val backdoor = GameBackdoor(this)
+  val backdoor = Backdoor(this)
 }

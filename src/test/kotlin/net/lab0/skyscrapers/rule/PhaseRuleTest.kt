@@ -15,7 +15,7 @@ internal class PhaseRuleTest {
     val turn = TurnType.PlacementTurn(0, Position(0, 0))
     val rule = PhaseRule
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEmpty()
+    assertThat(rule.checkRule(g.state, turn)).isEmpty()
   }
 
   @Test
@@ -24,7 +24,7 @@ internal class PhaseRuleTest {
     val turn = TurnType.PlacementTurn(0, Position(0, 0))
     val rule = PhaseRule
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEqualTo(
+    assertThat(rule.checkRule(g.state, turn)).isEqualTo(
       listOf(
         GameRuleViolationImpl(
           rule,
@@ -45,7 +45,7 @@ internal class PhaseRuleTest {
     )
     val rule = PhaseRule
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEmpty()
+    assertThat(rule.checkRule(g.state, turn)).isEmpty()
   }
 
   @Test
@@ -59,7 +59,7 @@ internal class PhaseRuleTest {
     )
     val rule = PhaseRule
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEqualTo(
+    assertThat(rule.checkRule(g.state, turn)).isEqualTo(
       listOf(
         GameRuleViolationImpl(
           rule,

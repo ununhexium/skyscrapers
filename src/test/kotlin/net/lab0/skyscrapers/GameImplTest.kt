@@ -3,6 +3,7 @@ package net.lab0.skyscrapers
 import net.lab0.skyscrapers.DefaultGames.newGameWithSequentiallyPlacedBuilders
 import net.lab0.skyscrapers.action.DSL
 import net.lab0.skyscrapers.api.Game
+import net.lab0.skyscrapers.assertj.GameStateAssert
 import net.lab0.skyscrapers.exception.*
 import org.assertj.core.api.Assertions.assertThat
 import net.lab0.skyscrapers.structure.*
@@ -21,9 +22,10 @@ internal class GameImplTest {
     fun `newGameWithSequentiallyPlacedBuilders generates this specific game by default`() {
       val g = newGameWithSequentiallyPlacedBuilders()
 
-      assertThat(g.getState()).isEqualTo(
-        GameStateData.from(
-          Phase.MOVEMENT,
+      assertThat(g.state).isEqualTo(
+        GameState.from(
+          (0 until Defaults.PLAYER_COUNT).map { Player(it) },
+          Defaults.BUILDERS_PER_PLAYER,
           Defaults.BLOCKS,
           """
             0 0 0 0 0
@@ -94,7 +96,7 @@ internal class GameImplTest {
       return (0 until width).flatMap { column ->
         (0 until height).map { row ->
           DynamicTest.dynamicTest("g[$row, $column] == 0") {
-            assertThat(g.getHeight(row, column)).isEqualTo(Height(0))
+            assertThat(g.state.getHeight(P(column, row))).isEqualTo(Height(0))
           }
         }
       }
@@ -103,14 +105,14 @@ internal class GameImplTest {
     @Test
     fun `the game starts in the placement phase`() {
       val g = Game.new()
-      assertThat(g.phase).isEqualTo(Phase.PLACEMENT)
+      assertThat(g.state.phase).isEqualTo(Phase.PLACEMENT)
     }
 
     @Test
     fun `the game board starts with 0 builders on it`() {
       val g: Game = Game.new(playerCount = 2, buildersPerPlayer = 1)
-      assertThat(g.getBuilders(0)).hasSize(0)
-      assertThat(g.getBuilders(1)).hasSize(0)
+      assertThat(g.state.getBuilders(0)).hasSize(0)
+      assertThat(g.state.getBuilders(1)).hasSize(0)
     }
 
     @Test
@@ -142,11 +144,11 @@ internal class GameImplTest {
     }
 
     @Test
-    fun `there must be more block of lower height than higher height`() {
+    fun `there must be more blocks of lower height than higher height`() {
       assertThat(
         assertThrows<InvalidBlocksConfiguration> {
           Game.new(
-            blocks = mapOf(Height(1) to 1, Height(2) to 99)
+            blocks = mapOf(Height(0) to 0, Height(1) to 1, Height(2) to 99)
           )
         }
       ).hasMessage("The lower blocks must be in larger quantity than the higher blocks")
@@ -157,7 +159,7 @@ internal class GameImplTest {
       assertThat(
         assertThrows<InvalidBlocksConfiguration> {
           Game.new(
-            blocks = mapOf(Height(1) to 1, Height(2) to 0, Height(3) to 0)
+            blocks = mapOf(Height(0) to 1, Height(1) to 1, Height(2) to 0, Height(3) to 0)
           )
         }
       ).hasMessage(
@@ -172,7 +174,7 @@ internal class GameImplTest {
     @Test
     fun `the game starts with the placing phase`() {
       val g = Game.new()
-      assertThat(g.phase).isEqualTo(Phase.PLACEMENT)
+      assertThat(g.state.phase).isEqualTo(Phase.PLACEMENT)
     }
 
     @Test
@@ -184,7 +186,7 @@ internal class GameImplTest {
         DSL.player(player).placement.addBuilder(P(1, 2))
       )
 
-      assertThat(g.getBuilders(player)).isEqualTo(listOf(P(1, 2)))
+      assertThat(g.state.getBuilders(player)).isEqualTo(listOf(P(1, 2)))
     }
 
     @Test
@@ -216,7 +218,7 @@ internal class GameImplTest {
     fun `the game starts at turn 0`() {
       val g: Game = Game.new(playerCount = 2)
       assertThat(g.turn).isEqualTo(0)
-      assertThat(g.currentPlayer).isEqualTo(0)
+      assertThat(g.state.currentPlayer).isEqualTo(0)
     }
 
     @Test
@@ -228,14 +230,14 @@ internal class GameImplTest {
       )
 
       assertThat(g.turn).isEqualTo(1)
-      assertThat(g.currentPlayer).isEqualTo(1)
+      assertThat(g.state.currentPlayer).isEqualTo(1)
 
       g.play(
         DSL.player(1).placement.addBuilder(1, 1)
       )
 
       assertThat(g.turn).isEqualTo(2)
-      assertThat(g.currentPlayer).isEqualTo(0)
+      assertThat(g.state.currentPlayer).isEqualTo(0)
     }
 
     @Test
@@ -302,18 +304,18 @@ internal class GameImplTest {
     fun `the player can move a builder`() {
       val g = newGameWithSequentiallyPlacedBuilders()
 
-      val state0 = g.getState()
+      val state0 = g.state
 
       g.play(
         DSL.player(0).building.move().from(0, 0).to(0, 1).andBuild(0, 0)
       )
 
-      assertThat(g.getBuilders(0))
+      assertThat(g.state.getBuilders(0))
         .contains(P(0, 1), P(2, 0))
 
-      assertThat(g.getState()).isEqualTo(
+      GameStateAssert.assertThat(g.state).isEqualTo(
         state0.copy(
-          currentPlayer = 1,
+          players = listOf(Player(1), Player(0)),
           blocks = state0.blocks
             .toMutableMap()
             .also { it[Height(1)] = it[Height(1)]!! - 1 },
@@ -445,7 +447,7 @@ internal class GameImplTest {
       val end = P(1, 1)
       val build = P(0, 0)
 
-      g.backdoor.setHeight(end, 2) // too high
+      g.backdoor.forceState(g.state.height(end, 2)) // too high
 
       assertThrows<GameRuleViolationException> {
         g.play(
@@ -471,7 +473,7 @@ internal class GameImplTest {
           .andBuild(buildPosition)
       )
 
-      assertThat(g.getHeight(buildPosition)).isEqualTo(Height(1))
+      assertThat(g.state.getHeight(buildPosition)).isEqualTo(Height(1))
 
       g.play(
         DSL.player(1).building
@@ -482,7 +484,7 @@ internal class GameImplTest {
       )
 
       // building stacks
-      assertThat(g.getHeight(buildPosition)).isEqualTo(Height(2))
+      assertThat(g.state.getHeight(buildPosition)).isEqualTo(Height(2))
     }
 
     @Test
@@ -504,8 +506,8 @@ internal class GameImplTest {
       }
 
       // the player's movement didn't occur either
-      assertThat(g.hasBuilder(builderStartPosition)).isTrue()
-      assertThat(g.hasBuilder(builderTargetPosition)).isFalse()
+      assertThat(g.state.hasBuilder(builderStartPosition)).isTrue()
+      assertThat(g.state.hasBuilder(builderTargetPosition)).isFalse()
     }
 
     @Test
@@ -536,13 +538,13 @@ internal class GameImplTest {
         )
       )
 
-      // can play once as the is exactly 1 block available
+      // can build once as there is exactly 1 block available
 
       g.play(
         DSL.player(0).building.move().from(0, 0).to(0, 1).andBuild(0, 0)
       )
 
-      // can't play a block for height 1 as there is none remaining
+      // can't build a block for height 1 as there is none remaining
 
       val builderStartPosition = P(1, 0)
       val builderTargetPosition = P(1, 1)
@@ -592,17 +594,16 @@ internal class GameImplTest {
           .andSeal(seal)
       )
 
-      assertThat(g.hasSeal(seal)).isTrue()
+      assertThat(g.state.seals[seal]).isTrue()
     }
 
     @Test
     fun `can't move to a tile with a seal`() {
       val g = newGameWithSequentiallyPlacedBuilders()
 
-      val start = P(1, 0)
       val seal = P(0, 0)
 
-      val state0 = g.getState()
+      val state0 = g.state
 
       g.play(
         DSL.player(0).building
@@ -612,9 +613,9 @@ internal class GameImplTest {
           .andSeal(seal)
       )
 
-      assertThat(g.getState()).isEqualTo(
+      GameStateAssert.assertThat(g.state).isEqualTo(
         state0.copy(
-          currentPlayer = 1,
+          players = listOf(Player(1), Player(0)),
           seals = Matrix.from(
             """
             |1 0 0 0 0
@@ -632,11 +633,14 @@ internal class GameImplTest {
             |. . . . .
             |. . . . .
           """.trimMargin(),
-          ) { if (it == ".") null else it.toInt() }
+          ) { if (it == ".") null else it.toInt() },
+          blocks = state0.blocks.mapValues { if(it.key == Height.SEAL) it.value - 1 else it.value }
         )
       )
 
-      val state1 = g.getState()
+      val state1 = g.state
+
+      val start = P(1, 0)
 
       assertThrows<GameRuleViolationException> {
         g.play(
@@ -648,7 +652,7 @@ internal class GameImplTest {
         )
       }
 
-      assertThat(g.getState())
+      GameStateAssert.assertThat(g.state)
         .describedAs("Check no state change")
         .isEqualTo(state1)
     }
@@ -661,9 +665,9 @@ internal class GameImplTest {
       val target = P(0, 1)
       val building = P(0, 0)
 
-      (g as GameImpl).backdoor.addSeal(building)
+      (g as GameImpl).backdoor.forceState(g.state.seal(building))
 
-      val state0 = g.getState()
+      val state0 = g.state
 
       assertThrows<GameRuleViolationException> {
         g.play(
@@ -675,7 +679,7 @@ internal class GameImplTest {
         )
       }
 
-      assertThat(g.getState())
+      assertThat(g.state)
         .describedAs("Check no state change")
         .isEqualTo(state0)
     }
@@ -688,9 +692,9 @@ internal class GameImplTest {
       val target = P(0, 1)
       val seal = P(0, 0)
 
-      (g as GameImpl).backdoor.addSeal(seal)
+      (g as GameImpl).backdoor.forceState(g.state.seal(seal))
 
-      val state0 = g.getState()
+      val state0 = g.state
 
       assertThrows<GameRuleViolationException> {
         g.play(
@@ -702,7 +706,7 @@ internal class GameImplTest {
         )
       }
 
-      assertThat(g.getState())
+      assertThat(g.state)
         .describedAs("Check no state change")
         .isEqualTo(state0)
     }
@@ -723,20 +727,20 @@ internal class GameImplTest {
       )
 
       assertThat(g.turn).isEqualTo(6)
-      assertThat(g.currentPlayer).isEqualTo(0)
+      assertThat(g.state.currentPlayer).isEqualTo(0)
 
       g.play(
         DSL.player(0).building.giveUp()
       )
       assertThat(g.turn).isEqualTo(7)
-      assertThat(g.currentPlayer).isEqualTo(1)
+      assertThat(g.state.currentPlayer).isEqualTo(1)
 
       g.play(
         DSL.player(1).building.move().from(1, 0).to(1, 1).andBuild(1, 0)
       )
 
       assertThat(g.turn).isEqualTo(8)
-      assertThat(g.currentPlayer).isEqualTo(2)
+      assertThat(g.state.currentPlayer).isEqualTo(2)
 
       g.play(
         DSL.player(2).building.move().from(2, 0).to(2, 1).andBuild(2, 0)
@@ -745,20 +749,20 @@ internal class GameImplTest {
       // now the player 0 doesn't play because it gave up
 
       assertThat(g.turn).isEqualTo(9)
-      assertThat(g.currentPlayer).isEqualTo(1)
+      assertThat(g.state.currentPlayer).isEqualTo(1)
     }
 
     @Test
     fun `when there is only 1 player remaining, the game is finished`() {
       val g = newGameWithSequentiallyPlacedBuilders()
 
-      assertThat(g.isFinished()).isFalse
+      assertThat(g.state.isFinished()).isFalse
 
       g.play(
         DSL.player(0).building.giveUp()
       )
 
-      assertThat(g.isFinished()).isTrue
+      assertThat(g.state.isFinished()).isTrue
     }
 
     // TODO reach max level

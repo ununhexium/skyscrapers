@@ -19,7 +19,7 @@ internal class MovementRangeRuleTest {
       Position(0, 2)
     )
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEmpty()
+    assertThat(rule.checkRule(g.state, turn)).isEmpty()
   }
 
   @Test
@@ -33,7 +33,7 @@ internal class MovementRangeRuleTest {
       Position(0, 1)
     )
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEqualTo(
+    assertThat(rule.checkRule(g.state, turn)).isEqualTo(
       listOf(
         GameRuleViolationImpl(
           rule,

@@ -15,7 +15,7 @@ internal class BuildingRangeRuleTest {
     )
 
     val game = DefaultGames.newGameWithSequentiallyPlacedBuilders()
-    val state = game.getState()
+    val state = game.state
 
     val rule = BuildingRangeRule()
 
@@ -33,7 +33,7 @@ internal class BuildingRangeRuleTest {
     )
 
     val game = DefaultGames.newGameWithSequentiallyPlacedBuilders()
-    val state = game.getState()
+    val state = game.state
 
     val rule = BuildingRangeRule()
 

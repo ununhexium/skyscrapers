@@ -19,7 +19,7 @@ internal class BuilderPreventsBuildingRuleTest {
     )
     val rule = BuilderPreventsBuildingRule
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEmpty()
+    assertThat(rule.checkRule(g.state, turn)).isEmpty()
   }
 
   @Test
@@ -33,7 +33,7 @@ internal class BuilderPreventsBuildingRuleTest {
     )
     val rule = BuilderPreventsBuildingRule
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEqualTo(
+    assertThat(rule.checkRule(g.state, turn)).isEqualTo(
       listOf(
         GameRuleViolationImpl(rule, "Can't build at [1, 0]: a builder is present")
       )

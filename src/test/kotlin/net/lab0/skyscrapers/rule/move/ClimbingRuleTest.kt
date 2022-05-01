@@ -21,9 +21,9 @@ internal class ClimbingRuleTest {
     )
     val rule = ClimbingRule()
 
-    (g as GameImpl).backdoor.setHeight(target, 1)
+    (g as GameImpl).backdoor.forceState(g.state.height(target, 1))
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEmpty()
+    assertThat(rule.checkRule(g.state, turn)).isEmpty()
   }
 
   @Test
@@ -38,9 +38,9 @@ internal class ClimbingRuleTest {
     )
     val rule = ClimbingRule()
 
-    (g as GameImpl).backdoor.setHeight(target, 2)
+    (g as GameImpl).backdoor.forceState(g.state.height(target, 2))
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEqualTo(
+    assertThat(rule.checkRule(g.state, turn)).isEqualTo(
       listOf(
         GameRuleViolationImpl(
           rule,

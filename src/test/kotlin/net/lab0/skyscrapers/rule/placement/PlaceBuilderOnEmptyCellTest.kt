@@ -15,7 +15,7 @@ internal class PlaceBuilderOnEmptyCellTest {
     val rule = PlaceBuilderOnEmptyCell
     val turn = TurnType.PlacementTurn(0, Position(0, 0))
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEmpty()
+    assertThat(rule.checkRule(g.state, turn)).isEmpty()
   }
 
   @Test
@@ -24,9 +24,9 @@ internal class PlaceBuilderOnEmptyCellTest {
     val rule = PlaceBuilderOnEmptyCell
     val turn = TurnType.PlacementTurn(0, Position(0, 0))
 
-    (g as GameImpl).backdoor.addBuilder(0, Position(0, 0))
+    (g as GameImpl).backdoor.forceState(g.state.placeBuilder(0, Position(0, 0)))
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEqualTo(
+    assertThat(rule.checkRule(g.state, turn)).isEqualTo(
       listOf(
         GameRuleViolationImpl(
           rule,

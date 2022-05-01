@@ -2,6 +2,7 @@ package net.lab0.skyscrapers.rule.move
 
 import net.lab0.skyscrapers.api.*
 import net.lab0.skyscrapers.rule.GameRuleViolationImpl
+import net.lab0.skyscrapers.structure.GameState
 
 object SealsPreventAnyMoveAndAction : Rule<TurnType.MoveTurn> {
   override val name = "Seals prevent building and moving"

@@ -20,7 +20,7 @@ internal class DefaultBuildersMovementRulesTest {
       Position(2, 2)
     )
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEmpty()
+    assertThat(rule.checkRule(g.state, turn)).isEmpty()
   }
 
   @Test
@@ -34,7 +34,7 @@ internal class DefaultBuildersMovementRulesTest {
       Position(2, 2)
     )
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEqualTo(
+    assertThat(rule.checkRule(g.state, turn)).isEqualTo(
       listOf(
         GameRuleViolationImpl(
           rule,
@@ -57,9 +57,9 @@ internal class DefaultBuildersMovementRulesTest {
       Position(2, 2)
     )
 
-    (g as GameImpl).backdoor.addBuilder(0, target)
+    (g as GameImpl).backdoor.forceState(g.state.placeBuilder(0, target))
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEqualTo(
+    assertThat(rule.checkRule(g.state, turn)).isEqualTo(
       listOf(
         GameRuleViolationImpl(
           rule,
@@ -81,7 +81,7 @@ internal class DefaultBuildersMovementRulesTest {
       Position(2, 2)
     )
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEqualTo(
+    assertThat(rule.checkRule(g.state, turn)).isEqualTo(
       listOf(
         GameRuleViolationImpl(
           rule,

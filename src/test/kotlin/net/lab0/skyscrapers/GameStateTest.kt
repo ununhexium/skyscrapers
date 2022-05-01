@@ -1,17 +1,17 @@
 package net.lab0.skyscrapers
 
-import net.lab0.skyscrapers.structure.GameStateData
+import net.lab0.skyscrapers.structure.GameState
 import net.lab0.skyscrapers.structure.Matrix
 import net.lab0.skyscrapers.structure.Phase
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class GameStateDataTest {
+internal class GameStateTest {
   companion object {
-    val state = GameStateData(
-      Phase.MOVEMENT,
-      mapOf(),
+    val state = GameState(
+      listOf(),
       0,
+      mapOf(),
       Matrix(
         listOf(
           listOf(1, 0, 3, 4),
@@ -38,8 +38,9 @@ internal class GameStateDataTest {
 
   @Test
   fun `can store the initial state from strings`() {
-    val parsed = GameStateData.from(
-      Phase.MOVEMENT,
+    val parsed = GameState.from(
+      listOf(),
+      0,
       mapOf(),
       """
           1 0 3 4

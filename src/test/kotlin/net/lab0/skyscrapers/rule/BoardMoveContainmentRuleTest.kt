@@ -13,8 +13,6 @@ internal class BoardMoveContainmentRuleTest {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
     val rule = BoardMoveContainmentRule
 
-    g.getState()
-
     val turn = TurnType.MoveTurn.BuildTurn(
       0,
       Position(0, 0),
@@ -22,7 +20,7 @@ internal class BoardMoveContainmentRuleTest {
       Position(2, 2)
     )
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEmpty()
+    assertThat(rule.checkRule(g.state, turn)).isEmpty()
   }
 
   @Test
@@ -38,7 +36,7 @@ internal class BoardMoveContainmentRuleTest {
 
     val rule = BoardMoveContainmentRule
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEqualTo(
+    assertThat(rule.checkRule(g.state, turn)).isEqualTo(
       listOf(
         GameRuleViolationImpl(
           rule,
@@ -61,7 +59,7 @@ internal class BoardMoveContainmentRuleTest {
 
     val rule = BoardMoveContainmentRule
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEqualTo(
+    assertThat(rule.checkRule(g.state, turn)).isEqualTo(
       listOf(
         GameRuleViolationImpl(
           rule,
@@ -84,7 +82,7 @@ internal class BoardMoveContainmentRuleTest {
 
     val rule = BoardMoveContainmentRule
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEqualTo(
+    assertThat(rule.checkRule(g.state, turn)).isEqualTo(
       listOf(
         GameRuleViolationImpl(
           rule,
@@ -107,7 +105,7 @@ internal class BoardMoveContainmentRuleTest {
 
     val rule = BoardMoveContainmentRule
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEqualTo(
+    assertThat(rule.checkRule(g.state, turn)).isEqualTo(
       listOf(
         GameRuleViolationImpl(
           rule,

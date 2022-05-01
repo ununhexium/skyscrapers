@@ -21,14 +21,14 @@ internal class BlocksAvailabilityRuleTest {
     )
     val rule = BlocksAvailabilityRule()
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEmpty()
+    assertThat(rule.checkRule(g.state, turn)).isEmpty()
   }
 
   @Test
   fun `can't build when there is no block available`() {
     val g =
       DefaultGames.newGameWithSequentiallyPlacedBuilders(
-        blocks = mapOf(Height(1) to 1)
+        blocks = mapOf(Height(0) to 1, Height(1) to 1)
       )
 
     val build = Position(2, 2)
@@ -41,9 +41,9 @@ internal class BlocksAvailabilityRuleTest {
 
     val rule = BlocksAvailabilityRule()
 
-    (g as GameImpl).backdoor.setHeight(build, 1)
+    (g as GameImpl).backdoor.forceState(g.state.height(build, 1))
 
-    assertThat(rule.checkRule(g.getState(), turn)).isEqualTo(
+    assertThat(rule.checkRule(g.state, turn)).isEqualTo(
       listOf(
         GameRuleViolationImpl(
           rule,

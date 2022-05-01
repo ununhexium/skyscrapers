@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.api
 
 import net.lab0.skyscrapers.NewGame
-import net.lab0.skyscrapers.structure.GameStateData
+import net.lab0.skyscrapers.structure.GameState
 import net.lab0.skyscrapers.structure.Height
 import net.lab0.skyscrapers.structure.Phase
 import net.lab0.skyscrapers.structure.Position
@@ -39,13 +39,6 @@ interface Game {
   val turn: Int
 
   /**
-   * The player whose turn it is to play.
-   *
-   * Turns are 0-based.
-   */
-  val currentPlayer: Int
-
-  /**
    * Max number of builder per player.
    */
   val maxBuildersPerPlayer: Int
@@ -58,16 +51,8 @@ interface Game {
    */
   val blocks: Map<Height, Int>
 
-  fun getHeight(column: Int, row: Int): Height
-
-  fun getHeight(pos: Position): Height =
-    this.getHeight(pos.y, pos.x)
-
-  fun getBuilders(player: Int): List<Position>
-
   fun play(turn: TurnType)
   fun addBuilder(turn: Placement)
-  fun hasBuilder(position: Position): Boolean
 
   /**
    * The player abandons the game.
@@ -83,11 +68,13 @@ interface Game {
 
   fun moveAndSeal(turn: Seal)
 
-  fun hasSeal(seal: Position): Boolean
+  /**
+   * Get a specific state from the history
+   */
+  fun getState(step: Int): GameState
 
-  val phase: Phase
-
-  fun isFinished(): Boolean
-
-  fun getState(): GameStateData
+  /**
+   * The current state
+   */
+  val state: GameState
 }

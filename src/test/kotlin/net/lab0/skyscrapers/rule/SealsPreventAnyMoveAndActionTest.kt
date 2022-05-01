@@ -13,7 +13,7 @@ internal class SealsPreventAnyMoveAndActionTest {
   fun `can move and build where there is no seal`() {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
 
-    val state = g.getState()
+    val state = g.state
     val turn = TurnType.MoveTurn.SealTurn(
       0,
       Position(0, 0),
@@ -30,9 +30,9 @@ internal class SealsPreventAnyMoveAndActionTest {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
     val target = Position(1, 1)
 
-    (g as GameImpl).backdoor.addSeal(target)
+    (g as GameImpl).backdoor.forceState(g.state.seal(target))
 
-    val state = g.getState()
+    val state = g.state
     val turn = TurnType.MoveTurn.SealTurn(
       0,
       Position(0, 0),
@@ -57,9 +57,9 @@ internal class SealsPreventAnyMoveAndActionTest {
     val target = Position(1, 1)
     val build = Position(2, 2)
 
-    (g as GameImpl).backdoor.addSeal(build)
+    (g as GameImpl).backdoor.forceState(g.state.seal(build))
 
-    val state = g.getState()
+    val state = g.state
     val turn = TurnType.MoveTurn.BuildTurn(
       0,
       Position(0, 0),
@@ -84,9 +84,9 @@ internal class SealsPreventAnyMoveAndActionTest {
     val target = Position(1, 1)
     val seal = Position(2, 2)
 
-    (g as GameImpl).backdoor.addSeal(seal)
+    (g as GameImpl).backdoor.forceState(g.state.seal(seal))
 
-    val state = g.getState()
+    val state = g.state
     val turn = TurnType.MoveTurn.SealTurn(
       0,
       Position(0, 0),
