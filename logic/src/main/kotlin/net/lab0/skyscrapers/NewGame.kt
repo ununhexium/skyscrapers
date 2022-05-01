@@ -4,6 +4,7 @@ import net.lab0.skyscrapers.api.BlocksData
 import net.lab0.skyscrapers.api.Game
 import net.lab0.skyscrapers.exception.InvalidBoardSize
 import net.lab0.skyscrapers.exception.InvalidPlayersCount
+import net.lab0.skyscrapers.rule.RuleBook
 
 interface NewGame {
   fun new(
@@ -12,6 +13,7 @@ interface NewGame {
     playerCount: Int = Defaults.PLAYER_COUNT,
     buildersPerPlayer: Int = Defaults.BUILDERS_PER_PLAYER,
     blocks: BlocksData = Defaults.BLOCKS,
+    ruleBook: RuleBook = Defaults.RULE_BOOK
   ): Game {
     if (playerCount < 1)
       throw InvalidPlayersCount(playerCount)
@@ -28,6 +30,7 @@ interface NewGame {
       playerCount = playerCount,
       maxBuildersPerPlayer = buildersPerPlayer,
       initialBlocks = blocks,
+      ruleBook = ruleBook
     )
   }
 }

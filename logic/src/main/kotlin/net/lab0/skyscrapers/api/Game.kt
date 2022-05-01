@@ -1,6 +1,7 @@
 package net.lab0.skyscrapers.api
 
 import net.lab0.skyscrapers.NewGame
+import net.lab0.skyscrapers.rule.RuleBook
 
 /**
  * Represents a game.
@@ -42,6 +43,8 @@ interface Game {
   val totalBuilders: Int
     get() = playerCount * maxBuildersPerPlayer
 
+  val ruleBook: RuleBook
+
   fun play(turn: TurnType)
   fun addBuilder(turn: Placement)
 
@@ -70,4 +73,9 @@ interface Game {
   val state: GameState
 
   val history: List<GameState>
+
+  /**
+   * Undo the last turn
+   */
+  fun undo()
 }

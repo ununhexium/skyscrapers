@@ -779,6 +779,7 @@ internal class GameImplTest {
       )
 
       assertThat(g.state.isFinished()).isTrue
+      assertThat(g.state.phase).isEqualTo(Phase.FINISHED)
     }
 
     @Test

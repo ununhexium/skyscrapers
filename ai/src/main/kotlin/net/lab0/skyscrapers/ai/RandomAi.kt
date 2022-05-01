@@ -1,12 +1,15 @@
 package net.lab0.skyscrapers.ai
 
+import net.lab0.skyscrapers.api.Game
 import net.lab0.skyscrapers.api.GameState
-import net.lab0.skyscrapers.api.Turn
 import net.lab0.skyscrapers.api.TurnType
 import net.lab0.skyscrapers.structure.Phase
 import net.lab0.skyscrapers.structure.Position
 
-class RandomAi(val player: Int, override val name: String = "RandomAi#$player") : Ai {
+class RandomAi(
+  val player: Int,
+  override val name: String = "RandomAi#$player"
+) : Ai {
 
   data class RandomAction(
     val start: Position,
@@ -20,15 +23,17 @@ class RandomAi(val player: Int, override val name: String = "RandomAi#$player") 
     }
   }
 
-  override fun think(state: GameState): TurnType {
-    return when (state.phase) {
-      Phase.PLACEMENT -> findPlacementTurn(state)
-      Phase.MOVEMENT -> findMovementTurn(state)
+  override fun think(game: Game): TurnType {
+    return when (game.state.phase) {
+      Phase.PLACEMENT -> findPlacementTurn(game)
+      Phase.MOVEMENT -> findMovementTurn(game)
       Phase.FINISHED -> throw IllegalStateException("Should not happen as the game will stop before calling the AI with such a state")
     }
   }
 
-  private fun findPlacementTurn(state: GameState): TurnType {
+  private fun findPlacementTurn(game: Game): TurnType {
+    val state = game.state
+
     val randomPosition = state
       .dimentions
       .positionsSequence
@@ -39,8 +44,10 @@ class RandomAi(val player: Int, override val name: String = "RandomAi#$player") 
     return TurnType.PlacementTurn(player, randomPosition)
   }
 
-  private fun findMovementTurn(state: GameState): TurnType {
-    val turns = state
+  private fun findMovementTurn(game: Game): TurnType {
+    val state = game.state
+
+    val choices = state
       .getBuilders(player)
       .flatMap { start ->
         start
@@ -72,8 +79,7 @@ class RandomAi(val player: Int, override val name: String = "RandomAi#$player") 
           }
       }
 
-    return turns.shuffled().firstOrNull()?.let {
-
+    val validatedTurns = choices.shuffled().map {
       when (it.type) {
         RandomAction.Type.BUILD -> TurnType.MoveTurn.BuildTurn(
           player,
@@ -88,6 +94,10 @@ class RandomAi(val player: Int, override val name: String = "RandomAi#$player") 
           it.buildOrSeal
         )
       }
-    } ?: TurnType.GiveUpTurn(player)
+    }.filter {
+      game.ruleBook.tryToPlay(it, state).isEmpty()
+    }
+
+    return validatedTurns.firstOrNull() ?: TurnType.GiveUpTurn(player)
   }
 }

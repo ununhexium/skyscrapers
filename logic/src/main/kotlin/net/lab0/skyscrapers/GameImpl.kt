@@ -5,65 +5,21 @@ import net.lab0.skyscrapers.exception.*
 import net.lab0.skyscrapers.rule.*
 import net.lab0.skyscrapers.rule.move.*
 import net.lab0.skyscrapers.rule.move.build.*
-import net.lab0.skyscrapers.rule.move.seal.BoardSealingContainmentRule
-import net.lab0.skyscrapers.rule.move.seal.BuildersPreventsSealingRule
-import net.lab0.skyscrapers.rule.move.seal.SealingRangeRule
-import net.lab0.skyscrapers.rule.move.seal.SealsPreventSealingRule
-import net.lab0.skyscrapers.rule.move.win.WinConditionRule
-import net.lab0.skyscrapers.rule.placement.CantGiveUpDuringPlacementRule
-import net.lab0.skyscrapers.rule.placement.PlaceBuilderOnEmptyCell
 import net.lab0.skyscrapers.structure.*
-import java.util.LinkedList
+import java.util.*
 
 class GameImpl(
   override val width: Int,
   override val height: Int,
   override val playerCount: Int,
   override val maxBuildersPerPlayer: Int,
-
+  override val ruleBook: RuleBook,
   initialBlocks: BlocksData,
-
-  private val turnRules: List<Rule<TurnType>> = listOf(
-    PhaseRule,
-    CheckCurrentPlayer,
-    CantGiveUpDuringPlacementRule,
-  ),
-
-  private val placementRules: List<Rule<TurnType.PlacementTurn>> = listOf(
-    PlaceBuilderOnEmptyCell,
-  ),
-
-  private val moveRules: List<Rule<TurnType.MoveTurn>> = listOf(
-    BoardMoveContainmentRule,
-    DefaultBuildersMovementRule,
-    MovementRangeRule(),
-    ClimbingRule(),
-    SealsPreventMovingRule,
-  ),
-
-  private val buildRules: List<Rule<TurnType.MoveTurn.BuildTurn>> = listOf(
-    BoardBuildingContainmentRule,
-    BlocksAvailabilityRule(),
-    BuildingRangeRule(),
-    BuildersPreventsBuildingRule,
-    SealsPreventBuildingRule,
-  ),
-
-  private val sealRules: List<Rule<TurnType.MoveTurn.SealTurn>> = listOf(
-    BoardSealingContainmentRule,
-    SealingRangeRule(),
-    SealsPreventSealingRule,
-    BuildersPreventsSealingRule,
-  ),
-
-  private val winRules: List<Rule<TurnType.MoveTurn.WinTurn>> = listOf(
-    WinConditionRule,
-  ),
 ) : Game {
 
   companion object : NewGame
 
-  private val internalHistory = mutableListOf<GameState>()
+  private val internalHistory = LinkedList<GameState>()
 
   override val history
     get() = internalHistory.toList()
@@ -136,45 +92,30 @@ class GameImpl(
   override val turn: Int
     get() = internalTurns
 
-  // TODO: add rulesbook to manage all the rules and their application
   @kotlin.jvm.Throws(GameRuleViolationException::class)
   override fun play(turn: TurnType) {
-    throwIfViolatedRule(turnRules, turn, state)
+    val violations = ruleBook.tryToPlay(turn, state)
 
-    when (turn) {
-      is TurnType.PlacementTurn -> {
-        throwIfViolatedRule(placementRules, turn, state)
-        addBuilder(turn)
-      }
-      is TurnType.GiveUpTurn -> giveUp(turn)
-      is TurnType.MoveTurn -> {
-        throwIfViolatedRule(moveRules, turn, state)
-
-        val nextBuilderState = move(turn, state)
-
-        when (turn) {
-          is TurnType.MoveTurn.BuildTurn -> {
-            throwIfViolatedRule(buildRules, turn, nextBuilderState)
-            moveAndBuild(turn)
-          }
-          is TurnType.MoveTurn.SealTurn -> {
-            throwIfViolatedRule(sealRules, turn, nextBuilderState)
-            moveAndSeal(turn)
-          }
-          is TurnType.MoveTurn.WinTurn -> {
-            throwIfViolatedRule(winRules, turn, nextBuilderState)
-            moveAndWin(turn)
+    if (violations.isEmpty()) {
+      when (turn) {
+        is TurnType.PlacementTurn -> addBuilder(turn)
+        is TurnType.GiveUpTurn -> giveUp(turn)
+        is TurnType.MoveTurn -> {
+          when (turn) {
+            is TurnType.MoveTurn.BuildTurn -> moveAndBuild(turn)
+            is TurnType.MoveTurn.SealTurn -> moveAndSeal(turn)
+            is TurnType.MoveTurn.WinTurn -> moveAndWin(turn)
           }
         }
       }
-    }
+    } else throw GameRuleViolationException(violations)
 
     internalTurns++
   }
 
   private fun moveAndWin(turn: TurnType.MoveTurn) {
     internalHistory.add(
-      move(turn, state).copy(
+      state.move(turn).copy(
         players = state.players.map {
           if (it.id == turn.player) it else it.copy(
             active = false
@@ -182,27 +123,6 @@ class GameImpl(
         }
       )
     )
-  }
-
-  private fun move(turn: Move, state: GameState): GameState =
-    state.copy(
-      builders = state.builders.copyAndSwap(turn.start, turn.target)
-    )
-
-  private inline fun <reified T> throwIfViolatedRule(
-    rules: List<Rule<T>>,
-    turn: T,
-    state: GameState,
-  ) where T : TurnType {
-    val violatedRule = rules.firstOrNull {
-      it.checkRule(state, turn).isNotEmpty()
-    }
-
-    if (violatedRule != null) {
-      throw GameRuleViolationException(
-        violatedRule.checkRule(state, turn)
-      )
-    }
   }
 
   override fun addBuilder(turn: Placement) {
@@ -232,7 +152,7 @@ class GameImpl(
         // disable to current player and rotate
         players = state.players.drop(1) + state.players
           .first()
-          .copy(active = false)
+          .copy(active = false),
       )
     )
   }
@@ -247,7 +167,7 @@ class GameImpl(
       state.copy(
         players = rotateToNextPlayer(state.players),
 
-        builders = move(turn, state).builders,
+        builders = state.move(turn).builders,
 
         blocks = state.blocks.removeBlockOfHeight(nextHeight),
 
@@ -263,7 +183,7 @@ class GameImpl(
     internalHistory.add(
       state.copy(
         players = rotateToNextPlayer(state.players),
-        builders = move(turn, state).builders,
+        builders = state.move(turn).builders,
         blocks = state.blocks.removeBlockOfHeight(Height.SEAL),
         seals = state.seals.copyAndSet(turn.seal, true)
       )
@@ -275,6 +195,11 @@ class GameImpl(
 
   override val state
     get() = internalHistory.last()
+
+  override fun undo() {
+    internalTurns--
+    internalHistory.removeLast()
+  }
 
   class Backdoor(val game: GameImpl) {
     fun forceState(state: GameState) {

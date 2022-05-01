@@ -77,11 +77,14 @@ data class GameState(
     builders[position] != null
 
   val phase: Phase
-    get() {
-      val totalBuilders = players.size * maxBuildersPerPlayer
-      val placedBuilders = builders.count { it != null }
-      return if (placedBuilders < totalBuilders) Phase.PLACEMENT else Phase.MOVEMENT
-    }
+    get() =
+      if (isFinished()) {
+        Phase.FINISHED
+      } else {
+        val totalBuilders = players.size * maxBuildersPerPlayer
+        val placedBuilders = builders.count { it != null }
+        if (placedBuilders < totalBuilders) Phase.PLACEMENT else Phase.MOVEMENT
+      }
 
   fun isFinished() =
     players.count { it.active } == 1 // or reached max height
@@ -99,4 +102,7 @@ data class GameState(
 
   fun placeBuilder(player: Int, position: Position) =
     copy(builders = builders.copyAndSet(position, player))
+
+  fun move(turn: Move) =
+    copy(builders = builders.copyAndSwap(turn.start, turn.target))
 }
