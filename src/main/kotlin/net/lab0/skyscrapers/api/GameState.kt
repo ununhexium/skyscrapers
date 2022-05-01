@@ -9,7 +9,7 @@ import net.lab0.skyscrapers.structure.Position
 data class GameState(
   val players: List<Player>,
   val maxBuildersPerPlayer: Int,
-  val blocks: Map<Height, Int>,
+  val blocks: BlocksData,
   val buildings: Matrix<Height>,
   val seals: Matrix<Boolean>,
   val builders: Matrix<Int?>,
@@ -18,7 +18,7 @@ data class GameState(
     fun from(
       players: List<Player>,
       buildersPerPlayer: Int,
-      blocks: Map<Height, Int>,
+      blocks: BlocksData,
       buildings: String,
       seals: String,
       builders: String,

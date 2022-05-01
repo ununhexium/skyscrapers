@@ -1,6 +1,7 @@
 package net.lab0.skyscrapers
 
 import net.lab0.skyscrapers.action.DSL
+import net.lab0.skyscrapers.api.BlocksData
 import net.lab0.skyscrapers.api.Game
 import net.lab0.skyscrapers.structure.Height
 import net.lab0.skyscrapers.structure.Position
@@ -12,7 +13,7 @@ object DefaultGames {
     height: Int = Defaults.HEIGHT,
     playerCount: Int = Defaults.PLAYER_COUNT,
     buildersPerPlayer: Int = Defaults.BUILDERS_PER_PLAYER,
-    blocks: Map<Height, Int> = Defaults.BLOCKS,
+    blocks: BlocksData = Defaults.BLOCKS,
   ) = Game.new(width, height, playerCount, buildersPerPlayer, blocks).also {
     (0 until playerCount * buildersPerPlayer).forEach { turn ->
       val player = turn % playerCount

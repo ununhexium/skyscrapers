@@ -2,6 +2,7 @@ package net.lab0.skyscrapers
 
 import net.lab0.skyscrapers.DefaultGames.newGameWithSequentiallyPlacedBuilders
 import net.lab0.skyscrapers.action.DSL
+import net.lab0.skyscrapers.api.BlocksData
 import net.lab0.skyscrapers.api.Game
 import net.lab0.skyscrapers.api.GameState
 import net.lab0.skyscrapers.assertj.GameStateAssert
@@ -120,14 +121,14 @@ internal class GameImplTest {
     fun `some blocks to build must be present`() {
       assertThat(
         assertThrows<InvalidBlocksConfiguration> {
-          Game.new(blocks = mapOf())
+          Game.new(blocks = BlocksData.EMPTY)
         }
       ).hasMessage("There must be at least 1 block for the game to make sense")
 
       assertThat(
         assertThrows<InvalidBlocksConfiguration> {
           Game.new(
-            blocks = mapOf(Height(1) to 0, Height(2) to 0)
+            blocks = BlocksData(Height(2) to 0)
           )
         }
       ).hasMessage("There must be at least 1 block for the game to make sense")
@@ -138,7 +139,7 @@ internal class GameImplTest {
       assertThat(
         assertThrows<InvalidBlocksConfiguration> {
           Game.new(
-            blocks = mapOf(Height(1) to 10, Height(3) to 5)
+            blocks = BlocksData(Height(1) to 10, Height(3) to 5)
           )
         }
       ).hasMessage("There must no gap in the blocks heights")
@@ -149,7 +150,7 @@ internal class GameImplTest {
       assertThat(
         assertThrows<InvalidBlocksConfiguration> {
           Game.new(
-            blocks = mapOf(Height(0) to 0, Height(1) to 1, Height(2) to 99)
+            blocks = BlocksData(Height(0) to 0, Height(1) to 1, Height(2) to 99)
           )
         }
       ).hasMessage("The lower blocks must be in larger quantity than the higher blocks")
@@ -160,7 +161,7 @@ internal class GameImplTest {
       assertThat(
         assertThrows<InvalidBlocksConfiguration> {
           Game.new(
-            blocks = mapOf(Height(0) to 1, Height(1) to 1, Height(2) to 0, Height(3) to 0)
+            blocks = BlocksData(Height(0) to 1, Height(1) to 1, Height(2) to 0, Height(3) to 0)
           )
         }
       ).hasMessage(
@@ -317,9 +318,9 @@ internal class GameImplTest {
       GameStateAssert.assertThat(g.state).isEqualTo(
         state0.copy(
           players = listOf(Player(1), Player(0)),
-          blocks = state0.blocks
-            .toMutableMap()
-            .also { it[Height(1)] = it[Height(1)]!! - 1 },
+          blocks = state0
+            .blocks
+            .removeBlockOfHeight(Height(1)),
           buildings = BuildingsMatrix.from(
             """
               |1 0 0 0 0
@@ -533,7 +534,7 @@ internal class GameImplTest {
     @Test
     fun `can't build if there is no building block remaining`() {
       val g = newGameWithSequentiallyPlacedBuilders(
-        blocks = mapOf(
+        blocks = BlocksData(
           Height(1) to 1,
           Height(2) to 1
         )
@@ -635,7 +636,7 @@ internal class GameImplTest {
             |. . . . .
           """.trimMargin(),
           ) { if (it == ".") null else it.toInt() },
-          blocks = state0.blocks.mapValues { if(it.key == Height.SEAL) it.value - 1 else it.value }
+          blocks = state0.blocks.removeSeal()
         )
       )
 

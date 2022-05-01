@@ -43,11 +43,6 @@ interface Game {
   val totalBuilders: Int
     get() = playerCount * maxBuildersPerPlayer
 
-  /**
-   * The number of blocks available for each height
-   */
-  val blocks: Map<Height, Int>
-
   fun play(turn: TurnType)
   fun addBuilder(turn: Placement)
 

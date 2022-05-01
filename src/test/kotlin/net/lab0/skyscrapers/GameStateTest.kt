@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers
 
+import net.lab0.skyscrapers.api.BlocksData
 import net.lab0.skyscrapers.api.GameState
 import net.lab0.skyscrapers.structure.Height
 import net.lab0.skyscrapers.structure.Matrix
@@ -11,7 +12,7 @@ internal class GameStateTest {
     val state = GameState(
       listOf(),
       0,
-      mapOf(),
+      BlocksData.EMPTY,
       Matrix(
         listOf(
           listOf(1, 0, 3, 4),
@@ -41,7 +42,7 @@ internal class GameStateTest {
     val parsed = GameState.from(
       listOf(),
       0,
-      mapOf(),
+      BlocksData.EMPTY,
       """
           1 0 3 4
           0 2 0 0

@@ -2,6 +2,7 @@ package net.lab0.skyscrapers.rule.move.build
 
 import net.lab0.skyscrapers.DefaultGames
 import net.lab0.skyscrapers.GameImpl
+import net.lab0.skyscrapers.api.BlocksData
 import net.lab0.skyscrapers.api.TurnType
 import net.lab0.skyscrapers.rule.GameRuleViolationImpl
 import net.lab0.skyscrapers.structure.Height
@@ -28,7 +29,7 @@ internal class BlocksAvailabilityRuleTest {
   fun `can't build when there is no block available`() {
     val g =
       DefaultGames.newGameWithSequentiallyPlacedBuilders(
-        blocks = mapOf(Height(0) to 1, Height(1) to 1)
+        blocks = BlocksData(Height(0) to 1, Height(1) to 1)
       )
 
     val build = Position(2, 2)

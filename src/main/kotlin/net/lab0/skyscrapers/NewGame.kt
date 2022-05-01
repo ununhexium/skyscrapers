@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers
 
+import net.lab0.skyscrapers.api.BlocksData
 import net.lab0.skyscrapers.api.Game
 import net.lab0.skyscrapers.exception.InvalidBoardSize
 import net.lab0.skyscrapers.exception.InvalidPlayersCount
@@ -11,7 +12,7 @@ interface NewGame {
     height: Int = Defaults.HEIGHT,
     playerCount: Int = Defaults.PLAYER_COUNT,
     buildersPerPlayer: Int = Defaults.BUILDERS_PER_PLAYER,
-    blocks: Map<Height,Int> = Defaults.BLOCKS,
+    blocks: BlocksData = Defaults.BLOCKS,
   ): Game {
     if (playerCount < 1)
       throw InvalidPlayersCount(playerCount)

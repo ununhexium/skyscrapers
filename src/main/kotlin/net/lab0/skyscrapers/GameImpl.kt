@@ -17,7 +17,7 @@ class GameImpl(
   override val playerCount: Int,
   override val maxBuildersPerPlayer: Int,
 
-  initialBlocks: Map<Height, Int>,
+  initialBlocks: BlocksData,
 
   private val turnRules: List<Rule<TurnType>> = listOf(
     PhaseRule,
@@ -49,7 +49,7 @@ class GameImpl(
   private val history = mutableListOf<GameState>()
 
   init {
-    if (initialBlocks.keys.isEmpty() || initialBlocks.entries.sumOf { it.value } == 0)
+    if (initialBlocks.isEmpty())
       throw InvalidBlocksConfiguration(
         "There must be at least 1 block for the game to make sense"
       )
@@ -57,10 +57,10 @@ class GameImpl(
     // all the blocks from 0 (seals) to N must be present
     // therefore the *filtered* keys must be [1, 2, 3, 4, .. N]
     val filteredKeys =
-      initialBlocks.keys.filter { it != Height.SEAL }.maxOf { it.value }
+      initialBlocks.getBuildingBlocks().keys.maxOf { it.value }
 
     val filteredInitialBlock =
-      initialBlocks.keys.filter { it != Height.SEAL }.size
+      initialBlocks.getBuildingBlocks().keys.size
 
     if (filteredKeys != filteredInitialBlock)
       throw InvalidBlocksConfiguration(
@@ -70,7 +70,7 @@ class GameImpl(
     // checks that the block amounts are decreasing as the height increases
     // seals are a separate case, not checking their amount
     val amounts = initialBlocks
-      .filter { it.key.value != 0 }
+      .getBuildingBlocks()
       .toSortedMap(Height::compareTo)
       .map { it.value }
 
@@ -88,7 +88,7 @@ class GameImpl(
      * Given the previous tests, checking for an amount of 0 at the top
      * position is enough, but still checking everything at it's cheap.
      */
-    val missingBlocks = initialBlocks.filter { it.value == 0 }
+    val missingBlocks = initialBlocks.getBuildingBlocks().filterValues { it <= 0 }
     if (missingBlocks.isNotEmpty()) {
       val heights =
         missingBlocks.keys.joinToString(", ") { it.value.toString() }
@@ -113,9 +113,6 @@ class GameImpl(
 
   override val turn: Int
     get() = internalTurns
-
-  override val blocks: Map<Height, Int>
-    get() = state.blocks.toMap()
 
   // TODO: add rulesbook to manage all the rules and their application
   @kotlin.jvm.Throws(GameRuleViolationException::class)
@@ -211,9 +208,7 @@ class GameImpl(
 
         builders = move(turn, state).builders,
 
-        blocks = state.blocks.mapValues {
-          if (it.key == nextHeight) it.value - 1 else it.value
-        },
+        blocks = state.blocks.removeBlockOfHeight(nextHeight),
 
         buildings = state.buildings.copyAndSet(
           turn.build,
@@ -228,9 +223,7 @@ class GameImpl(
       state.copy(
         players = rotateToNextPlayer(state.players),
         builders = move(turn, state).builders,
-        blocks = state.blocks.mapValues {
-          if (it.key.value == 0) it.value - 1 else it.value
-        },
+        blocks = state.blocks.removeBlockOfHeight(Height.SEAL),
         seals = state.seals.copyAndSet(turn.seal, true)
       )
     )

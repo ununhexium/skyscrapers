@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers
 
+import net.lab0.skyscrapers.api.BlocksData
 import net.lab0.skyscrapers.structure.Height
 
 object Defaults {
@@ -9,10 +10,12 @@ object Defaults {
 
   const val BUILDERS_PER_PLAYER = 2
 
-  val BLOCKS = mapOf(
-    Height(0) to 17,
-    Height(1) to 21,
-    Height(2) to 19,
-    Height(3) to 14,
+  val BLOCKS = BlocksData(
+    mapOf(
+      Height(0) to 17,
+      Height(1) to 21,
+      Height(2) to 19,
+      Height(3) to 14,
+    )
   )
 }
