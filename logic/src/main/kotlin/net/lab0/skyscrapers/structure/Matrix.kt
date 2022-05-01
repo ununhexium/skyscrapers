@@ -130,4 +130,20 @@ data class Matrix<T>(
         function(cell)
       }
     }
+
+  fun <A, Z> merge(
+    other: Matrix<A>,
+    combiner: (Pair<T, A>) -> Z
+  ): Matrix<Z> {
+    if (this.dimensions != other.dimensions)
+      throw IllegalArgumentException("The 2 matrices must have the same size. You gave $dimensions and ${other.dimensions}")
+
+    return Matrix(
+      data
+        .flatten()
+        .zip(other.data.flatten())
+        .map { combiner(it) }
+        .chunked(columns)
+    )
+  }
 }

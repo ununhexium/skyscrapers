@@ -2,6 +2,7 @@ package net.lab0.skyscrapers
 
 import net.lab0.skyscrapers.api.BlocksData
 import net.lab0.skyscrapers.api.GameState
+import net.lab0.skyscrapers.structure.Dimension
 import net.lab0.skyscrapers.structure.Height
 import net.lab0.skyscrapers.structure.Matrix
 import org.assertj.core.api.Assertions.assertThat
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.assertThrows
 internal class GameStateTest {
   companion object {
     val state = GameState(
+      Dimension(4,3),
       listOf(),
       0,
       BlocksData.EMPTY,
@@ -94,6 +96,7 @@ internal class GameStateTest {
     // seals matrix has a different size
     assertThrows<IllegalStateException> {
       GameState(
+        Dimension(0,0),
         listOf(),
         0,
         BlocksData.EMPTY,
@@ -106,6 +109,7 @@ internal class GameStateTest {
     // builders matrix has a different size
     assertThrows<IllegalStateException> {
       GameState(
+        Dimension(0,0),
         listOf(),
         0,
         BlocksData.EMPTY,

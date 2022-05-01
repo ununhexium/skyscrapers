@@ -63,7 +63,10 @@ class GameImpl(
 
   companion object : NewGame
 
-  private val history = mutableListOf<GameState>()
+  private val internalHistory = mutableListOf<GameState>()
+
+  override val history
+    get() = internalHistory.toList()
 
   init {
     if (initialBlocks.isEmpty())
@@ -115,8 +118,9 @@ class GameImpl(
       )
     }
 
-    history.add(
+    internalHistory.add(
       GameState(
+        Dimension(width, height),
         (0 until playerCount).map { Player(it) },
         maxBuildersPerPlayer,
         initialBlocks,
@@ -169,7 +173,7 @@ class GameImpl(
   }
 
   private fun moveAndWin(turn: TurnType.MoveTurn) {
-    history.add(
+    internalHistory.add(
       move(turn, state).copy(
         players = state.players.map {
           if (it.id == turn.player) it else it.copy(
@@ -202,7 +206,7 @@ class GameImpl(
   }
 
   override fun addBuilder(turn: Placement) {
-    history.add(
+    internalHistory.add(
       state.copy(
         builders = state.builders.copyAndSet(turn.position, turn.player),
         players = rotateToNextPlayer(state.players)
@@ -223,7 +227,7 @@ class GameImpl(
   }
 
   override fun giveUp(turn: GiveUp) {
-    history.add(
+    internalHistory.add(
       state.copy(
         // disable to current player and rotate
         players = state.players.drop(1) + state.players
@@ -239,7 +243,7 @@ class GameImpl(
     // remove the block that will be used to increase the height
     val nextHeight = state.buildings[turn.build] + 1
 
-    history.add(
+    internalHistory.add(
       state.copy(
         players = rotateToNextPlayer(state.players),
 
@@ -256,7 +260,7 @@ class GameImpl(
   }
 
   override fun moveAndSeal(turn: Seal) {
-    history.add(
+    internalHistory.add(
       state.copy(
         players = rotateToNextPlayer(state.players),
         builders = move(turn, state).builders,
@@ -267,14 +271,14 @@ class GameImpl(
   }
 
   override fun getState(step: Int) =
-    history.reversed()[step]
+    internalHistory.reversed()[step]
 
   override val state
-    get() = history.last()
+    get() = internalHistory.last()
 
   class Backdoor(val game: GameImpl) {
     fun forceState(state: GameState) {
-      game.history.add(state)
+      game.internalHistory.add(state)
     }
   }
 

@@ -68,4 +68,6 @@ interface Game {
    * The current state
    */
   val state: GameState
+
+  val history: List<GameState>
 }

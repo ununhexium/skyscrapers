@@ -108,4 +108,29 @@ internal class MatrixTest {
       )
     )
   }
+
+  @Test
+  fun `can zip matrices`() {
+    val one = Matrix(
+      listOf(
+        listOf(1, 2, 3),
+        listOf(4, 5, 6),
+      )
+    )
+    val a = Matrix(
+      listOf(
+        listOf("a", "b", "c"),
+        listOf("d", "e", "f"),
+      )
+    )
+
+    assertThat(one.merge(a){ it.first.toString() + it.second.toString() }).isEqualTo(
+      Matrix(
+        listOf(
+          listOf("1a", "2b", "3c"),
+          listOf("4d", "5e", "6f"),
+        )
+      )
+    )
+  }
 }

@@ -22,5 +22,24 @@ data class Position(
    * @param maxY inclusive
    */
   fun inBounds(minX: Int, maxX: Int, minY: Int, maxY: Int) =
-    x in 0..maxX && y in 0..maxY
+    x in minX..maxX && y in minY..maxY
+
+  fun inBounds(dimensions:Dimension) =
+    x in 0 until dimensions.width && y in 0 until dimensions.height
+
+  /**
+   * Get the list of all surrounding positions, including diagonals
+   */
+  fun getSurroundingPositions() = listOf(
+    Position(this.x + 1, this.y - 1),
+    Position(this.x + 1, this.y),
+    Position(this.x + 1, this.y + 1),
+
+    Position(this.x, this.y - 1),
+    Position(this.x, this.y + 1),
+
+    Position(this.x - 1, this.y - 1),
+    Position(this.x - 1, this.y),
+    Position(this.x - 1, this.y + 1),
+  )
 }

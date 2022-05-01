@@ -1,12 +1,10 @@
 package net.lab0.skyscrapers.api
 
 import net.lab0.skyscrapers.Player
-import net.lab0.skyscrapers.structure.Height
-import net.lab0.skyscrapers.structure.Matrix
-import net.lab0.skyscrapers.structure.Phase
-import net.lab0.skyscrapers.structure.Position
+import net.lab0.skyscrapers.structure.*
 
 data class GameState(
+  val dimentions: Dimension,
   val players: List<Player>,
   val maxBuildersPerPlayer: Int,
   val blocks: BlocksData,
@@ -15,7 +13,7 @@ data class GameState(
   val builders: Matrix<Int?>,
 ) {
   init {
-    if(buildings.dimensions != seals.dimensions || buildings.dimensions != builders.dimensions)
+    if (buildings.dimensions != seals.dimensions || buildings.dimensions != builders.dimensions)
       throw IllegalStateException("All the matrices must have the same size")
   }
 
@@ -28,7 +26,6 @@ data class GameState(
       seals: String,
       builders: String,
     ): GameState {
-      // TODO check that all the matrices have the same size
       val buildingsData = Matrix.from(buildings) { it.toInt() }
 
       val sealsData = Matrix.from(seals) { it == "1" }
@@ -37,10 +34,8 @@ data class GameState(
         if (it == ".") null else it.toInt()
       }
 
-      // TODO: guess current player
-      // TODO: set blocks
-
       return GameState(
+        Dimension(buildingsData.columns, buildingsData.rows),
         players,
         buildersPerPlayer,
         blocks,
@@ -91,7 +86,7 @@ data class GameState(
   fun isFinished() =
     players.count { it.active } == 1 // or reached max height
 
-  // TODO: encapsulate these in a backdoor
+  // TODO: encapsulate these in a backdoor?
 
   fun isWithinBounds(pos: Position) =
     pos.inBounds(0, buildings.columns, 0, buildings.rows)

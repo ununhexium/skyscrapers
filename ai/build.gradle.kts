@@ -13,6 +13,8 @@ repositories {
 
 dependencies {
 
+    implementation(project(":logic"))
+
     // TEST
 
     testImplementation("org.assertj:assertj-core:3.22.0")
