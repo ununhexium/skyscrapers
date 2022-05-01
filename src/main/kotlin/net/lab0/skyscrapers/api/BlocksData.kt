@@ -5,7 +5,7 @@ import net.lab0.skyscrapers.structure.Height
 /**
  * Immutable list of blocks
  */
-class BlocksData(val blocks: Map<Height, Int>) {
+data class BlocksData(val blocks: Map<Height, Int>) {
 
   companion object {
     val EMPTY = BlocksData(mapOf())

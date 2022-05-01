@@ -6,6 +6,7 @@ import net.lab0.skyscrapers.structure.Height
 import net.lab0.skyscrapers.structure.Matrix
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 internal class GameStateTest {
   companion object {
@@ -85,5 +86,34 @@ internal class GameStateTest {
         |0 . . .
       """.trimMargin()
     )
+  }
+
+  @Test
+  fun `can't have matrices of different sizes`() {
+
+    // seals matrix has a different size
+    assertThrows<IllegalStateException> {
+      GameState(
+        listOf(),
+        0,
+        BlocksData.EMPTY,
+        Matrix(3, 4) { Height(0) },
+        Matrix(5, 5) { false },
+        Matrix(3, 4) { 0 },
+      )
+    }
+
+    // builders matrix has a different size
+    assertThrows<IllegalStateException> {
+      GameState(
+        listOf(),
+        0,
+        BlocksData.EMPTY,
+        Matrix(3, 4) { Height(0) },
+        Matrix(3, 4) { false },
+        Matrix(5, 5) { 0 },
+      )
+    }
+
   }
 }

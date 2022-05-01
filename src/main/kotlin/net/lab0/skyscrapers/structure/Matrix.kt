@@ -9,6 +9,8 @@ data class Matrix<T>(
   val rows: Int = data.size,
   val columns: Int = data.first().size,
 ) {
+  val dimensions = Dimension(columns, rows)
+
   constructor(rows: Int, columns: Int, generator: (Position) -> T) : this(
     (0 until rows).map { r ->
       (0 until columns).map { c ->

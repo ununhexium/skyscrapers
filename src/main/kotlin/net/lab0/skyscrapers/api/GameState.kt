@@ -14,6 +14,11 @@ data class GameState(
   val seals: Matrix<Boolean>,
   val builders: Matrix<Int?>,
 ) {
+  init {
+    if(buildings.dimensions != seals.dimensions || buildings.dimensions != builders.dimensions)
+      throw IllegalStateException("All the matrices must have the same size")
+  }
+
   companion object {
     fun from(
       players: List<Player>,
@@ -23,7 +28,7 @@ data class GameState(
       seals: String,
       builders: String,
     ): GameState {
-      // TODO check that all the matrices has the same size
+      // TODO check that all the matrices have the same size
       val buildingsData = Matrix.from(buildings) { it.toInt() }
 
       val sealsData = Matrix.from(seals) { it == "1" }
