@@ -1,32 +1,17 @@
 package net.lab0.skyscrapers.rule.move.build
 
-import net.lab0.skyscrapers.api.*
-import net.lab0.skyscrapers.rule.GameRuleViolationImpl
 import net.lab0.skyscrapers.api.GameState
+import net.lab0.skyscrapers.api.TurnType
+import net.lab0.skyscrapers.rule.AbstractRule
 
-/**
- * The game happens inside the board only ;p
- */
-// TODO: sealing containment
-object BoardBuildingContainmentRule : Rule<TurnType.MoveTurn.BuildTurn> {
-  override val name = "Board containment"
-  override val description = "The game is played inside the board only"
+object BoardBuildingContainmentRule : AbstractRule<TurnType.MoveTurn.BuildTurn>(
+  "Board containment",
+  "The building must be placed inside the board",
+  { state: GameState,
+    turn: TurnType.MoveTurn.BuildTurn ->
 
-  override fun checkRule(
-    state: GameState,
-    turn: TurnType.MoveTurn.BuildTurn
-  ): List<GameRuleViolation> {
-
-    if(!state.isWithinBounds(turn.build)) {
-      return listOf(
-        GameRuleViolationImpl(
-          this,
-          "Can't build outside ${turn.build} of the board"
-        )
-      )
-    }
-
-    return listOf()
+    if (!state.isWithinBounds(turn.build))
+      "Can't build outside ${turn.build} of the board"
+    else null
   }
-
-}
+)

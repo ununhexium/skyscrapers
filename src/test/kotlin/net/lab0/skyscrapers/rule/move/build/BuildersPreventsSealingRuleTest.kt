@@ -3,6 +3,7 @@ package net.lab0.skyscrapers.rule.move.build
 import net.lab0.skyscrapers.DefaultGames
 import net.lab0.skyscrapers.api.TurnType
 import net.lab0.skyscrapers.rule.GameRuleViolationImpl
+import net.lab0.skyscrapers.rule.move.seal.BuildersPreventsSealingRule
 import net.lab0.skyscrapers.structure.Position
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

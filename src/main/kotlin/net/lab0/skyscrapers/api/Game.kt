@@ -9,11 +9,11 @@ import net.lab0.skyscrapers.structure.Height
  * The game is played on a width * height square board.
  *
  * Placing phase.
- * At the start, each player will put in turn their builder on an empty cell of the board.
+ * At the start, each player will put in turn their builder on an empty position of the board.
  *
  * Building phase.
  * On each turn, a play must do the following actions:
- * - Move a builder to an empty cell
+ * - Move a builder to an empty position
  * - Increase the height of a tower in the 8 cells around where the builder was moved.
  *
  * If a player can't do one of the above actions, he looses.

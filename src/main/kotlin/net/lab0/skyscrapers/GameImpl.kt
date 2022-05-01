@@ -5,6 +5,10 @@ import net.lab0.skyscrapers.exception.*
 import net.lab0.skyscrapers.rule.*
 import net.lab0.skyscrapers.rule.move.*
 import net.lab0.skyscrapers.rule.move.build.*
+import net.lab0.skyscrapers.rule.move.seal.BoardSealingContainmentRule
+import net.lab0.skyscrapers.rule.move.seal.BuildersPreventsSealingRule
+import net.lab0.skyscrapers.rule.move.seal.SealingRangeRule
+import net.lab0.skyscrapers.rule.move.seal.SealsPreventSealingRule
 import net.lab0.skyscrapers.rule.move.win.WinConditionRule
 import net.lab0.skyscrapers.rule.placement.CantGiveUpDuringPlacementRule
 import net.lab0.skyscrapers.rule.placement.PlaceBuilderOnEmptyCell
