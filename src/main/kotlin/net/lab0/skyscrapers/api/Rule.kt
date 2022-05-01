@@ -1,6 +1,6 @@
 package net.lab0.skyscrapers.api
 
-interface Rule<T : Turn> {
+interface Rule<T> {
   val name: String
   val description: String
 
