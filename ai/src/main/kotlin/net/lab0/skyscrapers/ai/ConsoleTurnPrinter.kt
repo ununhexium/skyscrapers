@@ -7,11 +7,11 @@ object ConsoleTurnPrinter : (TurnType) -> Unit {
     print("Player#${turn.player}")
 
     when (turn) {
-      is TurnType.GiveUpTurn -> print(" gave up")
+      is TurnType.GiveUpTurn ->
+        print(" gave up")
 
-      is TurnType.PlacementTurn -> {
+      is TurnType.PlacementTurn ->
         print(" placed ${turn.position}")
-      }
 
       is TurnType.MoveTurn -> {
         print(" moved from ${turn.start} to ${turn.target} and ")

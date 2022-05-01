@@ -34,4 +34,9 @@ data class BlocksData(val blocks: Map<Height, Int>) {
 
   fun maxHeight() =
     blocks.keys.maxByOrNull { it.value } ?: Height(0)
+
+  fun toShortString() =
+    blocks.entries.joinToString(separator = ", ") {
+      "${it.key.value}:${it.value}"
+    }
 }

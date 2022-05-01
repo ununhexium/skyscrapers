@@ -44,6 +44,78 @@ data class GameState(
         playersData
       )
     }
+
+    /**
+     * Parses board displays like
+     *
+     * ```
+     * Board
+     *   0 (0)   1   0   0
+     * (3) (1) (1) (0)   0
+     *   0  B0  A0 (0) (1)
+     *  A0 (1)   0 (0)  B1
+     * (0) (0) (0) (1) (0)
+     * Blocks: 0:3, 1:13, 2:18, 3:13
+     * Players: 0:a, 1:d
+     * ```
+     */
+    fun from(input: String): GameState {
+      val lines = input.split(Regex("\n"))
+
+      if (lines.first() != "Board")
+        throw IllegalArgumentException("The first line must be 'Board'")
+
+      // parse board
+      val positions =
+        lines.drop(1).takeWhile { !it.startsWith("Blocks:") }.map { line ->
+          line.trim().split(Regex(" +")).map { position ->
+            CompositePosition.from(position)
+          }
+        }
+
+      val posMatrix = Matrix(positions)
+
+      val buildings = posMatrix.map { Height(it.building) }
+      val seals = posMatrix.map { it.seal }
+      val builders = posMatrix.map { it.builder }
+
+      // parse blocks
+      val blocksPrefix = "Blocks: "
+      val blocks =
+        lines
+          .dropWhile { !it.startsWith(blocksPrefix) }
+          .take(1)
+          .first()
+          .substring(blocksPrefix.length)
+          .split(", ")
+          .map { it.split(":") }
+          .map { it.component1().toInt() to it.component2() }
+          .associate { Height(it.first) to it.second.toInt() }
+
+      // parse players
+      val playersPrefix = "Players: "
+
+      val players =
+        lines
+          .dropWhile { !it.startsWith(playersPrefix) }
+          .take(1)
+          .first()
+          .substring(playersPrefix.length)
+          .split(", ")
+          .map { it.split(":") }
+          .map { it.component1().toInt() to (it.component2() == "a") }
+          .map { Player(it.first, it.second) }
+
+      return GameState(
+        buildings.dimensions,
+        players,
+        builders.data.flatten().filterNotNull().groupBy { it }.entries.first().value.size,
+        BlocksData(blocks),
+        buildings,
+        seals,
+        builders
+        )
+    }
   }
 
   val currentPlayer: Int
@@ -60,6 +132,36 @@ data class GameState(
       |
       |Builders
       |${builders.toString { it?.toString() ?: "." }}
+    """.trimMargin()
+  }
+
+  fun toCompositeString(): String {
+    val fullState =
+      buildings.merge(seals.merge(builders) { it }) {
+        CompositePosition(
+          it.first.value,
+          it.second.first,
+          it.second.second
+        )
+      }
+
+    val stringyfied = fullState.map {
+      val builder = it.builder
+
+      if (it.seal) "(${it.building})"
+      else if (builder != null) ('A' + builder).toString() + it.building
+      else it.building.toString()
+    }.map { it.padStart(3, ' ') }
+
+    return """
+      |Board
+      |$stringyfied
+      |Blocks: ${blocks.toShortString()}
+      |Players: ${
+      players.joinToString(separator = ", ") {
+        "${it.id}:${if (it.active) "a" else "d"}"
+      }
+    }
     """.trimMargin()
   }
 
