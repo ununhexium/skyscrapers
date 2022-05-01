@@ -31,4 +31,7 @@ data class BlocksData(val blocks: Map<Height, Int>) {
 
   fun removeSeal(): BlocksData =
     removeBlockOfHeight(Height.SEAL)
+
+  fun maxHeight() =
+    blocks.keys.maxByOrNull { it.value } ?: Height(0)
 }

@@ -801,12 +801,24 @@ internal class GameImplTest {
 
       GameStateAssert.assertThat(g.state).isEqualTo(
         state0.copy(
-          players = listOf(Player(0)),
+          players = listOf(Player(0), Player(1, false)),
           builders = state0.builders.copyAndSwap(start, target)
         )
       )
     }
 
-    // TODO reach max level
+    @Test
+    fun `asking nicely doesn't grant victory`() {
+      val g = newGameWithSequentiallyPlacedBuilders()
+
+      val start = P(0, 0)
+      val target = P(1, 1)
+
+      assertThrows<GameRuleViolationException> {
+        g.play(
+          DSL.player(0).building.move().from(start).to(target).andWin()
+        )
+      }
+    }
   }
 }

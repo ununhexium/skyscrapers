@@ -5,6 +5,7 @@ import net.lab0.skyscrapers.exception.*
 import net.lab0.skyscrapers.rule.*
 import net.lab0.skyscrapers.rule.move.*
 import net.lab0.skyscrapers.rule.move.build.*
+import net.lab0.skyscrapers.rule.move.win.WinConditionRule
 import net.lab0.skyscrapers.rule.placement.CantGiveUpDuringPlacementRule
 import net.lab0.skyscrapers.rule.placement.PlaceBuilderOnEmptyCell
 import net.lab0.skyscrapers.structure.*
@@ -49,6 +50,10 @@ class GameImpl(
     SealingRangeRule(),
     SealsPreventSealingRule,
     BuildersPreventsSealingRule,
+  ),
+
+  private val winRules: List<Rule<TurnType.MoveTurn.WinTurn>> = listOf(
+    WinConditionRule,
   ),
 ) : Game {
 
@@ -96,7 +101,8 @@ class GameImpl(
      * Given the previous tests, checking for an amount of 0 at the top
      * position is enough, but still checking everything at it's cheap.
      */
-    val missingBlocks = initialBlocks.getBuildingBlocks().filterValues { it <= 0 }
+    val missingBlocks =
+      initialBlocks.getBuildingBlocks().filterValues { it <= 0 }
     if (missingBlocks.isNotEmpty()) {
       val heights =
         missingBlocks.keys.joinToString(", ") { it.value.toString() }
@@ -136,22 +142,38 @@ class GameImpl(
       is TurnType.MoveTurn -> {
         throwIfViolatedRule(moveRules, turn, state)
 
-        val nextState = move(turn, state)
+        val nextBuilderState = move(turn, state)
 
         when (turn) {
           is TurnType.MoveTurn.BuildTurn -> {
-            throwIfViolatedRule(buildRules, turn, nextState)
+            throwIfViolatedRule(buildRules, turn, nextBuilderState)
             moveAndBuild(turn)
           }
           is TurnType.MoveTurn.SealTurn -> {
-            throwIfViolatedRule(sealRules, turn, nextState)
+            throwIfViolatedRule(sealRules, turn, nextBuilderState)
             moveAndSeal(turn)
+          }
+          is TurnType.MoveTurn.WinTurn -> {
+            throwIfViolatedRule(winRules, turn, nextBuilderState)
+            moveAndWin(turn)
           }
         }
       }
     }
 
     internalTurns++
+  }
+
+  private fun moveAndWin(turn: TurnType.MoveTurn) {
+    history.add(
+      move(turn, state).copy(
+        players = state.players.map {
+          if (it.id == turn.player) it else it.copy(
+            active = false
+          )
+        }
+      )
+    )
   }
 
   private fun move(turn: Move, state: GameState): GameState =
