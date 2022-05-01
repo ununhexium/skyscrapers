@@ -68,9 +68,6 @@ data class GameState(
     """.trimMargin()
   }
 
-  fun getHeight(pos: Position): Height =
-    buildings[pos]
-
   fun getBuilders(player: Int): List<Position> {
     val result = mutableListOf<Position?>()
 

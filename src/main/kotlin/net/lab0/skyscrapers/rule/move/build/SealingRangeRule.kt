@@ -1,4 +1,4 @@
-package net.lab0.skyscrapers.rule.move
+package net.lab0.skyscrapers.rule.move.build
 
 import net.lab0.skyscrapers.api.*
 import net.lab0.skyscrapers.rule.GameRuleViolationImpl
@@ -7,21 +7,21 @@ import net.lab0.skyscrapers.api.GameState
 /**
  * Limit the building range of the player
  */
-class BuildingRangeRule : Rule<TurnType.MoveTurn> {
+class SealingRangeRule : Rule<TurnType.MoveTurn.SealTurn> {
   override val name = "Building range limit"
   override val description =
     "The player must build in the 8 cells around the moved builder"
 
   override fun checkRule(
     state: GameState,
-    turn: TurnType.MoveTurn,
+    turn: TurnType.MoveTurn.SealTurn,
   ): List<GameRuleViolation> {
-    if (turn.target.nextTo(turn.sealOrBuild)) return listOf()
+    if (turn.target.nextTo(turn.seal)) return listOf()
 
     return listOf(
       GameRuleViolationImpl(
         this,
-        "Can't use the builder at ${turn.target} to build at ${turn.sealOrBuild}"
+        "Can't use the builder at ${turn.target} to build at ${turn.seal}"
       )
     )
   }

@@ -33,6 +33,7 @@ internal class BlocksAvailabilityRuleTest {
       )
 
     val build = Position(2, 2)
+
     val turn = TurnType.MoveTurn.BuildTurn(
       0,
       Position(0, 0),

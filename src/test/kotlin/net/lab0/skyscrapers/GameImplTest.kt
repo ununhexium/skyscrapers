@@ -98,7 +98,7 @@ internal class GameImplTest {
       return (0 until width).flatMap { column ->
         (0 until height).map { row ->
           DynamicTest.dynamicTest("g[$row, $column] == 0") {
-            assertThat(g.state.getHeight(P(column, row))).isEqualTo(Height(0))
+            assertThat(g.state.buildings[P(column, row)]).isEqualTo(Height(0))
           }
         }
       }
@@ -161,7 +161,12 @@ internal class GameImplTest {
       assertThat(
         assertThrows<InvalidBlocksConfiguration> {
           Game.new(
-            blocks = BlocksData(Height(0) to 1, Height(1) to 1, Height(2) to 0, Height(3) to 0)
+            blocks = BlocksData(
+              Height(0) to 1,
+              Height(1) to 1,
+              Height(2) to 0,
+              Height(3) to 0
+            )
           )
         }
       ).hasMessage(
@@ -475,7 +480,7 @@ internal class GameImplTest {
           .andBuild(buildPosition)
       )
 
-      assertThat(g.state.getHeight(buildPosition)).isEqualTo(Height(1))
+      assertThat(g.state.buildings[buildPosition]).isEqualTo(Height(1))
 
       g.play(
         DSL.player(1).building
@@ -486,7 +491,7 @@ internal class GameImplTest {
       )
 
       // building stacks
-      assertThat(g.state.getHeight(buildPosition)).isEqualTo(Height(2))
+      assertThat(g.state.buildings[buildPosition]).isEqualTo(Height(2))
     }
 
     @Test
@@ -687,7 +692,7 @@ internal class GameImplTest {
     }
 
     @Test
-    fun `can't build a seal on top of a seal`() {
+    fun `can't seal on top of a seal`() {
       val g = newGameWithSequentiallyPlacedBuilders()
 
       val start = P(0, 0)
@@ -713,7 +718,16 @@ internal class GameImplTest {
         .isEqualTo(state0)
     }
 
-    // TODO: assert construction rules distances
+    @Test
+    fun `can't seal more than 1 tiles away from the target position`() {
+      val g = newGameWithSequentiallyPlacedBuilders()
+
+      assertThrows<GameRuleViolationException> {
+        g.play(
+          DSL.player(0).building.move().from(0, 0).to(1, 1).andSeal(3, 3)
+        )
+      }
+    }
   }
 
   @Nested
@@ -765,6 +779,32 @@ internal class GameImplTest {
       )
 
       assertThat(g.state.isFinished()).isTrue
+    }
+
+    @Test
+    fun `when a player reaches the max height, they win`() {
+      val g = newGameWithSequentiallyPlacedBuilders()
+
+      val start = P(0, 0)
+      val target = P(1, 1)
+      (g as GameImpl).backdoor.forceState(
+        g.state
+          .height(start, 2)
+          .height(target, 3)
+      )
+
+      val state0 = g.state
+
+      g.play(
+        DSL.player(0).building.move().from(start).to(target).andWin()
+      )
+
+      GameStateAssert.assertThat(g.state).isEqualTo(
+        state0.copy(
+          players = listOf(Player(0)),
+          builders = state0.builders.copyAndSwap(start, target)
+        )
+      )
     }
 
     // TODO reach max level

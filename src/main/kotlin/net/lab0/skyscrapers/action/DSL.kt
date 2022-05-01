@@ -52,4 +52,7 @@ data class BuildDSL(
 
   fun andSeal(pos: Position) =
     TurnType.MoveTurn.SealTurn(player, start, target, pos)
+
+  fun andWin() =
+    TurnType.MoveTurn.WinTurn(player, start, target)
 }

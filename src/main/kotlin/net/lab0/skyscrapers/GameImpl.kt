@@ -4,8 +4,7 @@ import net.lab0.skyscrapers.api.*
 import net.lab0.skyscrapers.exception.*
 import net.lab0.skyscrapers.rule.*
 import net.lab0.skyscrapers.rule.move.*
-import net.lab0.skyscrapers.rule.move.build.BlocksAvailabilityRule
-import net.lab0.skyscrapers.rule.move.build.BuilderPreventsBuildingRule
+import net.lab0.skyscrapers.rule.move.build.*
 import net.lab0.skyscrapers.rule.placement.CantGiveUpDuringPlacementRule
 import net.lab0.skyscrapers.rule.placement.PlaceBuilderOnEmptyCell
 import net.lab0.skyscrapers.structure.*
@@ -31,16 +30,25 @@ class GameImpl(
 
   private val moveRules: List<Rule<TurnType.MoveTurn>> = listOf(
     BoardMoveContainmentRule,
-    DefaultBuildersMovementRules,
+    DefaultBuildersMovementRule,
     MovementRangeRule(),
     ClimbingRule(),
-    BuildingRangeRule(),
-    SealsPreventAnyMoveAndAction,
+    SealsPreventMovingRule,
   ),
 
   private val buildRules: List<Rule<TurnType.MoveTurn.BuildTurn>> = listOf(
+    BoardBuildingContainmentRule,
     BlocksAvailabilityRule(),
-    BuilderPreventsBuildingRule,
+    BuildingRangeRule(),
+    BuildersPreventsBuildingRule,
+    SealsPreventBuildingRule,
+  ),
+
+  private val sealRules: List<Rule<TurnType.MoveTurn.SealTurn>> = listOf(
+    BoardSealingContainmentRule,
+    SealingRangeRule(),
+    SealsPreventSealingRule,
+    BuildersPreventsSealingRule,
   ),
 ) : Game {
 
@@ -135,7 +143,10 @@ class GameImpl(
             throwIfViolatedRule(buildRules, turn, nextState)
             moveAndBuild(turn)
           }
-          is TurnType.MoveTurn.SealTurn -> moveAndSeal(turn)
+          is TurnType.MoveTurn.SealTurn -> {
+            throwIfViolatedRule(sealRules, turn, nextState)
+            moveAndSeal(turn)
+          }
         }
       }
     }

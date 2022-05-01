@@ -17,6 +17,7 @@ object PhaseRule : Rule<TurnType> {
       is TurnType.MoveTurn.BuildTurn -> Phase.MOVEMENT
       is TurnType.MoveTurn.SealTurn -> Phase.MOVEMENT
       is TurnType.PlacementTurn -> Phase.PLACEMENT
+      is TurnType.MoveTurn.WinTurn -> Phase.MOVEMENT
       is TurnType.GiveUpTurn -> return listOf()
     }
 

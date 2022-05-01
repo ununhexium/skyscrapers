@@ -27,7 +27,7 @@ data class BlocksData(val blocks: Map<Height, Int>) {
     )
 
   fun hasBlock(height: Height) =
-    blocks.getOrDefault(height, 0) >= 0
+    blocks.getOrDefault(height, 0) > 0
 
   fun removeSeal(): BlocksData =
     removeBlockOfHeight(Height.SEAL)

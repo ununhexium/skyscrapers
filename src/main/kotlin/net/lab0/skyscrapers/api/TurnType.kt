@@ -14,7 +14,6 @@ sealed class TurnType(override val player: Int) : Turn {
     override val player: Int,
     override val start: Position,
     override val target: Position,
-    override val sealOrBuild: Position,
   ) : TurnType(player), Move {
 
     data class BuildTurn(
@@ -22,13 +21,19 @@ sealed class TurnType(override val player: Int) : Turn {
       override val start: Position,
       override val target: Position,
       override val build: Position,
-    ) : MoveTurn(player, start, target, build), Build
+    ) : MoveTurn(player, start, target), Build
 
     data class SealTurn(
       override val player: Int,
       override val start: Position,
       override val target: Position,
       override val seal: Position,
-    ) : MoveTurn(player, start, target, seal), Seal
+    ) : MoveTurn(player, start, target), Seal
+
+    data class WinTurn(
+      override val player: Int,
+      override val start: Position,
+      override val target: Position,
+    ): MoveTurn(player, start, target), Win
   }
 }
