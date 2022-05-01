@@ -9,6 +9,16 @@ import org.junit.jupiter.api.Test
 
 internal class PhaseRuleTest {
   @Test
+  fun `can give up at any time`() {
+    val rule = PhaseRule
+    val turn = TurnType.GiveUpTurn(0)
+    val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
+
+    assertThat(rule.checkRule(Game.new().state, turn)).isEmpty()
+    assertThat(rule.checkRule(g.state, turn)).isEmpty()
+  }
+
+  @Test
   fun `can place builders during the placement phase`() {
     val g = Game.new()
 
@@ -68,5 +78,4 @@ internal class PhaseRuleTest {
       )
     )
   }
-
 }

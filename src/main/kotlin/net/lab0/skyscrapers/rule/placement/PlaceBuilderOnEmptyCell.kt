@@ -1,25 +1,15 @@
 package net.lab0.skyscrapers.rule.placement
 
-import net.lab0.skyscrapers.api.*
-import net.lab0.skyscrapers.rule.GameRuleViolationImpl
 import net.lab0.skyscrapers.api.GameState
+import net.lab0.skyscrapers.api.TurnType
+import net.lab0.skyscrapers.rule.AbstractRule
 
-object PlaceBuilderOnEmptyCell : Rule<TurnType.PlacementTurn> {
-  override val name = "Place builders on empty cells"
-  override val description =
-    "During the placement phase, builder must be placed on empty board cells."
-
-  override fun checkRule(
-    state: GameState,
-    turn: TurnType.PlacementTurn
-  ): List<GameRuleViolation> {
-    if (state.builders[turn.position] != null) return listOf(
-      GameRuleViolationImpl(
-        this,
-        "Can't put a builder on a cell that already contains a builder at ${turn.position}"
-      )
-    )
-
-    return listOf()
+object PlaceBuilderOnEmptyCell : AbstractRule<TurnType.PlacementTurn>(
+  "Place builders on empty cells",
+  "During the placement phase, builder must be placed on empty board cells.",
+  { state: GameState, turn: TurnType.PlacementTurn ->
+    if (state.builders[turn.position] != null)
+      "Can't put a builder on a cell that already contains a builder at ${turn.position}"
+    else null
   }
-}
+)

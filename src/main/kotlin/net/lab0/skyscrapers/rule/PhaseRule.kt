@@ -4,37 +4,33 @@ import net.lab0.skyscrapers.api.*
 import net.lab0.skyscrapers.api.GameState
 import net.lab0.skyscrapers.structure.Phase
 
-object PhaseRule : Rule<TurnType> {
-  override val name = "Check that this is the right type of turn"
-  override val description =
-    "Prevents movement in placement phase and prevents placement in the movement phase."
+object PhaseRule : AbstractRule<TurnType>(
+  "Check that this is the right type of turn",
+  "Prevents movement in placement phase and prevents placement in the movement phase.",
+  { state: GameState, turn: TurnType ->
 
-  override fun checkRule(
-    state: GameState,
-    turn: TurnType
-  ): List<GameRuleViolation> {
-    val phase = when(turn) {
-      is TurnType.MoveTurn.BuildTurn -> Phase.MOVEMENT
-      is TurnType.MoveTurn.SealTurn -> Phase.MOVEMENT
+    fun toVerb(phase: Phase) = when (phase) {
+      Phase.PLACEMENT -> "place"
+      Phase.MOVEMENT -> "move"
+      Phase.FINISHED -> "finish"
+    }
+
+    fun toNoun(phase: Phase) = when (phase) {
+      Phase.PLACEMENT -> "placement"
+      Phase.MOVEMENT -> "movement"
+      Phase.FINISHED -> "finished"
+    }
+
+    val phase = when (turn) {
+      is TurnType.MoveTurn -> Phase.MOVEMENT
       is TurnType.PlacementTurn -> Phase.PLACEMENT
-      is TurnType.MoveTurn.WinTurn -> Phase.MOVEMENT
-      is TurnType.GiveUpTurn -> return listOf()
+      is TurnType.GiveUpTurn -> Phase.MOVEMENT
     }
 
-    if(state.phase != phase) {
-      val verb = when(phase) {
-        Phase.PLACEMENT -> "place"
-        Phase.MOVEMENT -> "move"
-        Phase.FINISHED -> "finish"
-      }
-      val desc = when(state.phase){
-        Phase.PLACEMENT -> "placement"
-        Phase.MOVEMENT -> "movement"
-        Phase.FINISHED -> "finished"
-      }
-      return listOf(GameRuleViolationImpl(this, "Can't $verb a builder during the $desc phase"))
-    }
-
-    return listOf()
+    if (turn is TurnType.GiveUpTurn) {
+      null
+    } else if (state.phase != phase) {
+      "Can't ${toVerb(phase)} a builder during the ${toNoun(state.phase)} phase"
+    } else null
   }
-}
+)
