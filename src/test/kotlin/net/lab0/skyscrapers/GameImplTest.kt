@@ -3,6 +3,7 @@ package net.lab0.skyscrapers
 import net.lab0.skyscrapers.DefaultGames.newGameWithSequentiallyPlacedBuilders
 import net.lab0.skyscrapers.action.DSL
 import net.lab0.skyscrapers.api.Game
+import net.lab0.skyscrapers.api.GameState
 import net.lab0.skyscrapers.assertj.GameStateAssert
 import net.lab0.skyscrapers.exception.*
 import org.assertj.core.api.Assertions.assertThat
@@ -327,7 +328,7 @@ internal class GameImplTest {
               |0 0 0 0 0
               |0 0 0 0 0
             """.trimMargin()
-          ).matrix,
+          ).matrix.map { Height(it) },
           builders = BuildersMatrix.from(
             """
               |. 1 0 1 .

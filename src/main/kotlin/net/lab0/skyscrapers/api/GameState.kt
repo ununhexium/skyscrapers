@@ -1,12 +1,16 @@
-package net.lab0.skyscrapers.structure
+package net.lab0.skyscrapers.api
 
 import net.lab0.skyscrapers.Player
+import net.lab0.skyscrapers.structure.Height
+import net.lab0.skyscrapers.structure.Matrix
+import net.lab0.skyscrapers.structure.Phase
+import net.lab0.skyscrapers.structure.Position
 
 data class GameState(
   val players: List<Player>,
   val maxBuildersPerPlayer: Int,
   val blocks: Map<Height, Int>,
-  val buildings: Matrix<Int>,
+  val buildings: Matrix<Height>,
   val seals: Matrix<Boolean>,
   val builders: Matrix<Int?>,
 ) {
@@ -35,7 +39,7 @@ data class GameState(
         players,
         buildersPerPlayer,
         blocks,
-        buildingsData,
+        buildingsData.map { Height(it) },
         sealsData,
         playersData
       )
@@ -49,7 +53,7 @@ data class GameState(
 
     return """
       |Buildings
-      |$buildings
+      |${buildings.map { it.value }}
       |
       |Seals
       |${seals.toString { if (it) "1" else "0" }}
@@ -60,7 +64,7 @@ data class GameState(
   }
 
   fun getHeight(pos: Position): Height =
-    Height(buildings[pos])
+    buildings[pos]
 
   fun getBuilders(player: Int): List<Position> {
     val result = mutableListOf<Position?>()
@@ -91,7 +95,7 @@ data class GameState(
     pos.inBounds(0, buildings.columns, 0, buildings.rows)
 
   fun height(pos: Position, height: Int) =
-    copy(buildings = buildings.copyAndSet(pos, height))
+    copy(buildings = buildings.copyAndSet(pos, Height(height)))
 
   fun seal(pos: Position) =
     copy(seals = seals.copyAndSet(pos, true))

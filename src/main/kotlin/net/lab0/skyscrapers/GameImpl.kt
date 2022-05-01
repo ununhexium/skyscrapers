@@ -102,7 +102,7 @@ class GameImpl(
         (0 until playerCount).map { Player(it) },
         maxBuildersPerPlayer,
         initialBlocks,
-        Matrix(height, width) { 0 },
+        Matrix(height, width) { Height(0) },
         Matrix(height, width) { false },
         Matrix(height, width) { null },
       )
@@ -212,7 +212,7 @@ class GameImpl(
         builders = move(turn, state).builders,
 
         blocks = state.blocks.mapValues {
-          if (it.key.value == nextHeight) it.value - 1 else it.value
+          if (it.key == nextHeight) it.value - 1 else it.value
         },
 
         buildings = state.buildings.copyAndSet(

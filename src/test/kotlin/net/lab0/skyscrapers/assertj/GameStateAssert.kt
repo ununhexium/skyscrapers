@@ -1,8 +1,7 @@
 package net.lab0.skyscrapers.assertj
 
-import net.lab0.skyscrapers.structure.GameState
+import net.lab0.skyscrapers.api.GameState
 import org.assertj.core.api.AbstractAssert
-import kotlin.math.exp
 import org.assertj.core.api.Assertions.assertThat as at
 
 class GameStateAssert(actual: GameState) // assertion methods described later

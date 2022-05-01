@@ -1,8 +1,8 @@
 package net.lab0.skyscrapers
 
-import net.lab0.skyscrapers.structure.GameState
+import net.lab0.skyscrapers.api.GameState
+import net.lab0.skyscrapers.structure.Height
 import net.lab0.skyscrapers.structure.Matrix
-import net.lab0.skyscrapers.structure.Phase
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -18,7 +18,7 @@ internal class GameStateTest {
           listOf(0, 2, 0, 0),
           listOf(0, 0, 3, 0),
         )
-      ),
+      ).map { Height(it) },
       Matrix(
         listOf(
           listOf(true, false, false, true),

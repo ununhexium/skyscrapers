@@ -4,7 +4,7 @@ import net.lab0.skyscrapers.api.GameRuleViolation
 import net.lab0.skyscrapers.api.Rule
 import net.lab0.skyscrapers.api.TurnType
 import net.lab0.skyscrapers.rule.GameRuleViolationImpl
-import net.lab0.skyscrapers.structure.GameState
+import net.lab0.skyscrapers.api.GameState
 
 class ClimbingRule : Rule<TurnType.MoveTurn> {
   override val name = "Height progression"
@@ -23,7 +23,7 @@ class ClimbingRule : Rule<TurnType.MoveTurn> {
       return listOf(
         GameRuleViolationImpl(
           this,
-          "Can't climb from ${turn.start} height=${startHeight} to ${turn.target} height = ${targetHeight}"
+          "Can't climb from ${turn.start} height=${startHeight.value} to ${turn.target} height = ${targetHeight.value}"
         )
       )
 

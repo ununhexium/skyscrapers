@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.rule
 
 import net.lab0.skyscrapers.api.*
-import net.lab0.skyscrapers.structure.GameState
+import net.lab0.skyscrapers.api.GameState
 
 /**
  * The first rule depends on the second, which depends on the third and so on.

@@ -2,7 +2,7 @@ package net.lab0.skyscrapers.rule.move
 
 import net.lab0.skyscrapers.api.*
 import net.lab0.skyscrapers.rule.GameRuleViolationImpl
-import net.lab0.skyscrapers.structure.GameState
+import net.lab0.skyscrapers.api.GameState
 
 /**
  * The game happens inside the board only ;p

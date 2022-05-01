@@ -2,7 +2,7 @@ package net.lab0.skyscrapers.rule.placement
 
 import net.lab0.skyscrapers.api.*
 import net.lab0.skyscrapers.rule.GameRuleViolationImpl
-import net.lab0.skyscrapers.structure.GameState
+import net.lab0.skyscrapers.api.GameState
 
 object PlaceBuilderOnEmptyCell : Rule<TurnType.PlacementTurn> {
   override val name = "Place builders on empty cells"

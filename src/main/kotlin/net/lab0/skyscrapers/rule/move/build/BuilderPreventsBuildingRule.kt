@@ -4,7 +4,7 @@ import net.lab0.skyscrapers.api.GameRuleViolation
 import net.lab0.skyscrapers.api.Rule
 import net.lab0.skyscrapers.api.TurnType
 import net.lab0.skyscrapers.rule.GameRuleViolationImpl
-import net.lab0.skyscrapers.structure.GameState
+import net.lab0.skyscrapers.api.GameState
 
 object BuilderPreventsBuildingRule : Rule<TurnType.MoveTurn.BuildTurn> {
   override val name = "Building location must be free of builders"
