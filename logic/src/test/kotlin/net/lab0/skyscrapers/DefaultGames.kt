@@ -3,7 +3,6 @@ package net.lab0.skyscrapers
 import net.lab0.skyscrapers.action.DSL
 import net.lab0.skyscrapers.api.BlocksData
 import net.lab0.skyscrapers.api.Game
-import net.lab0.skyscrapers.structure.Height
 import net.lab0.skyscrapers.structure.Position
 
 object DefaultGames {

@@ -4,7 +4,6 @@ import net.lab0.skyscrapers.api.BlocksData
 import net.lab0.skyscrapers.api.Game
 import net.lab0.skyscrapers.exception.InvalidBoardSize
 import net.lab0.skyscrapers.exception.InvalidPlayersCount
-import net.lab0.skyscrapers.structure.Height
 
 interface NewGame {
   fun new(

@@ -1,7 +1,6 @@
 package net.lab0.skyscrapers.api
 
 import net.lab0.skyscrapers.NewGame
-import net.lab0.skyscrapers.structure.Height
 
 /**
  * Represents a game.

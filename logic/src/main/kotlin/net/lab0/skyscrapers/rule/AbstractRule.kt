@@ -3,7 +3,6 @@ package net.lab0.skyscrapers.rule
 import net.lab0.skyscrapers.api.GameRuleViolation
 import net.lab0.skyscrapers.api.GameState
 import net.lab0.skyscrapers.api.Rule
-import net.lab0.skyscrapers.api.TurnType
 
 abstract class AbstractRule<T>(
   override val name: String,
