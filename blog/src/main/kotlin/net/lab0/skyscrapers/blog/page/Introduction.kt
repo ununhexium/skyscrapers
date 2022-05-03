@@ -12,7 +12,7 @@ import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
 object Introduction : Publication {
-
+  override val id = "5/3/22 10:51 PM"
   override val after = Instant.MIN!!
   override val lastUpdate = LocalDateTime.of(2022, Month.MAY, 3, 20, 0)
     .toInstant(ZoneOffset.UTC)

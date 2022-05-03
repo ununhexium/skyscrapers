@@ -16,6 +16,7 @@ import java.time.ZoneOffset
 
 
 object TheNeverEndingTodoList : Publication {
+  override val id = "5/3/22 10:53 PM"
   override val after = Instant.MIN!!
 
   override val lastUpdate = LocalDateTime
