@@ -1,8 +1,5 @@
 package net.lab0.skyscrapers.blog.engine
 
-import kotlinx.html.*
-import kotlinx.html.stream.appendHTML
-
 /**
  * This will output an HTML page
  */

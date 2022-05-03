@@ -5,10 +5,17 @@ import net.lab0.skyscrapers.blog.engine.KotlinxHtmlRawBody
 import net.lab0.skyscrapers.blog.engine.PageImpl
 import net.lab0.skyscrapers.blog.engine.Publication
 import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.Month
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 
 object Introduction : Publication {
 
   override val after = Instant.MIN!!
+  override val lastUpdate = LocalDateTime.of(2022, Month.MAY, 3, 20, 0)
+    .toInstant(ZoneOffset.UTC)
 
   override val page = object : PageImpl() {
 

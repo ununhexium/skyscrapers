@@ -7,5 +7,6 @@ import java.time.Instant
  */
 interface Publication {
   val after: Instant
+  val lastUpdate: Instant
   val page: Page
 }
