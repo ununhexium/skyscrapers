@@ -1,51 +1,67 @@
 package net.lab0.skyscrapers.client.shell.jline3
 
+import net.lab0.skyscrapers.Defaults
+import net.lab0.skyscrapers.api.Game
 import org.jline.builtins.Completers.OptDesc
 import org.jline.builtins.Completers.OptionCompleter
-import org.jline.builtins.Completers.TreeCompleter.Node
-import org.jline.console.CommandRegistry
+import org.jline.reader.Candidate
 import org.jline.reader.Completer
 import org.jline.reader.EndOfFileException
+import org.jline.reader.LineReader
+import org.jline.reader.LineReader.Option
 import org.jline.reader.LineReaderBuilder
+import org.jline.reader.ParsedLine
 import org.jline.reader.UserInterruptException
 import org.jline.reader.impl.DefaultParser
-import org.jline.reader.impl.completer.AggregateCompleter
 import org.jline.reader.impl.completer.ArgumentCompleter
 import org.jline.reader.impl.completer.NullCompleter
 import org.jline.reader.impl.completer.StringsCompleter
-import org.jline.terminal.Terminal
 import org.jline.terminal.TerminalBuilder
+import org.jline.widget.AutosuggestionWidgets
+import java.util.concurrent.atomic.AtomicReference
+
 
 fun main(args: Array<String>) {
-  val terminal = TerminalBuilder.builder().build()
-  Application(terminal).run()
+  Application().run()
 }
 
-class Application(val terminal: Terminal) {
+class Application {
 
   var running = true
 
   fun run() {
 
-    val registry = GameCommands()
+    val terminal = TerminalBuilder.terminal()
 
     val parser = DefaultParser()
+
+    val ref = AtomicReference<Game?>(null)
+
     val reader = LineReaderBuilder
       .builder()
       .terminal(terminal)
       .parser(parser)
-      .completer(
-        AggregateCompleter(
-          buildNewGameCommands(),
-          StringsCompleter("restart")
-        )
-      )
+      .completer(GameCompleter(ref))
+      .option(Option.AUTO_MENU_LIST, true)
       .build()
+
+    val autosuggestionWidgets = AutosuggestionWidgets(reader)
+    autosuggestionWidgets.enable()
 
     running = true
     while (running) {
       try {
         val line = reader.readLine("prompt > ")
+
+        val parsedLine = reader.parser.parse(line, line.lastIndex)
+
+        val words = parsedLine.words()
+
+        println(words)
+        when (words.first()) {
+          "new" -> ref.set(Game.new())
+        }
+
         println(line)
       } catch (e: UserInterruptException) {
         running = false
@@ -57,48 +73,9 @@ class Application(val terminal: Terminal) {
     }
   }
 
-  private fun buildNewGameCommands(): ArgumentCompleter {
-    val opts = listOf(
-      OptDesc("-w", "--width", "Width", StringsCompleter("5")),
-      OptDesc("-h", "--height", "Height", StringsCompleter("5")),
-      OptDesc("-p", "--players", "Players", StringsCompleter("2", "3")),
-      OptDesc(
-        "-b",
-        "--builders",
-        "Builders per player",
-        StringsCompleter("2")
-      ),
-    )
-
-    return ArgumentCompleter(
-      StringsCompleter("new"),
-      *List(opts.size) { index ->
-        OptionCompleter(
-          opts,
-          index + 1
-        )
-      }.toTypedArray(),
-      NullCompleter.INSTANCE
-    )
-  }
-
-  private fun node(completer: Completer) = Node(
-    completer,
-    emptyList()
-  )
-
-  private fun node(completer: Completer, vararg more: Node) = Node(
-    completer,
-    more.toList()
-  )
-
   companion object {
     fun new(): Application {
-      val terminal = TerminalBuilder.builder()
-        .nativeSignals(true)
-        .build()
-
-      return Application(terminal)
+      return Application()
     }
   }
 }

@@ -17,10 +17,7 @@ class GameCommands : JlineCommandRegistry(), CommandRegistry {
   private val commandExecute = mutableMapOf<String, CommandMethods>()
 
   init {
-    commandExecute["new"] =
-      CommandMethods({ newGame(it) }) { command: String? ->
-        newGameCompleter(command)
-      }
+    commandExecute["foo"] = CommandMethods(::newGame, ::newGameCompleter)
     registerCommands(commandExecute)
   }
 
@@ -28,16 +25,11 @@ class GameCommands : JlineCommandRegistry(), CommandRegistry {
     return listOf("Starts a new game")
   }
 
-  fun setLineReader(reader: LineReader) {
-    this.reader = reader
-  }
-
   private fun terminal(): Terminal {
-    return reader!!.terminal
+    return reader.terminal
   }
 
   private fun newGame(input: CommandInput) {
-    val usage = arrayOf("new - start a new game")
     try {
       terminal().writer().println("Hello game")
     } catch (e: Exception) {
@@ -46,17 +38,6 @@ class GameCommands : JlineCommandRegistry(), CommandRegistry {
   }
 
   internal inner class NewGameCompleter : Completer {
-    private fun newGame(input: CommandInput) {
-      val usage = arrayOf(
-        "new - new game"
-      )
-      try {
-        terminal().writer().println("Hello game")
-      } catch (e: Exception) {
-        saveException(e)
-      }
-    }
-
     override fun complete(
       reader: LineReader,
       line: ParsedLine,
