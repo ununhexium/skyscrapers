@@ -63,26 +63,17 @@ class Application(val terminal: Terminal) {
             StringsCompleter("new2"),
             OptionCompleter(
               listOf(
-                StringsCompleter("--width"),
+                OptDesc("-w", "--width", "Width", StringsCompleter("3", "5"))
               ),
-              {
-                listOf(
-                  OptDesc("-w", "--width", "The width for the new game"),
-                )
-              },
               1
             ),
             OptionCompleter(
               listOf(
-                StringsCompleter("--height"),
+                OptDesc("-h", "--height", "Height", StringsCompleter("2", "4"))
               ),
-              {
-                listOf(
-                  OptDesc("-h", "--height", "The height for the new game"),
-                )
-              },
-              3
+              2
             ),
+            NullCompleter.INSTANCE
           )
         )
       )
@@ -124,6 +115,16 @@ class Application(val terminal: Terminal) {
       }
     }
   }
+
+  private fun node(completer: Completer) = Node(
+    completer,
+    emptyList()
+  )
+
+  private fun node(completer: Completer, vararg more: Node) = Node(
+    completer,
+    more.toList()
+  )
 
   companion object {
     fun new(): Application {
