@@ -1,6 +1,7 @@
 package net.lab0.skyscrapers.client.shell.jline3
 
 import org.jline.builtins.Completers
+import org.jline.builtins.Completers.OptDesc
 import org.jline.builtins.Completers.OptionCompleter
 import org.jline.builtins.Completers.TreeCompleter
 import org.jline.builtins.Completers.TreeCompleter.Node
@@ -33,22 +34,55 @@ class Application(val terminal: Terminal) {
       .terminal(terminal)
       .parser(parser)
       .completer(
-        TreeCompleter(
-          Node(
-            StringsCompleter("new"),
-            listOf(
-              Node(
-                StringsCompleter("--width"),
-                listOf(
-                  Node(StringsCompleter("3"), listOf()),
-                  Node(StringsCompleter("5"), listOf())
+        AggregateCompleter(
+          TreeCompleter(
+            Node(
+              StringsCompleter("new"),
+              listOf(
+                Node(
+                  StringsCompleter("--width"),
+                  listOf(3, 5, 7)
+                    .map { it.toString() }
+                    .map { Node(StringsCompleter(it), listOf()) }
+                ),
+                Node(
+                  StringsCompleter("--height"),
+                  listOf(2, 4, 6)
+                    .map { it.toString() }
+                    .map { Node(StringsCompleter(it), listOf()) }
                 )
+
               )
+            ),
+            Node(
+              StringsCompleter("restart"),
+              listOf()
             )
           ),
-          Node(
-            StringsCompleter("restart"),
-            listOf()
+          ArgumentCompleter(
+            StringsCompleter("new2"),
+            OptionCompleter(
+              listOf(
+                StringsCompleter("--width"),
+              ),
+              {
+                listOf(
+                  OptDesc("-w", "--width", "The width for the new game"),
+                )
+              },
+              1
+            ),
+            OptionCompleter(
+              listOf(
+                StringsCompleter("--height"),
+              ),
+              {
+                listOf(
+                  OptDesc("-h", "--height", "The height for the new game"),
+                )
+              },
+              3
+            ),
           )
         )
       )
