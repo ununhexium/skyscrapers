@@ -8,12 +8,11 @@ version = "1.0-SNAPSHOT"
 
 repositories {
   mavenCentral()
-  mavenLocal() // for jline 3.21.1 snpashot
 }
 
 dependencies {
 
-  val jline = "3.21.1-SNAPSHOT"
+  val jline = "3.21.0"
   implementation("org.jline:jline:$jline")
   implementation("org.jline:jline-builtins:$jline")
 
@@ -28,5 +27,5 @@ tasks.getByName<Test>("test") {
 }
 
 application {
-  mainClass.set("net.lab0.skyscrapers.client.shell.jline3.Game")
+  mainClass.set("net.lab0.skyscrapers.client.shell.jline3.ApplicationKt")
 }
