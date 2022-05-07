@@ -13,11 +13,13 @@ repositories {
 
 dependencies {
 
+  implementation(project(":logic"))
+
+  implementation("com.github.ajalt.clikt:clikt-jvm:3.4.2")
+
   val jline = "3.21.0"
   implementation("org.jline:jline:$jline")
   implementation("org.jline:jline-builtins:$jline")
-
-  implementation(project(":logic"))
 
   // TEST
 

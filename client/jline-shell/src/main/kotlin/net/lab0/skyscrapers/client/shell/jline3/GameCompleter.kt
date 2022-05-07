@@ -10,6 +10,7 @@ import org.jline.reader.Candidate
 import org.jline.reader.Completer
 import org.jline.reader.LineReader
 import org.jline.reader.ParsedLine
+import org.jline.reader.impl.completer.AggregateCompleter
 import org.jline.reader.impl.completer.ArgumentCompleter
 import org.jline.reader.impl.completer.NullCompleter
 import org.jline.reader.impl.completer.StringsCompleter
@@ -22,18 +23,26 @@ class GameCompleter(val ref: AtomicReference<Game?>) : Completer {
     candidates: MutableList<Candidate>
   ) {
     val game = ref.get()
-    if (game == null) {
-      buildNewGameCommands().complete(reader, line, candidates)
-    } else {
-      if (game.state.phase == Phase.PLACEMENT) {
-        buildPlacementCommands(game).complete(reader, line, candidates)
+
+    val completer = AggregateCompleter(
+      StringsCompleter("show"),
+      if (game == null) {
+        buildNewGameCommands()
+      } else {
+        if (game.state.phase == Phase.PLACEMENT) {
+          buildPlacementCommands(game)
+        }
+
+        NullCompleter.INSTANCE
       }
-    }
+    )
+
+    completer.complete(reader, line, candidates)
   }
 
-  private fun buildPlacementCommands(game:Game): Completer {
+  private fun buildPlacementCommands(game: Game): Completer {
     return TreeCompleter(
-      node(        "place-builder"      )
+      node("place-builder")
     )
   }
 
@@ -79,4 +88,5 @@ class GameCompleter(val ref: AtomicReference<Game?>) : Completer {
       NullCompleter.INSTANCE
     )
   }
+
 }

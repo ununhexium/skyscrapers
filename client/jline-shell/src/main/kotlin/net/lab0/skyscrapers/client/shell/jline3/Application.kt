@@ -1,21 +1,12 @@
 package net.lab0.skyscrapers.client.shell.jline3
 
-import net.lab0.skyscrapers.Defaults
 import net.lab0.skyscrapers.api.Game
-import org.jline.builtins.Completers.OptDesc
-import org.jline.builtins.Completers.OptionCompleter
-import org.jline.reader.Candidate
-import org.jline.reader.Completer
+import net.lab0.skyscrapers.client.shell.jline3.execution.GameCli
 import org.jline.reader.EndOfFileException
-import org.jline.reader.LineReader
 import org.jline.reader.LineReader.Option
 import org.jline.reader.LineReaderBuilder
-import org.jline.reader.ParsedLine
 import org.jline.reader.UserInterruptException
 import org.jline.reader.impl.DefaultParser
-import org.jline.reader.impl.completer.ArgumentCompleter
-import org.jline.reader.impl.completer.NullCompleter
-import org.jline.reader.impl.completer.StringsCompleter
 import org.jline.terminal.TerminalBuilder
 import org.jline.widget.AutosuggestionWidgets
 import java.util.concurrent.atomic.AtomicReference
@@ -37,6 +28,8 @@ class Application {
 
     val ref = AtomicReference<Game?>(null)
 
+    val cli = GameCli.new(ref, terminal.writer())
+
     val reader = LineReaderBuilder
       .builder()
       .terminal(terminal)
@@ -57,12 +50,7 @@ class Application {
 
         val words = parsedLine.words()
 
-        println(words)
-        when (words.first()) {
-          "new" -> ref.set(Game.new())
-        }
-
-        println(line)
+        cli.main(words)
       } catch (e: UserInterruptException) {
         running = false
       } catch (e: EndOfFileException) {
