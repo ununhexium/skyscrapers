@@ -33,17 +33,23 @@ class Application(val terminal: Terminal) {
       .terminal(terminal)
       .parser(parser)
       .completer(
-        ArgumentCompleter(
-          StringsCompleter("new"),
-          OptionCompleter(
-            StringsCompleter("--width"),
-            {
-              when(it) {
-                else -> listOf()
-              }
-            },
-            1
+        TreeCompleter(
+          Node(
+            StringsCompleter("new"),
+            listOf(
+              Node(
+                StringsCompleter("--width"),
+                listOf(
+                  Node(StringsCompleter("3"), listOf()),
+                  Node(StringsCompleter("5"), listOf())
+                )
+              )
+            )
           ),
+          Node(
+            StringsCompleter("restart"),
+            listOf()
+          )
         )
       )
 
@@ -68,7 +74,7 @@ class Application(val terminal: Terminal) {
 //            ),
 //            0
 //          )
-    .build()
+      .build()
 
     running = true
     while (running) {
