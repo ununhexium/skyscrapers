@@ -1,11 +1,9 @@
 package net.lab0.skyscrapers.client.shell.jline3
 
-import org.jline.builtins.Completers
 import org.jline.builtins.Completers.OptDesc
 import org.jline.builtins.Completers.OptionCompleter
-import org.jline.builtins.Completers.TreeCompleter
 import org.jline.builtins.Completers.TreeCompleter.Node
-import org.jline.reader.Candidate
+import org.jline.console.CommandRegistry
 import org.jline.reader.Completer
 import org.jline.reader.EndOfFileException
 import org.jline.reader.LineReaderBuilder
@@ -28,6 +26,9 @@ class Application(val terminal: Terminal) {
   var running = true
 
   fun run() {
+
+    val registry = GameCommands()
+
     val parser = DefaultParser()
     val reader = LineReaderBuilder
       .builder()
@@ -35,70 +36,10 @@ class Application(val terminal: Terminal) {
       .parser(parser)
       .completer(
         AggregateCompleter(
-          TreeCompleter(
-            Node(
-              StringsCompleter("new"),
-              listOf(
-                Node(
-                  StringsCompleter("--width"),
-                  listOf(3, 5, 7)
-                    .map { it.toString() }
-                    .map { Node(StringsCompleter(it), listOf()) }
-                ),
-                Node(
-                  StringsCompleter("--height"),
-                  listOf(2, 4, 6)
-                    .map { it.toString() }
-                    .map { Node(StringsCompleter(it), listOf()) }
-                )
-
-              )
-            ),
-            Node(
-              StringsCompleter("restart"),
-              listOf()
-            )
-          ),
-          ArgumentCompleter(
-            StringsCompleter("new2"),
-            OptionCompleter(
-              listOf(
-                OptDesc("-w", "--width", "Width", StringsCompleter("3", "5"))
-              ),
-              1
-            ),
-            OptionCompleter(
-              listOf(
-                OptDesc("-h", "--height", "Height", StringsCompleter("2", "4"))
-              ),
-              2
-            ),
-            NullCompleter.INSTANCE
-          )
+          buildNewGameCommands(),
+          StringsCompleter("restart")
         )
       )
-
-//          OptionCompleter(
-//            listOf(
-//              Completers.OptDesc(
-//                "-w",
-//                "--width",
-//                "Width",
-//
-//              ),
-//              Completers.OptDesc(
-//                "-h",
-//                "--height",
-//                "Height",
-//                Completer { reader, line, candidates ->
-//                  candidates.addAll(
-//                    listOf(
-//                      3, 4, 5
-//                    ).map { Candidate(it.toString()) })
-//                }),
-//            ),
-//            0
-//          )
       .build()
 
     running = true
@@ -114,6 +55,31 @@ class Application(val terminal: Terminal) {
         e.printStackTrace()
       }
     }
+  }
+
+  private fun buildNewGameCommands(): ArgumentCompleter {
+    val opts = listOf(
+      OptDesc("-w", "--width", "Width", StringsCompleter("5")),
+      OptDesc("-h", "--height", "Height", StringsCompleter("5")),
+      OptDesc("-p", "--players", "Players", StringsCompleter("2", "3")),
+      OptDesc(
+        "-b",
+        "--builders",
+        "Builders per player",
+        StringsCompleter("2")
+      ),
+    )
+
+    return ArgumentCompleter(
+      StringsCompleter("new"),
+      *List(opts.size) { index ->
+        OptionCompleter(
+          opts,
+          index + 1
+        )
+      }.toTypedArray(),
+      NullCompleter.INSTANCE
+    )
   }
 
   private fun node(completer: Completer) = Node(

@@ -17,6 +17,8 @@ dependencies {
   implementation("org.jline:jline:$jline")
   implementation("org.jline:jline-builtins:$jline")
 
+  implementation(project(":logic"))
+
   // TEST
 
   testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
