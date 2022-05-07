@@ -12,6 +12,7 @@ import org.jline.reader.UserInterruptException
 import org.jline.reader.impl.DefaultParser
 import org.jline.reader.impl.completer.AggregateCompleter
 import org.jline.reader.impl.completer.ArgumentCompleter
+import org.jline.reader.impl.completer.NullCompleter
 import org.jline.reader.impl.completer.StringsCompleter
 import org.jline.terminal.Terminal
 import org.jline.terminal.TerminalBuilder
@@ -34,7 +35,18 @@ class Application(val terminal: Terminal) {
       .completer(
         ArgumentCompleter(
           StringsCompleter("new"),
-          StringsCompleter("--width")
+          OptionCompleter(
+            StringsCompleter("--width"),
+            {
+              when(it) {
+                else -> listOf()
+              }
+            },
+            1
+          ),
+        )
+      )
+
 //          OptionCompleter(
 //            listOf(
 //              Completers.OptDesc(
@@ -56,9 +68,7 @@ class Application(val terminal: Terminal) {
 //            ),
 //            0
 //          )
-        )
-      )
-      .build()
+    .build()
 
     running = true
     while (running) {
