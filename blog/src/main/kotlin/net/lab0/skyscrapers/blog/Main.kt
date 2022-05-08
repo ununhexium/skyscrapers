@@ -6,19 +6,25 @@ import kotlinx.html.html
 import kotlinx.html.li
 import kotlinx.html.stream.appendHTML
 import kotlinx.html.ul
+import net.lab0.skyscrapers.blog.page.GameDesign
 import net.lab0.skyscrapers.blog.page.Introduction
 import net.lab0.skyscrapers.blog.page.TheNeverEndingTodoList
+import spark.Redirect
 import spark.kotlin.ignite
+import spark.utils.IOUtils
 import java.security.MessageDigest
 
 val ARTICLES_PATH_SEGMENT = "/blog/article"
+val RESOURCES_PATH_SEGMENT = "/resources"
+val IMAGES_PATH_SEGMENT = "$RESOURCES_PATH_SEGMENT/images"
 
 fun main(args: Array<String>) {
   val http = ignite()
 
   val articles = listOf(
     Introduction,
-    TheNeverEndingTodoList
+    TheNeverEndingTodoList,
+    GameDesign,
   )
 
   val digest = MessageDigest.getInstance("SHA256")
@@ -48,7 +54,24 @@ fun main(args: Array<String>) {
       references[id]?.page?.build()
         ?: "Didn't find the page with id $id"
     } ?: "id is missing"
+  }
 
+  http.get("$IMAGES_PATH_SEGMENT/:article/:name") {
+    val article = request.params("article")
+    val name = request.params("name")
+
+    val binary =
+      Root::class.java.getResourceAsStream("/img/$article/$name")?.readAllBytes()
+        ?: ByteArray(0)
+
+    response.header("Content-Disposition", """attachment; filename="$name"""")
+    response.type("application/octet-stream")
+    response.raw().setContentLength(binary.size)
+    response.status(200)
+
+    response.raw().outputStream.use{
+      it.write(binary)
+    }
   }
 
   println("Started on port ${http.port()}")

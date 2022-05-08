@@ -1,4 +1,5 @@
 plugins {
+  application
   kotlin("jvm")
 }
 
@@ -29,4 +30,8 @@ dependencies {
 
 tasks.getByName<Test>("test") {
   useJUnitPlatform()
+}
+
+application {
+  mainClass.set("net.lab0.skyscrapers.blog.MainKt")
 }
