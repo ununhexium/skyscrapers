@@ -8,14 +8,18 @@ import net.lab0.skyscrapers.Defaults
 import net.lab0.skyscrapers.api.Game
 import java.util.concurrent.atomic.AtomicReference
 
-class NewCli(private val ref: AtomicReference<Game?>) : CliktCommand(name = "new") {
-  private val width by option(help = "Width of the board").int().default(Defaults.WIDTH)
+class New(private val ref: AtomicReference<Game?>) : CliktCommand(name = "new") {
+  private val width by option("-w", "--width", help = "Width of the board")
+    .int()
+    .default(Defaults.WIDTH)
 
-  private val height by option(help = "Height of the board")
+  private val height by option("-h", "--height", help = "Height of the board")
     .int()
     .default(Defaults.HEIGHT)
 
-  private val players by option(help = "Players").int().default(Defaults.PLAYER_COUNT)
+  private val players by option(help = "Players")
+    .int()
+    .default(Defaults.PLAYER_COUNT)
 
   private val builders by option(help = "Builders per player")
     .int()

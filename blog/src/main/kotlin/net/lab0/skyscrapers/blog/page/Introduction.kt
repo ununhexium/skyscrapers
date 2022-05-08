@@ -1,14 +1,16 @@
 package net.lab0.skyscrapers.blog.page
 
-import kotlinx.html.*
+import kotlinx.html.div
+import kotlinx.html.h1
+import kotlinx.html.li
+import kotlinx.html.p
+import kotlinx.html.ul
 import net.lab0.skyscrapers.blog.engine.KotlinxHtmlRawBody
 import net.lab0.skyscrapers.blog.engine.PageImpl
 import net.lab0.skyscrapers.blog.engine.Publication
 import java.time.Instant
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.Month
-import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
 object Introduction : Publication {

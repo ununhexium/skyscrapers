@@ -6,9 +6,16 @@ import net.lab0.skyscrapers.api.BlocksData
 import net.lab0.skyscrapers.api.Game
 import net.lab0.skyscrapers.api.GameState
 import net.lab0.skyscrapers.assertj.GameStateAssert
-import net.lab0.skyscrapers.exception.*
+import net.lab0.skyscrapers.exception.GameRuleViolationException
+import net.lab0.skyscrapers.exception.InvalidBlocksConfiguration
+import net.lab0.skyscrapers.exception.InvalidBoardSize
+import net.lab0.skyscrapers.exception.InvalidPlayersCount
+import net.lab0.skyscrapers.structure.BuildersMatrix
+import net.lab0.skyscrapers.structure.BuildingsMatrix
+import net.lab0.skyscrapers.structure.Height
+import net.lab0.skyscrapers.structure.Matrix
+import net.lab0.skyscrapers.structure.Phase
 import org.assertj.core.api.Assertions.assertThat
-import net.lab0.skyscrapers.structure.*
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -299,6 +306,17 @@ internal class GameImplTest {
       assertThrows<GameRuleViolationException> {
         g.play(
           DSL.player(0).building.move().from(0, 0).to(0, 1).andBuild(0, 0)
+        )
+      }
+    }
+
+    @Test
+    fun `can't place outside of the board`() {
+      val g = Game.new()
+
+      assertThrows<GameRuleViolationException> {
+        g.play(
+          DSL.player(1).placement.addBuilder(5,5)
         )
       }
     }

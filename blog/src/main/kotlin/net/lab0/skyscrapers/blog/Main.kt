@@ -8,10 +8,8 @@ import kotlinx.html.stream.appendHTML
 import kotlinx.html.ul
 import net.lab0.skyscrapers.blog.page.Introduction
 import net.lab0.skyscrapers.blog.page.TheNeverEndingTodoList
-import spark.kotlin.get
 import spark.kotlin.ignite
 import java.security.MessageDigest
-import java.util.*
 
 val ARTICLES_PATH_SEGMENT = "/blog/article"
 

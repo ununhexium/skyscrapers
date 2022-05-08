@@ -24,6 +24,7 @@ data class Position(
   fun inBounds(minX: Int, maxX: Int, minY: Int, maxY: Int) =
     x in minX..maxX && y in minY..maxY
 
+  // TODO: check whta this does, it's weird
   fun inBounds(dimensions:Dimension) =
     x in 0 until dimensions.width && y in 0 until dimensions.height
 

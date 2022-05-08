@@ -10,9 +10,15 @@ class GameCli : CliktCommand() {
 
   companion object {
     fun new(ref: AtomicReference<Game?>, writer: PrintWriter): CliktCommand =
-      GameCli().subcommands(NewCli(ref), ShowCli(ref, writer))
+      GameCli().subcommands(
+        New(ref),
+        ShowCli(ref, writer),
+        PlaceBuilder().subcommands(
+          PlaceBuilderRandomly(ref),
+          PlaceAt(ref),
+        )
+      )
   }
 
   override fun run() = Unit
 }
-

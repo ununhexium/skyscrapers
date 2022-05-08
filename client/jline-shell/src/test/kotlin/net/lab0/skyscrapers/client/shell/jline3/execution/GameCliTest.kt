@@ -4,6 +4,8 @@ import net.lab0.skyscrapers.api.Game
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.io.PrintWriter
+import java.io.StringWriter
 import java.util.concurrent.atomic.AtomicReference
 
 internal class GameCliTest {
@@ -16,7 +18,7 @@ internal class GameCliTest {
 
   @Test
   fun `can start a new game with params`() {
-    GameCli.new(ref, terminal.writer()).main(
+    GameCli.new(ref, PrintWriter(StringWriter())).main(
       listOf(
         "new", "--width=9", "--height=8", "--players=7", "--builders=6"
       )

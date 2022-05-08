@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.rule
 
-import net.lab0.skyscrapers.api.*
 import net.lab0.skyscrapers.api.GameState
+import net.lab0.skyscrapers.api.TurnType
 import net.lab0.skyscrapers.structure.Phase
 
 object PhaseRule : AbstractRule<TurnType>(

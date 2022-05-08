@@ -25,10 +25,21 @@ subprojects {
   }
 }
 
-tasks.test {
-  useJUnitPlatform()
-}
+tasks {
+  test {
+    useJUnitPlatform()
+  }
 
-tasks.withType<KotlinCompile> {
-  kotlinOptions.jvmTarget = "1.8"
+  withType<KotlinCompile> {
+    kotlinOptions.jvmTarget = "1.8"
+  }
+
+  clean {
+    val c = this
+    subprojects.forEach { project ->
+      project.tasks.findByName("clean")?.let { task ->
+        c.dependsOn(task)
+      }
+    }
+  }
 }

@@ -1,7 +1,12 @@
 package net.lab0.skyscrapers.api
 
 import net.lab0.skyscrapers.Player
-import net.lab0.skyscrapers.structure.*
+import net.lab0.skyscrapers.structure.CompositePosition
+import net.lab0.skyscrapers.structure.Dimension
+import net.lab0.skyscrapers.structure.Height
+import net.lab0.skyscrapers.structure.Matrix
+import net.lab0.skyscrapers.structure.Phase
+import net.lab0.skyscrapers.structure.Position
 
 data class GameState(
   val dimentions: Dimension,
@@ -13,7 +18,7 @@ data class GameState(
   val builders: Matrix<Int?>,
 ) {
   init {
-    if (buildings.dimensions != seals.dimensions || buildings.dimensions != builders.dimensions)
+    if (buildings.dimensions != dimentions || seals.dimensions != dimentions || buildings.dimensions != dimentions)
       throw IllegalStateException("All the matrices must have the same size")
   }
 
@@ -194,7 +199,7 @@ data class GameState(
   // TODO: encapsulate these in a backdoor?
 
   fun isWithinBounds(pos: Position) =
-    pos.inBounds(0, buildings.columns, 0, buildings.rows)
+    pos.inBounds(0, buildings.lastColumn, 0, buildings.lastRow)
 
   fun height(pos: Position, height: Int) =
     copy(buildings = buildings.copyAndSet(pos, Height(height)))

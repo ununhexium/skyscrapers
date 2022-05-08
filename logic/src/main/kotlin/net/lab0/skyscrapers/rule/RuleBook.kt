@@ -5,53 +5,14 @@ import net.lab0.skyscrapers.api.GameState
 import net.lab0.skyscrapers.api.Rule
 import net.lab0.skyscrapers.api.TurnType
 import net.lab0.skyscrapers.exception.GameRuleViolationException
-import net.lab0.skyscrapers.rule.move.*
-import net.lab0.skyscrapers.rule.move.build.*
-import net.lab0.skyscrapers.rule.move.seal.BoardSealingContainmentRule
-import net.lab0.skyscrapers.rule.move.seal.BuildersPreventsSealingRule
-import net.lab0.skyscrapers.rule.move.seal.SealingRangeRule
-import net.lab0.skyscrapers.rule.move.seal.SealsPreventSealingRule
-import net.lab0.skyscrapers.rule.move.win.WinConditionRule
-import net.lab0.skyscrapers.rule.placement.CantGiveUpDuringPlacementRule
-import net.lab0.skyscrapers.rule.placement.PlaceBuilderOnEmptyCell
 
 class RuleBook(
-  val turnRules: List<Rule<TurnType>> = listOf(
-    PhaseRule,
-    CheckCurrentPlayer,
-    CantGiveUpDuringPlacementRule,
-  ),
-
-  val placementRules: List<Rule<TurnType.PlacementTurn>> = listOf(
-    PlaceBuilderOnEmptyCell,
-  ),
-
-  val moveRules: List<Rule<TurnType.MoveTurn>> = listOf(
-    BoardMoveContainmentRule,
-    DefaultBuildersMovementRule,
-    MovementRangeRule(),
-    ClimbingRule(),
-    SealsPreventMovingRule,
-  ),
-
-  val buildRules: List<Rule<TurnType.MoveTurn.BuildTurn>> = listOf(
-    BoardBuildingContainmentRule,
-    BlocksAvailabilityRule(),
-    BuildingRangeRule(),
-    BuildersPreventsBuildingRule,
-    SealsPreventBuildingRule,
-  ),
-
-  val sealRules: List<Rule<TurnType.MoveTurn.SealTurn>> = listOf(
-    BoardSealingContainmentRule,
-    SealingRangeRule(),
-    SealsPreventSealingRule,
-    BuildersPreventsSealingRule,
-  ),
-
-  val winRules: List<Rule<TurnType.MoveTurn.WinTurn>> = listOf(
-    WinConditionRule,
-  ),
+  val turnRules: List<Rule<TurnType>>,
+  val placementRules: List<Rule<TurnType.PlacementTurn>>,
+  val moveRules: List<Rule<TurnType.MoveTurn>>,
+  val buildRules: List<Rule<TurnType.MoveTurn.BuildTurn>>,
+  val sealRules: List<Rule<TurnType.MoveTurn.SealTurn>>,
+  val winRules: List<Rule<TurnType.MoveTurn.WinTurn>>,
 ) {
   fun tryToPlay(turn: TurnType, state: GameState): List<GameRuleViolation> {
     try {

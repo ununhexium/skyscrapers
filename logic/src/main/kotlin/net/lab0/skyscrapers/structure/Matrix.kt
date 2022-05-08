@@ -11,6 +11,9 @@ data class Matrix<T>(
 ) {
   val dimensions = Dimension(columns, rows)
 
+  val lastColumn = columns - 1
+  val lastRow = rows - 1
+
   constructor(rows: Int, columns: Int, generator: (Position) -> T) : this(
     (0 until rows).map { r ->
       (0 until columns).map { c ->

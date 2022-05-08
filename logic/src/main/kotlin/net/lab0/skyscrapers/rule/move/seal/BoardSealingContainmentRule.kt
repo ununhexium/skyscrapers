@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.rule.move.seal
 
-import net.lab0.skyscrapers.api.*
 import net.lab0.skyscrapers.api.GameState
+import net.lab0.skyscrapers.api.TurnType
 import net.lab0.skyscrapers.rule.AbstractRule
 
 object BoardSealingContainmentRule : AbstractRule<TurnType.MoveTurn.SealTurn>(

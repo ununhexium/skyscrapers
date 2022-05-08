@@ -4,13 +4,22 @@ import net.lab0.skyscrapers.api.BlocksData
 import net.lab0.skyscrapers.rule.CheckCurrentPlayer
 import net.lab0.skyscrapers.rule.PhaseRule
 import net.lab0.skyscrapers.rule.RuleBook
-import net.lab0.skyscrapers.rule.move.*
-import net.lab0.skyscrapers.rule.move.build.*
+import net.lab0.skyscrapers.rule.move.BoardMoveContainmentRule
+import net.lab0.skyscrapers.rule.move.ClimbingRule
+import net.lab0.skyscrapers.rule.move.DefaultBuildersMovementRule
+import net.lab0.skyscrapers.rule.move.MovementRangeRule
+import net.lab0.skyscrapers.rule.move.SealsPreventMovingRule
+import net.lab0.skyscrapers.rule.move.build.BlocksAvailabilityRule
+import net.lab0.skyscrapers.rule.move.build.BoardBuildingContainmentRule
+import net.lab0.skyscrapers.rule.move.build.BuildersPreventsBuildingRule
+import net.lab0.skyscrapers.rule.move.build.BuildingRangeRule
+import net.lab0.skyscrapers.rule.move.build.SealsPreventBuildingRule
 import net.lab0.skyscrapers.rule.move.seal.BoardSealingContainmentRule
 import net.lab0.skyscrapers.rule.move.seal.BuildersPreventsSealingRule
 import net.lab0.skyscrapers.rule.move.seal.SealingRangeRule
 import net.lab0.skyscrapers.rule.move.seal.SealsPreventSealingRule
 import net.lab0.skyscrapers.rule.move.win.WinConditionRule
+import net.lab0.skyscrapers.rule.placement.BoardPlacementContainmentRule
 import net.lab0.skyscrapers.rule.placement.CantGiveUpDuringPlacementRule
 import net.lab0.skyscrapers.rule.placement.PlaceBuilderOnEmptyCell
 import net.lab0.skyscrapers.structure.Height
@@ -39,6 +48,7 @@ object Defaults {
     ),
 
     placementRules = listOf(
+      BoardPlacementContainmentRule,
       PlaceBuilderOnEmptyCell,
     ),
 

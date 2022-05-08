@@ -5,18 +5,15 @@ import org.jline.reader.Completer
 import org.jline.reader.LineReader
 import org.jline.reader.ParsedLine
 
-class FirstLevelCompleter: Completer {
+
+class IntRangeCompleter(val range: IntRange) : Completer {
   override fun complete(
-    reader: LineReader?,
-    line: ParsedLine?,
+    reader: LineReader,
+    line: ParsedLine,
     candidates: MutableList<Candidate>
   ) {
-    listOf(
-      "new",
-      "restart",
-      "play",
-    ).forEach {
-      candidates.add(Candidate(it))
-    }
+    candidates.addAll(
+      range.map { Candidate(it.toString()) }
+    )
   }
 }

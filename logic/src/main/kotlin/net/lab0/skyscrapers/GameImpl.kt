@@ -1,11 +1,19 @@
 package net.lab0.skyscrapers
 
-import net.lab0.skyscrapers.api.*
-import net.lab0.skyscrapers.exception.*
-import net.lab0.skyscrapers.rule.*
-import net.lab0.skyscrapers.rule.move.*
-import net.lab0.skyscrapers.rule.move.build.*
-import net.lab0.skyscrapers.structure.*
+import net.lab0.skyscrapers.api.BlocksData
+import net.lab0.skyscrapers.api.Build
+import net.lab0.skyscrapers.api.Game
+import net.lab0.skyscrapers.api.GameState
+import net.lab0.skyscrapers.api.GiveUp
+import net.lab0.skyscrapers.api.Placement
+import net.lab0.skyscrapers.api.Seal
+import net.lab0.skyscrapers.api.TurnType
+import net.lab0.skyscrapers.exception.GameRuleViolationException
+import net.lab0.skyscrapers.exception.InvalidBlocksConfiguration
+import net.lab0.skyscrapers.rule.RuleBook
+import net.lab0.skyscrapers.structure.Dimension
+import net.lab0.skyscrapers.structure.Height
+import net.lab0.skyscrapers.structure.Matrix
 import java.util.*
 
 class GameImpl(
