@@ -6,6 +6,7 @@ import kotlinx.html.html
 import kotlinx.html.li
 import kotlinx.html.stream.appendHTML
 import kotlinx.html.ul
+import net.lab0.skyscrapers.blog.page.Foundation
 import net.lab0.skyscrapers.blog.page.GameDesign
 import net.lab0.skyscrapers.blog.page.Introduction
 import net.lab0.skyscrapers.blog.page.TheNeverEndingTodoList
@@ -25,6 +26,7 @@ fun main(args: Array<String>) {
     Introduction,
     TheNeverEndingTodoList,
     GameDesign,
+    Foundation,
   )
 
   val digest = MessageDigest.getInstance("SHA256")

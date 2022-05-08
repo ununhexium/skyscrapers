@@ -22,6 +22,14 @@ abstract class PageImpl : Page {
 
         style {
           +"""
+            |body {
+            |    font-family: sans-serif;
+            |}
+            |
+            |.mono {
+            |    font-family: monospace;
+            |}
+            |
             |.imgbox {
             |    display: grid;
             |    height: 100%;
