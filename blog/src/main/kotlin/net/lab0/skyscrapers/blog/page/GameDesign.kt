@@ -76,6 +76,19 @@ object GameDesign : Publication {
       }
 
       image("game_design/moves.jpg")
+
+      p {
+        +"""
+          |In addition to that there could be:
+        """.trimMargin()
+
+        ul {
+          li { +"Buildings coloring" }
+          li { +"Power ups (crates dropped on top of buildings to builds more blocks, move faster, teleport, ...)" }
+          li { +"Profiles (Each payer has a special ability)" }
+          li { +"Achievements, highscores, hall of fame and all the usual \uD83D\uDC04\uD83D\uDCA9" }
+        }
+      }
     }
   }
 }
