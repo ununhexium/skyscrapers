@@ -226,6 +226,8 @@ object Foundation : Publication {
             +" for the game's logic"
           }
         }
+
+        image("foundation/foundation.jpg")
       }
     }
   }
