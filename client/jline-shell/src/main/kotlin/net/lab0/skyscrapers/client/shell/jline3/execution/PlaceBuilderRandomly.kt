@@ -17,10 +17,10 @@ class PlaceBuilderRandomly(val ref: AtomicReference<Game?>) : CliktCommand(
       DSL.player(game.state.currentPlayer).placement.addBuilder(
         Position(
           Random.nextInt(
-            game.state.dimentions.width
+            game.state.bounds.width
           ),
           Random.nextInt(
-            game.state.dimentions.height
+            game.state.bounds.height
           )
         )
       )

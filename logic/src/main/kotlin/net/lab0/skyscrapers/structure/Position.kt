@@ -25,7 +25,7 @@ data class Position(
     x in minX..maxX && y in minY..maxY
 
   // TODO: check whta this does, it's weird
-  fun inBounds(dimensions:Dimension) =
+  fun inBounds(dimensions: Bounds) =
     x in 0 until dimensions.width && y in 0 until dimensions.height
 
   /**
@@ -43,4 +43,17 @@ data class Position(
     Position(this.x - 1, this.y),
     Position(this.x - 1, this.y + 1),
   )
+
+  fun getSurroundingPositionsWithin(dimensions: Bounds) = listOf(
+    Position(this.x + 1, this.y - 1),
+    Position(this.x + 1, this.y),
+    Position(this.x + 1, this.y + 1),
+
+    Position(this.x, this.y - 1),
+    Position(this.x, this.y + 1),
+
+    Position(this.x - 1, this.y - 1),
+    Position(this.x - 1, this.y),
+    Position(this.x - 1, this.y + 1),
+  ).filter { it.inBounds(dimensions) }
 }

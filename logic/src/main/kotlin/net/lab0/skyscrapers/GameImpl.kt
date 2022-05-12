@@ -11,7 +11,7 @@ import net.lab0.skyscrapers.api.TurnType
 import net.lab0.skyscrapers.exception.GameRuleViolationException
 import net.lab0.skyscrapers.exception.InvalidBlocksConfiguration
 import net.lab0.skyscrapers.rule.RuleBook
-import net.lab0.skyscrapers.structure.Dimension
+import net.lab0.skyscrapers.structure.Bounds
 import net.lab0.skyscrapers.structure.Height
 import net.lab0.skyscrapers.structure.Matrix
 import java.util.*
@@ -84,7 +84,7 @@ class GameImpl(
 
     internalHistory.add(
       GameState(
-        Dimension(width, height),
+        Bounds(width, height),
         (0 until playerCount).map { Player(it) },
         maxBuildersPerPlayer,
         initialBlocks,

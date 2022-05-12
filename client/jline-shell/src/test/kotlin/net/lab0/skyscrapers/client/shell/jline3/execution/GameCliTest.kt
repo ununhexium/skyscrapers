@@ -27,7 +27,7 @@ internal class GameCliTest {
     val game = ref.get()!!
     Assertions.assertThat(game.state.maxBuildersPerPlayer).isEqualTo(6)
     Assertions.assertThat(game.state.players).hasSize(7)
-    Assertions.assertThat(game.state.dimentions.height).isEqualTo(8)
-    Assertions.assertThat(game.state.dimentions.width).isEqualTo(9)
+    Assertions.assertThat(game.state.bounds.height).isEqualTo(8)
+    Assertions.assertThat(game.state.bounds.width).isEqualTo(9)
   }
 }

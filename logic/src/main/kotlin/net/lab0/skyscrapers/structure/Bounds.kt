@@ -1,6 +1,10 @@
 package net.lab0.skyscrapers.structure
 
-data class Dimension(val width: Int, val height: Int) {
+/**
+ * @param width exclusive
+ * @param height exclusive
+ */
+data class Bounds(val width: Int, val height: Int) {
   /**
    * @return each position, assuming minX = minY = 0 and
    * (width and height) are exclusive.
@@ -15,4 +19,7 @@ data class Dimension(val width: Int, val height: Int) {
           index++
         }
       }
+
+  operator fun contains(pos:Position): Boolean =
+    pos.inBounds(this)
 }

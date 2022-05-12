@@ -16,7 +16,8 @@ class GameCli : CliktCommand() {
         PlaceBuilder().subcommands(
           PlaceBuilderRandomly(ref),
           PlaceAt(ref),
-        )
+        ),
+        MoveBuilder(ref)
       )
   }
 

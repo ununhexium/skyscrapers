@@ -2,7 +2,7 @@ package net.lab0.skyscrapers
 
 import net.lab0.skyscrapers.api.BlocksData
 import net.lab0.skyscrapers.api.GameState
-import net.lab0.skyscrapers.structure.Dimension
+import net.lab0.skyscrapers.structure.Bounds
 import net.lab0.skyscrapers.structure.Height
 import net.lab0.skyscrapers.structure.Matrix
 import org.assertj.core.api.Assertions.assertThat
@@ -12,7 +12,7 @@ import org.junit.jupiter.api.assertThrows
 internal class GameStateTest {
   companion object {
     val state = GameState(
-      Dimension(4, 3),
+      Bounds(4, 3),
       listOf(),
       0,
       BlocksData.EMPTY,
@@ -96,7 +96,7 @@ internal class GameStateTest {
     // seals matrix has a different size
     assertThrows<IllegalStateException> {
       GameState(
-        Dimension(0, 0),
+        Bounds(0, 0),
         listOf(),
         0,
         BlocksData.EMPTY,
@@ -109,7 +109,7 @@ internal class GameStateTest {
     // builders matrix has a different size
     assertThrows<IllegalStateException> {
       GameState(
-        Dimension(0, 0),
+        Bounds(0, 0),
         listOf(),
         0,
         BlocksData.EMPTY,
@@ -123,7 +123,7 @@ internal class GameStateTest {
   @Test
   fun `can show a composite board`() {
     val state = GameState(
-      dimentions = Dimension(5, 5),
+      bounds = Bounds(5, 5),
       players = listOf(Player(0, true), Player(1, false)),
       maxBuildersPerPlayer = 2,
       blocks = BlocksData(
@@ -180,7 +180,7 @@ internal class GameStateTest {
   @Test
   fun `can parse a composite board`() {
     val state = GameState(
-      dimentions = Dimension(5, 5),
+      bounds = Bounds(5, 5),
       players = listOf(Player(0, true), Player(1, false)),
       maxBuildersPerPlayer = 2,
       blocks = BlocksData(

@@ -34,7 +34,7 @@ class RandomAi(
     val state = game.state
 
     val randomPosition = state
-      .dimentions
+      .bounds
       .positionsSequence
       .filterNot { state.hasBuilder(it) }
       .shuffled()
@@ -51,12 +51,12 @@ class RandomAi(
       .flatMap { start ->
         start
           .getSurroundingPositions()
-          .filter { it.inBounds(state.dimentions) }
+          .filter { it.inBounds(state.bounds) }
           .filterNot { state.hasBuilder(it) }
           .flatMap { target ->
             target
               .getSurroundingPositions()
-              .filter { it.inBounds(state.dimentions) }
+              .filter { it.inBounds(state.bounds) }
               .filter { state.builders[it] == null }
               .filterNot { state.seals[it] }
               .flatMap { buildOrSeal ->

@@ -2,14 +2,14 @@ package net.lab0.skyscrapers.api
 
 import net.lab0.skyscrapers.Player
 import net.lab0.skyscrapers.structure.CompositePosition
-import net.lab0.skyscrapers.structure.Dimension
+import net.lab0.skyscrapers.structure.Bounds
 import net.lab0.skyscrapers.structure.Height
 import net.lab0.skyscrapers.structure.Matrix
 import net.lab0.skyscrapers.structure.Phase
 import net.lab0.skyscrapers.structure.Position
 
 data class GameState(
-  val dimentions: Dimension,
+  val bounds: Bounds,
   val players: List<Player>,
   val maxBuildersPerPlayer: Int,
   val blocks: BlocksData,
@@ -18,7 +18,7 @@ data class GameState(
   val builders: Matrix<Int?>,
 ) {
   init {
-    if (buildings.dimensions != dimentions || seals.dimensions != dimentions || buildings.dimensions != dimentions)
+    if (buildings.dimensions != bounds || seals.dimensions != bounds || buildings.dimensions != bounds)
       throw IllegalStateException("All the matrices must have the same size")
   }
 
@@ -40,7 +40,7 @@ data class GameState(
       }
 
       return GameState(
-        Dimension(buildingsData.columns, buildingsData.rows),
+        Bounds(buildingsData.columns, buildingsData.rows),
         players,
         buildersPerPlayer,
         blocks,

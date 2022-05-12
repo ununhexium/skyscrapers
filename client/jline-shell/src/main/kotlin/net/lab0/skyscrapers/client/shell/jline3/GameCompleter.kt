@@ -5,7 +5,8 @@ import net.lab0.skyscrapers.api.Game
 import net.lab0.skyscrapers.structure.Phase
 import org.jline.builtins.Completers
 import org.jline.builtins.Completers.TreeCompleter
-import org.jline.builtins.Completers.TreeCompleter.node
+import org.jline.builtins.Completers.TreeCompleter.Node
+import org.jline.builtins.Completers.TreeCompleter.node as treeNode
 import org.jline.reader.Candidate
 import org.jline.reader.Completer
 import org.jline.reader.LineReader
@@ -29,10 +30,10 @@ class GameCompleter(val ref: AtomicReference<Game?>) : Completer {
       if (game == null) {
         buildNewGameCommands()
       } else {
-        if (game.state.phase == Phase.PLACEMENT) {
-          buildPlacementCommands(game)
-        } else {
-          NullCompleter.INSTANCE
+        when (game.state.phase) {
+          Phase.PLACEMENT -> buildPlacementCommands(game)
+          Phase.MOVEMENT -> buildMovementCommands(game)
+          else -> NullCompleter.INSTANCE
         }
       }
     )
@@ -40,20 +41,71 @@ class GameCompleter(val ref: AtomicReference<Game?>) : Completer {
     completer.complete(reader, line, candidates)
   }
 
-  private fun buildPlacementCommands(game: Game): Completer {
+  private fun buildMovementCommands(game: Game): Completer {
+    val state = game.state
+
     return TreeCompleter(
       node(
-        "place-builder",
-        node("randomly"),
-        node(
-          "at",
+        "move-builder",
+        listOf(
           node(
-            "-x",
-            node(
-              IntRangeCompleter(0 until game.state.dimentions.width),
+            "--from",
+            state.getBuilders(state.currentPlayer).map { start ->
               node(
+                "${start.x},${start.y}",
+                listOf(
+                  node(
+                    "--to",
+                    start
+                      .getSurroundingPositionsWithin(state.bounds)
+                      .map { target ->
+                        node(
+                          "${target.x},${target.y}",
+                            listOf(
+                              "--andBuild",
+                              "--andSeal",
+                            ).map {
+                              node(
+                                it,
+                                target
+                                  .getSurroundingPositionsWithin(state.bounds)
+                                  .map { buildOrSeal ->
+                                    node("${buildOrSeal.x},${buildOrSeal.y}")
+                                  }
+                              )
+                            }
+                          )
+                      }
+                  )
+                )
+              )
+            }
+          )
+        )
+      )
+    )
+  }
+
+  private fun node(string: String) =
+    Node(StringsCompleter(string), listOf())
+
+  private fun node(string: String, more: List<Node>) =
+    Node(StringsCompleter(string), more)
+
+  private fun buildPlacementCommands(game: Game): Completer {
+    return TreeCompleter(
+      treeNode(
+        "place-builder",
+        treeNode("randomly"),
+        treeNode(
+          "at",
+          treeNode(
+            "-x",
+            treeNode(
+              IntRangeCompleter(0 until game.state.bounds.width),
+              treeNode(
                 "-y",
-                node(IntRangeCompleter(0 until game.state.dimentions.height))
+                treeNode(IntRangeCompleter(0 until game.state.bounds.height))
               )
             ),
           )
