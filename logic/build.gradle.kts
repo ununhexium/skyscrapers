@@ -16,7 +16,10 @@ dependencies {
 
   // TEST
 
+  implementation("io.mockk:mockk:1.12.4")
+
   testImplementation("org.assertj:assertj-core:3.22.0")
+
   testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 }
 

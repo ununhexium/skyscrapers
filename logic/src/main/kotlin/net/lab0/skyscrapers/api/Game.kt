@@ -1,6 +1,7 @@
 package net.lab0.skyscrapers.api
 
 import net.lab0.skyscrapers.NewGame
+import net.lab0.skyscrapers.exception.GameRuleViolationException
 import net.lab0.skyscrapers.rule.RuleBook
 
 /**
@@ -45,7 +46,9 @@ interface Game {
 
   val ruleBook: RuleBook
 
+  @kotlin.jvm.Throws(GameRuleViolationException::class)
   fun play(turn: TurnType)
+
   fun addBuilder(turn: Placement)
 
   /**

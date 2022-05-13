@@ -10,7 +10,7 @@ object BoardBuildingContainmentRule : AbstractRule<TurnType.MoveTurn.BuildTurn>(
   { state: GameState,
     turn: TurnType.MoveTurn.BuildTurn ->
 
-    if (!state.isWithinBounds(turn.build))
+    if (turn.build !in state.bounds)
       "Can't build outside ${turn.build} of the board"
     else null
   }

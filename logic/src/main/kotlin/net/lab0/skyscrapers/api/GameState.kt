@@ -114,12 +114,15 @@ data class GameState(
       return GameState(
         buildings.dimensions,
         players,
-        builders.data.flatten().filterNotNull().groupBy { it }.entries.first().value.size,
+        builders.data
+          .flatten()
+          .filterNotNull()
+          .groupBy { it }.entries.first().value.size,
         BlocksData(blocks),
         buildings,
         seals,
         builders
-        )
+      )
     }
   }
 
@@ -199,7 +202,7 @@ data class GameState(
   // TODO: encapsulate these in a backdoor?
 
   fun isWithinBounds(pos: Position) =
-    pos.inBounds(0, buildings.lastColumn, 0, buildings.lastRow)
+    pos in bounds
 
   fun height(pos: Position, height: Int) =
     copy(buildings = buildings.copyAndSet(pos, Height(height)))
@@ -212,4 +215,6 @@ data class GameState(
 
   fun move(turn: Move) =
     copy(builders = builders.copyAndSwap(turn.start, turn.target))
+
+
 }

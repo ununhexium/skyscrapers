@@ -106,13 +106,11 @@ data class Matrix<T>(
     Matrix(data.map { row -> row.map { transform(it) } })
 
   fun <R> mapIndexed(transform: (Position, T) -> R) =
-    Matrix(
-      data.mapIndexed { r, row ->
-        row.mapIndexed { c, cell ->
-          transform(Position(c, r), cell)
-        }
+    data.mapIndexed { r, row ->
+      row.mapIndexed { c, cell ->
+        transform(Position(c, r), cell)
       }
-    )
+    }
 
   fun <R> mapIndexedTo(
     collection: MutableCollection<R>,
@@ -149,4 +147,17 @@ data class Matrix<T>(
         .chunked(columns)
     )
   }
+
+  fun filterIndexed(predicate: (Position, T) -> Boolean) =
+    mutableMapOf<Position, T>().also { m ->
+      this@Matrix.forEachIndexed { pos, it -> if (predicate(pos, it)) m[pos] = it }
+    }
+
+  private fun forEachIndexed(f: (Position, T) -> Unit) =
+    data.forEachIndexed { r, row ->
+      row.forEachIndexed { c, cell ->
+        f(Position(c, r), cell)
+      }
+    }
+
 }

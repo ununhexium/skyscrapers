@@ -22,11 +22,13 @@ import net.lab0.skyscrapers.rule.move.win.WinConditionRule
 import net.lab0.skyscrapers.rule.placement.BoardPlacementContainmentRule
 import net.lab0.skyscrapers.rule.placement.CantGiveUpDuringPlacementRule
 import net.lab0.skyscrapers.rule.placement.PlaceBuilderOnEmptyCell
+import net.lab0.skyscrapers.structure.Bounds
 import net.lab0.skyscrapers.structure.Height
 
 object Defaults {
   const val WIDTH = 5
   const val HEIGHT = 5
+  val BOUNDS = Bounds(WIDTH, HEIGHT)
   const val PLAYER_COUNT = 2
 
   const val BUILDERS_PER_PLAYER = 2

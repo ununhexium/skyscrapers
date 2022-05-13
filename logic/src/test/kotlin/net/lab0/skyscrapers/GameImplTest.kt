@@ -316,7 +316,7 @@ internal class GameImplTest {
 
       assertThrows<GameRuleViolationException> {
         g.play(
-          DSL.player(1).placement.addBuilder(5,5)
+          DSL.player(1).placement.addBuilder(5, 5)
         )
       }
     }

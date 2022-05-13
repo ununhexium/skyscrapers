@@ -6,6 +6,10 @@ data class Position(
   val x: Int,
   val y: Int,
 ) {
+  companion object {
+    val NONE = Position(-1, -1)
+  }
+
   /**
    * @return The distance between this position and the `other` position.
    */

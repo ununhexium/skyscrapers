@@ -49,20 +49,31 @@ class RuleBook(
     return listOf()
   }
 
-  inline fun <reified T> throwIfViolatedRule(
+  fun <T> checkRules(
+    rules: List<Rule<T>>,
+    turn: T,
+    state: GameState,
+  ): List<GameRuleViolation> =
+    rules
+      .asSequence()
+      .map { it.checkRule(state, turn) }
+      .firstOrNull { it.isNotEmpty() }
+      ?: listOf()
+
+  fun <T> throwIfViolatedRule(
     rules: List<Rule<T>>,
     turn: T,
     state: GameState,
   ) where T : TurnType {
-    val violatedRule = rules.firstOrNull {
-      it.checkRule(state, turn).isNotEmpty()
-    }
+    val violatedRules = checkRules(rules, turn, state)
 
-    if (violatedRule != null) {
-      throw GameRuleViolationException(
-        violatedRule.checkRule(state, turn)
-      )
+    if (violatedRules.isNotEmpty()) {
+      throw GameRuleViolationException(violatedRules)
     }
   }
 
+  fun canMove(
+    turn: TurnType.MoveTurn,
+    state: GameState
+  ) = checkRules(moveRules, turn, state).isEmpty()
 }

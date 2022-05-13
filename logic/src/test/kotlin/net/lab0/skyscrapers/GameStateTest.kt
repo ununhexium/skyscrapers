@@ -5,6 +5,7 @@ import net.lab0.skyscrapers.api.GameState
 import net.lab0.skyscrapers.structure.Bounds
 import net.lab0.skyscrapers.structure.Height
 import net.lab0.skyscrapers.structure.Matrix
+import net.lab0.skyscrapers.structure.Position
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
