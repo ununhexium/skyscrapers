@@ -3,6 +3,7 @@ package net.lab0.skyscrapers.client.shell.jline3
 import net.lab0.skyscrapers.Defaults
 import net.lab0.skyscrapers.api.Game
 import net.lab0.skyscrapers.structure.Phase
+import net.lab0.skyscrapers.utils.StateBrowser
 import org.jline.builtins.Completers
 import org.jline.builtins.Completers.TreeCompleter
 import org.jline.builtins.Completers.TreeCompleter.Node
@@ -43,6 +44,7 @@ class GameCompleter(val ref: AtomicReference<Game?>) : Completer {
 
   private fun buildMovementCommands(game: Game): Completer {
     val state = game.state
+    val browser = StateBrowser(state, game.ruleBook)
 
     return TreeCompleter(
       node(
@@ -50,14 +52,16 @@ class GameCompleter(val ref: AtomicReference<Game?>) : Completer {
         listOf(
           node(
             "--from",
-            state.getBuilders(state.currentPlayer).map { start ->
+            browser.getMovableBuilders(state.currentPlayer).map { start ->
               node(
                 "${start.x},${start.y}",
                 listOf(
                   node(
                     "--to",
-                    start
-                      .getSurroundingPositionsWithin(state.bounds)
+                    start.getSurroundingPositionsWithin(state.bounds)
+                      .filter{ target ->
+                        browser.builderCanMoveTo(start, target)
+                      }
                       .map { target ->
                         node(
                           "${target.x},${target.y}",

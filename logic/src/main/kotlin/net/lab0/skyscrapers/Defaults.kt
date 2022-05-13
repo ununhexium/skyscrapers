@@ -1,13 +1,17 @@
 package net.lab0.skyscrapers
 
 import net.lab0.skyscrapers.api.BlocksData
+import net.lab0.skyscrapers.api.Move
+import net.lab0.skyscrapers.api.MoveAndTurn
+import net.lab0.skyscrapers.api.Rule
 import net.lab0.skyscrapers.rule.CheckCurrentPlayer
 import net.lab0.skyscrapers.rule.PhaseRule
 import net.lab0.skyscrapers.rule.RuleBook
 import net.lab0.skyscrapers.rule.move.BoardMoveContainmentRule
 import net.lab0.skyscrapers.rule.move.ClimbingRule
-import net.lab0.skyscrapers.rule.move.DefaultBuildersMovementRule
+import net.lab0.skyscrapers.rule.move.BuildersMoveToEmptyCells
 import net.lab0.skyscrapers.rule.move.MovementRangeRule
+import net.lab0.skyscrapers.rule.move.PlayersMoveTheirOwnBuilders
 import net.lab0.skyscrapers.rule.move.SealsPreventMovingRule
 import net.lab0.skyscrapers.rule.move.build.BlocksAvailabilityRule
 import net.lab0.skyscrapers.rule.move.build.BoardBuildingContainmentRule
@@ -54,12 +58,16 @@ object Defaults {
       PlaceBuilderOnEmptyCell,
     ),
 
-    moveRules = listOf(
+    moveRules = listOf<Rule<Move>>(
       BoardMoveContainmentRule,
-      DefaultBuildersMovementRule,
+      BuildersMoveToEmptyCells,
       MovementRangeRule(),
       ClimbingRule(),
       SealsPreventMovingRule,
+    ),
+
+    moveAndTurnRules = listOf<Rule<MoveAndTurn>>(
+      PlayersMoveTheirOwnBuilders,
     ),
 
     buildRules = listOf(

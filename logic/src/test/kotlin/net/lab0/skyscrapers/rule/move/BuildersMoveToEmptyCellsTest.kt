@@ -8,11 +8,14 @@ import net.lab0.skyscrapers.structure.Position
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class DefaultBuildersMovementRuleTest {
+internal class BuildersMoveToEmptyCellsTest {
+  companion object {
+    val rule = BuildersMoveToEmptyCells
+  }
+
   @Test
   fun `can move a builder`() {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
-    val rule = DefaultBuildersMovementRule
     val turn = TurnType.MoveTurn.BuildTurn(
       0,
       Position(0, 0),
@@ -26,7 +29,6 @@ internal class DefaultBuildersMovementRuleTest {
   @Test
   fun `can't move a builder that doesn't exist`() {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
-    val rule = DefaultBuildersMovementRule
     val turn = TurnType.MoveTurn.BuildTurn(
       0,
       Position(1, 1),
@@ -38,7 +40,7 @@ internal class DefaultBuildersMovementRuleTest {
       listOf(
         GameRuleViolationImpl(
           rule,
-          "There is no builder that belongs to player#0 at [1, 1]"
+          "There is no builder at [1, 1]"
         )
       )
     )
@@ -47,7 +49,6 @@ internal class DefaultBuildersMovementRuleTest {
   @Test
   fun `can't move a builder on top of another builder`() {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
-    val rule = DefaultBuildersMovementRule
     val target = Position(1, 2)
 
     val turn = TurnType.MoveTurn.BuildTurn(
@@ -70,22 +71,22 @@ internal class DefaultBuildersMovementRuleTest {
   }
 
   @Test
-  fun `can't move a builder that doesn't belong to the player`() {
+  fun `can't move a builder on top of an opponent's builder`() {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
-    val rule = DefaultBuildersMovementRule
+    val target = Position(1, 0)
 
     val turn = TurnType.MoveTurn.BuildTurn(
       0,
-      Position(1, 0),
-      Position(1, 2),
-      Position(2, 2)
+      Position(0, 0),
+      target,
+      Position(1, 1)
     )
 
     assertThat(rule.checkRule(g.state, turn)).isEqualTo(
       listOf(
         GameRuleViolationImpl(
           rule,
-          "The builder at [1, 0] doesn't belong to player#0. It belongs to player#1"
+          "There is already a builder from player#1 at [1, 0]"
         )
       )
     )
