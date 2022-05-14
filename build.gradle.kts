@@ -53,14 +53,12 @@ tasks {
     recursively()
   }
 
-
-}
-
-tasks.koverMergedVerify {
-  rule {
-    bound {
-      minValue = 50
-      valueType = kotlinx.kover.api.VerificationValueType.COVERED_LINES_COUNT
-    }
-  }
+//  TODO: reintroduce after https://github.com/Kotlin/kotlinx-kover/issues/179 is fixed.
+//  koverMergedVerify {
+//    rule {
+//      bound {
+//        minValue = 50
+//      }
+//    }
+//  }
 }
