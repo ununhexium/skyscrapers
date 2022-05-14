@@ -4,7 +4,7 @@ import net.lab0.skyscrapers.logic.api.GameState
 import net.lab0.skyscrapers.logic.api.Move
 import net.lab0.skyscrapers.logic.rule.AbstractRule
 
-object BoardMoveContainmentRule : net.lab0.skyscrapers.logic.rule.AbstractRule<Move>(
+object BoardMoveContainmentRule : AbstractRule<Move>(
   "Board containment",
   "The movement must start and stay inside the board",
   { state: GameState, turn: Move ->

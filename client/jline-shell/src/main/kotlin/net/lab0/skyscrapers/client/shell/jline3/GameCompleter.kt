@@ -68,6 +68,7 @@ class GameCompleter(val ref: AtomicReference<Game?>) : Completer {
                             listOf(
                               "--andBuild",
                               "--andSeal",
+                              "--andWin",
                             ).map {
                               node(
                                 it,

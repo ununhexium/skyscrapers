@@ -7,7 +7,7 @@ import net.lab0.skyscrapers.logic.rule.AbstractRule
 /**
  * Limit the building range of the player
  */
-class SealingRangeRule : net.lab0.skyscrapers.logic.rule.AbstractRule<TurnType.MoveTurn.SealTurn>(
+class SealingRangeRule : AbstractRule<TurnType.MoveTurn.SealTurn>(
   "Building range limit",
   "The player must build in the 8 cells around the moved builder",
   { state: GameState, turn: TurnType.MoveTurn.SealTurn ->

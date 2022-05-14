@@ -4,7 +4,7 @@ import net.lab0.skyscrapers.logic.api.GameState
 import net.lab0.skyscrapers.logic.api.TurnType
 import net.lab0.skyscrapers.logic.rule.AbstractRule
 
-object BoardSealingContainmentRule : net.lab0.skyscrapers.logic.rule.AbstractRule<TurnType.MoveTurn.SealTurn>(
+object BoardSealingContainmentRule : AbstractRule<TurnType.MoveTurn.SealTurn>(
   "Board containment",
   "The seal must be placed inside the board",
   { state: GameState, turn: TurnType.MoveTurn.SealTurn ->

@@ -41,7 +41,14 @@ class Application {
     running = true
     while (running) {
       try {
-        val line = reader.readLine(ref.get()?.state?.currentPlayer?.let{"player ${'A'.code + it}>"} ?: "game>")
+        val line = reader.readLine(
+          ref
+            .get()
+            ?.state
+            ?.currentPlayer
+            ?.let { "player ${'A'.code + it}>" }
+            ?: "game>"
+        )
 
         val parsedLine = reader.parser.parse(line, line.lastIndex)
 

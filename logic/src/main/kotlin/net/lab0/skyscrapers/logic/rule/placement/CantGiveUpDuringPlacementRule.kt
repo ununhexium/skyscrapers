@@ -5,7 +5,7 @@ import net.lab0.skyscrapers.logic.api.TurnType
 import net.lab0.skyscrapers.logic.rule.AbstractRule
 import net.lab0.skyscrapers.logic.structure.Phase
 
-object CantGiveUpDuringPlacementRule : net.lab0.skyscrapers.logic.rule.AbstractRule<TurnType>(
+object CantGiveUpDuringPlacementRule : AbstractRule<TurnType>(
   "Can't give up during placement phase",
   "",
   { state: GameState, turn: TurnType ->

@@ -4,7 +4,7 @@ import net.lab0.skyscrapers.logic.api.GameState
 import net.lab0.skyscrapers.logic.api.Move
 import net.lab0.skyscrapers.logic.rule.AbstractRule
 
-class ClimbingRule : net.lab0.skyscrapers.logic.rule.AbstractRule<Move>(
+class ClimbingRule : AbstractRule<Move>(
   "Height progression",
   "Checks that the builder doesn't climb more than 1 step at a time",
   { state: GameState, turn: Move ->

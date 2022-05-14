@@ -4,7 +4,7 @@ import net.lab0.skyscrapers.logic.api.GameState
 import net.lab0.skyscrapers.logic.api.TurnType
 import net.lab0.skyscrapers.logic.rule.AbstractRule
 
-object SealsPreventSealingRule : net.lab0.skyscrapers.logic.rule.AbstractRule<TurnType.MoveTurn.SealTurn>(
+object SealsPreventSealingRule : AbstractRule<TurnType.MoveTurn.SealTurn>(
   "Seals prevent sealing",
   "",
   { state: GameState, turn: TurnType.MoveTurn.SealTurn ->

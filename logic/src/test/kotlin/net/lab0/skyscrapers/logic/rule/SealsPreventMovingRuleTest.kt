@@ -9,6 +9,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 internal class SealsPreventMovingRuleTest {
+
   @Test
   fun `can move where there is no seal`() {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()

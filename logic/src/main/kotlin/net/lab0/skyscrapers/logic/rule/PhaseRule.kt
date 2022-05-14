@@ -4,7 +4,7 @@ import net.lab0.skyscrapers.logic.api.GameState
 import net.lab0.skyscrapers.logic.api.TurnType
 import net.lab0.skyscrapers.logic.structure.Phase
 
-object PhaseRule : net.lab0.skyscrapers.logic.rule.AbstractRule<TurnType>(
+object PhaseRule : AbstractRule<TurnType>(
   "Check that this is the right type of turn",
   "Prevents movement in placement phase and prevents placement in the movement phase.",
   { state: GameState, turn: TurnType ->

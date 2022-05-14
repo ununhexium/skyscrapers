@@ -12,7 +12,7 @@ abstract class AbstractRule<T>(
   override fun checkRule(state: GameState, turn: T): List<GameRuleViolation> {
     return check(state, turn)
       ?.let { listOf(
-        net.lab0.skyscrapers.logic.rule.GameRuleViolationImpl(
+        GameRuleViolationImpl(
           this,
           it
         )

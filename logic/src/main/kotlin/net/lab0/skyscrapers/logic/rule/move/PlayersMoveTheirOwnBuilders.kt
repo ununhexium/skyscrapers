@@ -4,7 +4,7 @@ import net.lab0.skyscrapers.logic.api.GameState
 import net.lab0.skyscrapers.logic.api.MoveAndTurn
 import net.lab0.skyscrapers.logic.rule.AbstractRule
 
-object PlayersMoveTheirOwnBuilders : net.lab0.skyscrapers.logic.rule.AbstractRule<MoveAndTurn>(
+object PlayersMoveTheirOwnBuilders : AbstractRule<MoveAndTurn>(
   "Self Control",
   "Checks that the player moves a builder they own",
   { state: GameState, turn: MoveAndTurn ->

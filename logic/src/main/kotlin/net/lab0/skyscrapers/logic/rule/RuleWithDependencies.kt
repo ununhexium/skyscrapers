@@ -1,6 +1,5 @@
 package net.lab0.skyscrapers.logic.rule
 
-import net.lab0.skyscrapers.logic.api.GameRuleViolation
 import net.lab0.skyscrapers.logic.api.GameState
 import net.lab0.skyscrapers.logic.api.Rule
 

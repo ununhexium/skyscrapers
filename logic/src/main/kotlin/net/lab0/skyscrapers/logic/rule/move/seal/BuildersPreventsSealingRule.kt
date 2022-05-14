@@ -4,7 +4,7 @@ import net.lab0.skyscrapers.logic.api.GameState
 import net.lab0.skyscrapers.logic.api.TurnType
 import net.lab0.skyscrapers.logic.rule.AbstractRule
 
-object BuildersPreventsSealingRule : net.lab0.skyscrapers.logic.rule.AbstractRule<TurnType.MoveTurn.SealTurn>(
+object BuildersPreventsSealingRule : AbstractRule<TurnType.MoveTurn.SealTurn>(
   "Building location must be free of builders",
   "When building or sealing, the position where this happens must not have any builder",
   { state: GameState, turn: TurnType.MoveTurn.SealTurn ->

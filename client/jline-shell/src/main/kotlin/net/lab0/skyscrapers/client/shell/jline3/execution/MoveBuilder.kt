@@ -2,6 +2,7 @@ package net.lab0.skyscrapers.client.shell.jline3.execution
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.convert
+import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.required
 import net.lab0.skyscrapers.logic.api.Game
@@ -22,6 +23,7 @@ class MoveBuilder(private val ref: AtomicReference<Game?>) : CliktCommand(name =
 
   private val andBuild by option("--andBuild").position()
   private val andSeal by option("--andSeal").position()
+  private val andWin by option("--andWin").flag()
 
   override fun run() {
     val game = ref.get() ?: error("The game doesn't exist")
@@ -33,13 +35,18 @@ class MoveBuilder(private val ref: AtomicReference<Game?>) : CliktCommand(name =
         game.state.currentPlayer,
         from,
         to,
-        build
+        build,
       )
       seal != null -> TurnType.MoveTurn.SealTurn(
         game.state.currentPlayer,
         from,
         to,
-        seal
+        seal,
+      )
+      andWin ->TurnType.MoveTurn.WinTurn(
+        game.state.currentPlayer,
+        from,
+        to,
       )
       else -> error("Must either build or seal")
     }
