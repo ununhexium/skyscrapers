@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   kotlin("jvm") version "1.6.20"
+  id("org.jetbrains.kotlinx.kover") version "0.5.1"
 }
 
 group = "net.lab0.skyscrapers"
@@ -25,9 +26,23 @@ subprojects {
   }
 }
 
+/**
+ * Runs this task and all the tasks with the same name in the subprojects
+ */
+fun Task.recursively() {
+  val thisTask = this
+  subprojects.forEach { project ->
+    project.tasks.findByName(thisTask.name)?.let { task ->
+      thisTask.dependsOn(task)
+    }
+  }
+}
+
 tasks {
   test {
     useJUnitPlatform()
+
+    this.recursively()
   }
 
   withType<KotlinCompile> {
@@ -35,11 +50,17 @@ tasks {
   }
 
   clean {
-    val c = this
-    subprojects.forEach { project ->
-      project.tasks.findByName("clean")?.let { task ->
-        c.dependsOn(task)
-      }
+    recursively()
+  }
+
+
+}
+
+tasks.koverMergedVerify {
+  rule {
+    bound {
+      minValue = 50
+      valueType = kotlinx.kover.api.VerificationValueType.COVERED_LINES_COUNT
     }
   }
 }
