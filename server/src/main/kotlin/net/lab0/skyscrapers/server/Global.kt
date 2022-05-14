@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.server
 
+import kotlinx.serialization.json.Json
 import net.lab0.skyscrapers.logic.api.Game
 import org.http4k.core.Method
 import org.http4k.core.Response
@@ -13,3 +14,6 @@ fun routed(games: MutableMap<String, Game>) = routes(
   "/new/{name}" bind Method.GET to { req -> newGame(games, req) },
 )
 
+val json = Json{
+
+}

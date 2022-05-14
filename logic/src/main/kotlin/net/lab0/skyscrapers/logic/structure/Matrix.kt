@@ -3,6 +3,8 @@ package net.lab0.skyscrapers.logic.structure
 
 /**
  * A MxN matrix (rows x column)
+ *
+ * @param data ```data[rowIndex][columnIndex]```
  */
 data class Matrix<T>(
   val data: List<List<T>>,

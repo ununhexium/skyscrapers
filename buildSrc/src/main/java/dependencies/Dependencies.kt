@@ -55,5 +55,6 @@ object Dependencies {
     impl("org.http4k:http4k-core")
     impl("org.http4k:http4k-server-undertow")
     impl("org.http4k:http4k-client-apache")
+    impl("org.http4k:http4k-format-kotlinx-serialization")
   }
 }

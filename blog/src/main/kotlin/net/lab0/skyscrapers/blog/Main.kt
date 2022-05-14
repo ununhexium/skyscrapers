@@ -10,9 +10,7 @@ import net.lab0.skyscrapers.blog.page.Foundation
 import net.lab0.skyscrapers.blog.page.GameDesign
 import net.lab0.skyscrapers.blog.page.Introduction
 import net.lab0.skyscrapers.blog.page.TheNeverEndingTodoList
-import spark.Redirect
 import spark.kotlin.ignite
-import spark.utils.IOUtils
 import java.security.MessageDigest
 
 val ARTICLES_PATH_SEGMENT = "/blog/article"

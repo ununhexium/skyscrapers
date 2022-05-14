@@ -1,3 +1,5 @@
+import dependencies.Dependencies.kotlinxHtml
+
 plugins {
   application
   kotlin("jvm")
@@ -18,6 +20,8 @@ repositories {
 dependencies {
 
   implementation("com.sparkjava:spark-kotlin:1.0.0-alpha")
+
+  kotlinxHtml()
 
 
   // TEST
