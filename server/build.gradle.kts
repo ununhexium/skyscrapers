@@ -1,5 +1,4 @@
 import dependencies.Dependencies.http4k
-import dependencies.Dependencies.kotlinxSerializationJson
 
 plugins {
   application

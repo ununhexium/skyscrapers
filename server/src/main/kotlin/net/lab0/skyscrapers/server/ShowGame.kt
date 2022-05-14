@@ -1,6 +1,5 @@
 package net.lab0.skyscrapers.server
 
-import net.lab0.skyscrapers.logic.api.Game
 import net.lab0.skyscrapers.server.dto.GameError
 import org.http4k.core.Body
 import org.http4k.core.Request
@@ -10,16 +9,15 @@ import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
 import org.http4k.core.with
 import org.http4k.format.KotlinxSerialization.auto
-import org.http4k.routing.path
 
-fun showGame(games: MutableMap<String, Game>, req: Request): Response {
-  val gameName = req.path("name")
+fun showGame(service: Service, req: Request): Response {
+  val gameName = req.pathGameName()
     ?: return Response(BAD_REQUEST).with(
       Body.auto<GameError>().toLens() of
           GameError("The name of the game must be specified. i.e: /api/v1/games/gameName")
     )
 
-  val game = games[gameName]
+  val game = service.getGame(gameName)
 
   return if (game == null) {
     Response(NOT_FOUND).with(

@@ -2,6 +2,7 @@ package net.lab0.skyscrapers.server
 
 import net.lab0.skyscrapers.logic.api.Game
 import net.lab0.skyscrapers.server.dto.GameError
+import net.lab0.skyscrapers.server.value.GameName
 import org.assertj.core.api.Assertions.assertThat
 import org.http4k.core.Body
 import org.http4k.core.Method.GET
@@ -15,19 +16,19 @@ internal class ShowGameTest {
   @Test
   fun `can show a game`() {
     val newGame = Game.new()
-    val games = mutableMapOf<String, Game>("foo" to newGame)
+    val service = ServiceImpl.new(mapOf(GameName("foo") to newGame))
 
-    val readGame = routed(games)(Request(GET, "/api/v1/games/foo"))
+    val readGame = routed(service)(Request(GET, "/api/v1/games/foo"))
 
     assertThat(readGame.status).isEqualTo(OK)
     assertThat(
       Body.auto<GameResponse>().toLens().extract(readGame)
-    ).isEqualTo(GameResponse("foo", newGame.state))
+    ).isEqualTo(GameResponse(GameName("foo"), newGame.state))
   }
 
   @Test
   fun `return not found when there is no such game`() {
-    val readGame = routed(mutableMapOf())(Request(GET, "/api/v1/games/missing"))
+    val readGame = routed(ServiceImpl.new())(Request(GET, "/api/v1/games/missing"))
 
     assertThat(readGame.status).isEqualTo(NOT_FOUND)
     assertThat(

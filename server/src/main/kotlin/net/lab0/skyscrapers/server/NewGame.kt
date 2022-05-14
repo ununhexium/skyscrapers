@@ -1,6 +1,5 @@
 package net.lab0.skyscrapers.server
 
-import net.lab0.skyscrapers.logic.api.Game
 import net.lab0.skyscrapers.server.dto.GameError
 import org.http4k.core.Body
 import org.http4k.core.Request
@@ -8,10 +7,9 @@ import org.http4k.core.Response
 import org.http4k.core.Status
 import org.http4k.core.with
 import org.http4k.format.KotlinxSerialization.auto
-import org.http4k.routing.path
 
-fun newGame(games: MutableMap<String, Game>, req: Request): Response {
-  val gameName = req.path("name")
+fun createGame(service: Service, req: Request): Response {
+  val gameName = req.pathGameName()
 
   return if (gameName == null) {
     val gameError =
@@ -23,7 +21,7 @@ fun newGame(games: MutableMap<String, Game>, req: Request): Response {
         .toLens() of gameError
     )
   } else {
-    val game = games[gameName]
+    val game = service.getGame(gameName)
 
     if (game != null) {
       Response(Status.BAD_REQUEST).with(
@@ -31,8 +29,7 @@ fun newGame(games: MutableMap<String, Game>, req: Request): Response {
             GameError("The game $gameName already exists.")
       )
     } else {
-      val new = Game.new()
-      games[gameName] = new
+      val new = service.createGame(gameName)
       Response(Status.CREATED).with(
         Body.auto<GameResponse>().toLens() of
             GameResponse(gameName, new.state)

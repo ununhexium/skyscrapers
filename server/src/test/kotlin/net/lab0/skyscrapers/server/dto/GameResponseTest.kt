@@ -7,6 +7,7 @@ import net.lab0.skyscrapers.logic.structure.Bounds
 import net.lab0.skyscrapers.logic.structure.Height
 import net.lab0.skyscrapers.logic.structure.Matrix
 import net.lab0.skyscrapers.server.GameResponse
+import net.lab0.skyscrapers.server.value.GameName
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -55,7 +56,7 @@ internal class GameResponseTest {
       Matrix(builders),
     )
 
-    val dto = GameResponse("name", state)
+    val dto = GameResponse(GameName("name"), state)
 
     val serializedBounds = SerializableBounds(width, height)
     val serializedPlayers = listOf(
