@@ -1,3 +1,5 @@
+import dependencies.Dependencies.http4k
+
 plugins {
     application
     kotlin("jvm")
@@ -11,6 +13,8 @@ repositories {
 }
 
 dependencies {
+    http4k()
+
     // TEST
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
@@ -19,5 +23,5 @@ dependencies {
 }
 
 application {
-    mainClass.set("") // TODO main class
+    mainClass.set("net.lab0.skyscrapers.server.ApplicationKt")
 }

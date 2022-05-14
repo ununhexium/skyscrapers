@@ -1,3 +1,5 @@
+import dependencies.Dependencies
+import dependencies.TestDependencies
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -20,7 +22,7 @@ subprojects {
 
     // TEST
 
-    testImplementation("org.assertj:assertj-core:3.22.0")
+    testImplementation(TestDependencies.assertJ)
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
   }

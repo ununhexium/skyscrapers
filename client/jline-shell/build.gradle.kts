@@ -1,5 +1,6 @@
-import dependencies.Dependencies
-import dependencies.clikt
+import dependencies.Dependencies.clikt
+import dependencies.Dependencies.jline
+import dependencies.Dependencies.jlineBuiltins
 
 plugins {
   application
@@ -20,9 +21,8 @@ dependencies {
 //  implementation(Dependencies.clikt)
 
   clikt()
-
-  implementation(Dependencies.jline)
-  implementation(Dependencies.jlineBuiltins)
+  jline()
+  jlineBuiltins()
 
   // TEST
 

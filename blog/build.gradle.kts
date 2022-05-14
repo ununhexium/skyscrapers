@@ -19,9 +19,6 @@ dependencies {
 
   implementation("com.sparkjava:spark-kotlin:1.0.0-alpha")
 
-  val kotlinxHtmlVersion = "0.7.5"
-  implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:${kotlinxHtmlVersion}")
-  implementation("org.jetbrains.kotlinx:kotlinx-html:${kotlinxHtmlVersion}")
 
   // TEST
   testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")

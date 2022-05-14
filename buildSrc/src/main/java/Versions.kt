@@ -7,6 +7,9 @@ object Versions {
   // impl libs
   val clikt = "3.4.2"
   val jline = "3.21.0"
+  val kotlinxHtml = "0.7.5"
+  val http4k = "4.25.14.0"
+  val sparkJava = "2.9.3"
 
   // test
   val assertJ = "3.22.0"
