@@ -13,6 +13,8 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":logic"))
+
     http4k()
 
     // TEST
@@ -24,4 +26,10 @@ dependencies {
 
 application {
     mainClass.set("net.lab0.skyscrapers.server.ApplicationKt")
+}
+
+tasks {
+    test {
+        useJUnitPlatform()
+    }
 }
