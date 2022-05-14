@@ -1,3 +1,6 @@
+import dependencies.Dependencies
+import dependencies.clikt
+
 plugins {
   application
   java
@@ -14,12 +17,12 @@ repositories {
 dependencies {
 
   implementation(project(":logic"))
+//  implementation(Dependencies.clikt)
 
-  implementation("com.github.ajalt.clikt:clikt-jvm:3.4.2")
+  clikt()
 
-  val jline = "3.21.0"
-  implementation("org.jline:jline:$jline")
-  implementation("org.jline:jline-builtins:$jline")
+  implementation(Dependencies.jline)
+  implementation(Dependencies.jlineBuiltins)
 
   // TEST
 
