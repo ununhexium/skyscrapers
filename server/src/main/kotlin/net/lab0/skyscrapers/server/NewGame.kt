@@ -15,7 +15,7 @@ fun newGame(games: MutableMap<String, Game>, req: Request): Response {
 
   return if (gameName == null) {
     val gameError =
-      GameError("The game must have a name. e.g /new/yourGameName.")
+      GameError("The game must have a name. e.g /api/v1/games/yourGameName.")
 
     Response(Status.BAD_REQUEST).with(
       Body
@@ -27,17 +27,15 @@ fun newGame(games: MutableMap<String, Game>, req: Request): Response {
 
     if (game != null) {
       Response(Status.BAD_REQUEST).with(
-        Body.auto<GameError>()
-          .toLens() of GameError("The game $gameName already exists.")
+        Body.auto<GameError>().toLens() of
+            GameError("The game $gameName already exists.")
       )
     } else {
       val new = Game.new()
       games[gameName] = new
       Response(Status.CREATED).with(
-        Body.auto<GameResponse>().toLens() of GameResponse(
-          gameName,
-          new.state
-        )
+        Body.auto<GameResponse>().toLens() of
+            GameResponse(gameName, new.state)
       )
     }
   }

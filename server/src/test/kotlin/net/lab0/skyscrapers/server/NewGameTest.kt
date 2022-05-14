@@ -5,6 +5,7 @@ import net.lab0.skyscrapers.server.dto.GameError
 import org.assertj.core.api.Assertions.assertThat
 import org.http4k.core.Body
 import org.http4k.core.Method
+import org.http4k.core.Method.POST
 import org.http4k.core.Request
 import org.http4k.core.Status
 import org.http4k.format.KotlinxSerialization.auto
@@ -16,7 +17,7 @@ internal class NewGameTest {
     val games = mutableMapOf<String, Game>()
 
     val gameName = "fubar"
-    val created = routed(games)(Request(Method.GET, "/new/$gameName"))
+    val created = routed(games)(Request(POST, "/api/v1/games/$gameName"))
     val game = games[gameName]
 
     assertThat(game).isNotNull
@@ -29,7 +30,7 @@ internal class NewGameTest {
     )
 
     // now the game already exists
-    val alreadyExists = routed(games)(Request(Method.GET, "/new/$gameName"))
+    val alreadyExists = routed(games)(Request(POST, "/api/v1/games/$gameName"))
     assertThat(
       Body.auto<GameError>().toLens()[alreadyExists]
     ).isEqualTo(
