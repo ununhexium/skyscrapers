@@ -1,9 +1,9 @@
 package net.lab0.skyscrapers.client.shell.jline3.execution
 
 import com.github.ajalt.clikt.core.CliktCommand
-import net.lab0.skyscrapers.action.DSL
-import net.lab0.skyscrapers.api.Game
-import net.lab0.skyscrapers.structure.Position
+import net.lab0.skyscrapers.logic.action.DSL
+import net.lab0.skyscrapers.logic.api.Game
+import net.lab0.skyscrapers.logic.structure.Position
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.random.Random
 

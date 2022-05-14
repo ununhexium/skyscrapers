@@ -2,7 +2,7 @@ package net.lab0.skyscrapers.client.shell.jline3.execution
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.subcommands
-import net.lab0.skyscrapers.api.Game
+import net.lab0.skyscrapers.logic.api.Game
 import java.io.PrintWriter
 import java.util.concurrent.atomic.AtomicReference
 

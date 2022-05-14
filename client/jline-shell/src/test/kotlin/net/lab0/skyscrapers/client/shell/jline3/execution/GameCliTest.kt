@@ -1,6 +1,6 @@
 package net.lab0.skyscrapers.client.shell.jline3.execution
 
-import net.lab0.skyscrapers.api.Game
+import net.lab0.skyscrapers.logic.api.Game
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

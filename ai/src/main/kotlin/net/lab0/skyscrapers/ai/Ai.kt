@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.ai
 
-import net.lab0.skyscrapers.api.Game
-import net.lab0.skyscrapers.api.TurnType
+import net.lab0.skyscrapers.logic.api.Game
+import net.lab0.skyscrapers.logic.api.TurnType
 
 interface Ai {
   val name: String

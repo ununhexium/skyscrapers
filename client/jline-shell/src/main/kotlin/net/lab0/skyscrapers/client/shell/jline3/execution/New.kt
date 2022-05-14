@@ -4,8 +4,8 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
-import net.lab0.skyscrapers.Defaults
-import net.lab0.skyscrapers.api.Game
+import net.lab0.skyscrapers.logic.Defaults
+import net.lab0.skyscrapers.logic.api.Game
 import java.util.concurrent.atomic.AtomicReference
 
 class New(private val ref: AtomicReference<Game?>) : CliktCommand(name = "new") {

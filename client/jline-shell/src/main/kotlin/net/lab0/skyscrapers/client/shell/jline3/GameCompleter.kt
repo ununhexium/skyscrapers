@@ -1,9 +1,9 @@
 package net.lab0.skyscrapers.client.shell.jline3
 
-import net.lab0.skyscrapers.Defaults
-import net.lab0.skyscrapers.api.Game
-import net.lab0.skyscrapers.structure.Phase
-import net.lab0.skyscrapers.utils.StateBrowser
+import net.lab0.skyscrapers.logic.Defaults
+import net.lab0.skyscrapers.logic.api.Game
+import net.lab0.skyscrapers.logic.structure.Phase
+import net.lab0.skyscrapers.logic.utils.StateBrowser
 import org.jline.builtins.Completers
 import org.jline.builtins.Completers.TreeCompleter
 import org.jline.builtins.Completers.TreeCompleter.Node
