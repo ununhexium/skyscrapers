@@ -1,7 +1,5 @@
 package dependencies
 
-import dependencies.Dependencies.impl
-import dependencies.Dependencies.unsafeImpl
 import org.gradle.api.artifacts.dsl.DependencyHandler
 
 object Dependencies {
@@ -10,6 +8,12 @@ object Dependencies {
 
   val jline = "org.jline:jline:${Versions.jline}"
   val jlineBuiltins = "org.jline:jline-builtins:${Versions.jline}"
+
+  val kotlinxHtml = "org.jetbrains.kotlinx:kotlinx-html:${Versions.kotlinxHtml}"
+  val kotlinxHtmlJvm = "org.jetbrains.kotlinx:kotlinx-html-jvm:${Versions.kotlinxHtml}"
+
+  val kotlinxSerializationJson =
+    "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.kotlinxSerializationJson}"
 
   val sparkJava = "com.sparkjava:spark-core:${Versions.sparkJava}"
 
@@ -34,8 +38,12 @@ object Dependencies {
   }
 
   fun DependencyHandler.kotlinxHtml() {
-    impl("org.jetbrains.kotlinx:kotlinx-html-jvm:${Versions.kotlinxHtml}")
-    impl("org.jetbrains.kotlinx:kotlinx-html:${Versions.kotlinxHtml}")
+    impl(kotlinxHtml)
+    impl(kotlinxHtmlJvm)
+  }
+
+  fun DependencyHandler.kotlinxSerializationJson() {
+    impl(kotlinxSerializationJson)
   }
 
   fun DependencyHandler.sparkJava() {

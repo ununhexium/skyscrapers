@@ -8,6 +8,7 @@ object Versions {
   val clikt = "3.4.2"
   val jline = "3.21.0"
   val kotlinxHtml = "0.7.5"
+  val kotlinxSerializationJson = "1.3.3"
   val http4k = "4.25.14.0"
   val sparkJava = "2.9.3"
 

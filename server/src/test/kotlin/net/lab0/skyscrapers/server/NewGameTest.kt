@@ -11,11 +11,8 @@ import org.junit.jupiter.api.Test
 internal class NewGameTest {
   @Test
   fun `creates a new game when requesting new game`() {
-
-    // given
     val games = mutableMapOf<String, Game>()
 
-    //when
     val created = routed(games)(Request(Method.GET, "/new/gameName"))
     val game = games["gameName"]
     assertThat(game).isNotNull

@@ -1,8 +1,10 @@
 import dependencies.Dependencies.http4k
+import dependencies.Dependencies.kotlinxSerializationJson
 
 plugins {
     application
     kotlin("jvm")
+    kotlin("plugin.serialization") version Versions.kotlin
 }
 
 group = "net.lab0.skyscrapers"
@@ -16,6 +18,8 @@ dependencies {
     implementation(project(":logic"))
 
     http4k()
+
+    kotlinxSerializationJson()
 
     // TEST
 
