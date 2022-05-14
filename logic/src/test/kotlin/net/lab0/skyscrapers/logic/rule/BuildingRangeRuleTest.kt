@@ -2,7 +2,7 @@ package net.lab0.skyscrapers.logic.rule
 
 import net.lab0.skyscrapers.logic.DefaultGames
 import net.lab0.skyscrapers.logic.api.TurnType
-import net.lab0.skyscrapers.logic.rule.move.build.BuildingRangeRule
+import net.lab0.skyscrapers.logic.rule.move.building.BuildingRangeRule
 import net.lab0.skyscrapers.logic.structure.Position
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

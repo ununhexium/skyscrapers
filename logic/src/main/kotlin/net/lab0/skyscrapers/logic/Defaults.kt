@@ -13,11 +13,11 @@ import net.lab0.skyscrapers.logic.rule.move.BuildersMoveToEmptyCells
 import net.lab0.skyscrapers.logic.rule.move.MovementRangeRule
 import net.lab0.skyscrapers.logic.rule.move.PlayersMoveTheirOwnBuilders
 import net.lab0.skyscrapers.logic.rule.move.SealsPreventMovingRule
-import net.lab0.skyscrapers.logic.rule.move.build.BlocksAvailabilityRule
-import net.lab0.skyscrapers.logic.rule.move.build.BoardBuildingContainmentRule
-import net.lab0.skyscrapers.logic.rule.move.build.BuildersPreventsBuildingRule
-import net.lab0.skyscrapers.logic.rule.move.build.BuildingRangeRule
-import net.lab0.skyscrapers.logic.rule.move.build.SealsPreventBuildingRule
+import net.lab0.skyscrapers.logic.rule.move.building.BlocksAvailabilityRule
+import net.lab0.skyscrapers.logic.rule.move.building.BoardBuildingContainmentRule
+import net.lab0.skyscrapers.logic.rule.move.building.BuildersPreventsBuildingRule
+import net.lab0.skyscrapers.logic.rule.move.building.BuildingRangeRule
+import net.lab0.skyscrapers.logic.rule.move.building.SealsPreventBuildingRule
 import net.lab0.skyscrapers.logic.rule.move.seal.BoardSealingContainmentRule
 import net.lab0.skyscrapers.logic.rule.move.seal.BuildersPreventsSealingRule
 import net.lab0.skyscrapers.logic.rule.move.seal.SealingRangeRule
