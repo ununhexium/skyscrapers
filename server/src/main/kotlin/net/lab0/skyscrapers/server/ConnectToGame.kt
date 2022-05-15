@@ -1,12 +1,11 @@
 package net.lab0.skyscrapers.server
 
-import net.lab0.skyscrapers.server.dto.ConnectionResult
+import net.lab0.skyscrapers.server.dto.ConnectionResponse
 import net.lab0.skyscrapers.server.dto.GameError
 import net.lab0.skyscrapers.server.exception.GameFullException
 import org.http4k.core.Body
 import org.http4k.core.Request
 import org.http4k.core.Response
-import org.http4k.core.Status
 import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.FORBIDDEN
 import org.http4k.core.Status.Companion.NOT_FOUND
@@ -29,8 +28,8 @@ fun connectToGame(service: Service, req: Request): Response {
       try {
         val cnx = service.connect(gameName)
         Response(CREATED).with(
-          Body.auto<ConnectionResult>().toLens() of
-              ConnectionResult(cnx.player, cnx.token)
+          Body.auto<ConnectionResponse>().toLens() of
+              ConnectionResponse(cnx.player, cnx.token)
         )
       } catch (e: GameFullException) {
         Response(FORBIDDEN).with(

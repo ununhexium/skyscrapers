@@ -7,4 +7,4 @@ import kotlinx.serialization.Serializable
  * @param token The user must pass this token to play the game
  */
 @Serializable
-data class ConnectionResult(val player: Int, val token: String)
+data class ConnectionResponse(val player: Int, val token: String)

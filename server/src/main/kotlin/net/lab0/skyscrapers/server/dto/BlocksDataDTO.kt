@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 import net.lab0.skyscrapers.logic.api.BlocksData
 
 @Serializable
-data class SerializableBlocksData(val blocks: Map<Int, Int>) {
+data class BlocksDataDTO(val blocks: Map<Int, Int>) {
   constructor(blocks: BlocksData) : this(blocks.blocks.mapKeys { it.value })
 }

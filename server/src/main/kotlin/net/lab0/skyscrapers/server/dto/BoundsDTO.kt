@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 import net.lab0.skyscrapers.logic.structure.Bounds
 
 @Serializable
-data class SerializableBounds(
+data class BoundsDTO(
   val width: Int,
   val height: Int
 ) {

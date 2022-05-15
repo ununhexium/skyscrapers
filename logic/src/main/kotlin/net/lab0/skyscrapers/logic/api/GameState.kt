@@ -213,7 +213,7 @@ data class GameState(
   fun placeBuilder(player: Int, position: Position) =
     copy(builders = builders.copyAndSet(position, player))
 
-  fun move(turn: Move) =
+  fun move(turn: MoveOnly) =
     copy(builders = builders.copyAndSwap(turn.start, turn.target))
 
 

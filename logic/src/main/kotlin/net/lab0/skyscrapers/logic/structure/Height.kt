@@ -10,7 +10,7 @@ value class Height(val value: Int) {
     Height(value + 1)
 
   operator fun plus(amount:Int) =
-    Height(value+1)
+    Height(value + amount)
 
   operator fun minus(other: Height) =
     Height(this.value - other.value)

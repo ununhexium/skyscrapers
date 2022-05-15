@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.server
 
 import net.lab0.skyscrapers.logic.api.Game
-import net.lab0.skyscrapers.server.dto.ConnectionResult
+import net.lab0.skyscrapers.server.dto.ConnectionResponse
 import net.lab0.skyscrapers.server.dto.GameError
 import net.lab0.skyscrapers.server.value.GameName
 import org.assertj.core.api.Assertions.assertThat
@@ -21,7 +21,7 @@ internal class ConnectToGameTest {
     val response = routed(service)(Request(POST, "/api/v1/games/foo/connect"))
 
     assertThat(response.status).isEqualTo(CREATED)
-    val connection = Body.auto<ConnectionResult>().toLens().extract(response)
+    val connection = Body.auto<ConnectionResponse>().toLens().extract(response)
     assertThat(connection.player).isEqualTo(0)
     assertThat(connection.token).isNotEmpty()
   }
@@ -51,7 +51,7 @@ internal class ConnectToGameTest {
     )
 
 
-    val connection = Body.auto<ConnectionResult>().toLens().extract(response1)
+    val connection = Body.auto<ConnectionResponse>().toLens().extract(response1)
     assertThat(connection.player).isEqualTo(1)
     assertThat(connection.token).isNotEmpty()
   }

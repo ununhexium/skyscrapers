@@ -1,8 +1,8 @@
 package net.lab0.skyscrapers.logic
 
 import net.lab0.skyscrapers.logic.api.BlocksData
+import net.lab0.skyscrapers.logic.api.MoveOnly
 import net.lab0.skyscrapers.logic.api.Move
-import net.lab0.skyscrapers.logic.api.MoveAndTurn
 import net.lab0.skyscrapers.logic.api.Rule
 import net.lab0.skyscrapers.logic.rule.CheckCurrentPlayer
 import net.lab0.skyscrapers.logic.rule.PhaseRule
@@ -58,7 +58,7 @@ object Defaults {
       PlaceBuilderOnEmptyCell,
     ),
 
-    moveRules = listOf<Rule<Move>>(
+    moveOnlyRules = listOf<Rule<MoveOnly>>(
       BoardMoveContainmentRule,
       BuildersMoveToEmptyCells,
       MovementRangeRule(),
@@ -66,7 +66,7 @@ object Defaults {
       SealsPreventMovingRule,
     ),
 
-    moveAndTurnRules = listOf<Rule<MoveAndTurn>>(
+    moveRules = listOf<Rule<Move>>(
       PlayersMoveTheirOwnBuilders,
     ),
 

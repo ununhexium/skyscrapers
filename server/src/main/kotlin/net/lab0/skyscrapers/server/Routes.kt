@@ -25,7 +25,7 @@ fun routed(service: Service) = ServerFilters.CatchAll {
     "/api/v1/games/{gameName}" bind GET to { req -> showGame(service, req) },
     "/api/v1/games/{gameName}" bind POST to { req -> createGame(service, req) },
     "/api/v1/games/{gameName}/connect" bind POST to { connectToGame(service, it) },
-    "/api/v1/games/{gameName}/play" bind PUT to { req -> playGame(service, req) },
+    "/api/v1/games/{gameName}/play" bind POST to { req -> playGame(service, req) },
     Fallback bind { req: Request -> Response(Status.NOT_FOUND).body("Not found: ${req.method} ${req.uri}") },
   )
 )

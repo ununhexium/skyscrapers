@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.logic.utils
 
 import net.lab0.skyscrapers.logic.api.GameState
-import net.lab0.skyscrapers.logic.api.Move
+import net.lab0.skyscrapers.logic.api.MoveOnly
 import net.lab0.skyscrapers.logic.api.TurnType
 import net.lab0.skyscrapers.logic.rule.RuleBook
 import net.lab0.skyscrapers.logic.structure.Position
@@ -22,5 +22,5 @@ class StateBrowser(val state: GameState, val ruleBook: RuleBook) {
       }
 
   fun builderCanMoveTo(builder: Position, target: Position) =
-    ruleBook.canMove(Move.make(builder, target), state)
+    ruleBook.canMove(MoveOnly.make(builder, target), state)
 }

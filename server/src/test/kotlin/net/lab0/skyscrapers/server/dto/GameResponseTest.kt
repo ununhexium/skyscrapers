@@ -6,6 +6,7 @@ import net.lab0.skyscrapers.logic.api.GameState
 import net.lab0.skyscrapers.logic.structure.Bounds
 import net.lab0.skyscrapers.logic.structure.Height
 import net.lab0.skyscrapers.logic.structure.Matrix
+import net.lab0.skyscrapers.logic.structure.Phase
 import net.lab0.skyscrapers.server.GameResponse
 import net.lab0.skyscrapers.server.value.GameName
 import org.assertj.core.api.Assertions.assertThat
@@ -17,7 +18,6 @@ internal class GameResponseTest {
   fun `quick check conversion to DTO`() {
     val width = 5
     val height = 4
-    val playerCount = 2
     val buildersPerPlayer = 3
     val blocks = mapOf(
       Height(0) to 31,
@@ -58,18 +58,18 @@ internal class GameResponseTest {
 
     val dto = GameResponse(GameName("name"), state)
 
-    val serializedBounds = SerializableBounds(width, height)
+    val serializedBounds = BoundsDTO(width, height)
     val serializedPlayers = listOf(
-      SerializablePlayer(0, false),
-      SerializablePlayer(1, true),
+      PlayerDTO(0, false),
+      PlayerDTO(1, true),
     )
-    val serializedBlocksData = SerializableBlocksData(
+    val serializedBlocksData = BlocksDataDTO(
       blocks.mapKeys { it.value }
     )
     val serializedBuildings =
-      SerializableMatrix(buildings.map { it.map { it.value } })
-    val serializedSeals = SerializableMatrix(seals)
-    val serializedBuilders = SerializableMatrix(builders)
+      MatrixDTO(buildings.map { it.map { it.value } })
+    val serializedSeals = MatrixDTO(seals)
+    val serializedBuilders = MatrixDTO(builders)
 
     assertThat(dto.state.bounds).isEqualTo(serializedBounds)
     assertThat(dto.state.players).isEqualTo(serializedPlayers)
@@ -81,14 +81,16 @@ internal class GameResponseTest {
     assertThat(dto).isEqualTo(
       GameResponse(
         "name",
-        SerializedState(
+        StateDTO(
           bounds = serializedBounds,
           players = serializedPlayers,
           maxBuildersPerPlayer = buildersPerPlayer,
-          serializedBlocksData,
+          currentPlayer = 0,
+          blocks = serializedBlocksData,
           buildings = serializedBuildings,
           seals = serializedSeals,
           builders = serializedBuilders,
+          phase = PhaseDTO.FINISHED, // Because only 1 active player
         ),
       )
     )

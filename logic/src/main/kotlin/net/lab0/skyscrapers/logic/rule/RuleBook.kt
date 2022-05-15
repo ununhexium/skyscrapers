@@ -2,8 +2,8 @@ package net.lab0.skyscrapers.logic.rule
 
 import net.lab0.skyscrapers.logic.api.GameRuleViolation
 import net.lab0.skyscrapers.logic.api.GameState
+import net.lab0.skyscrapers.logic.api.MoveOnly
 import net.lab0.skyscrapers.logic.api.Move
-import net.lab0.skyscrapers.logic.api.MoveAndTurn
 import net.lab0.skyscrapers.logic.api.Rule
 import net.lab0.skyscrapers.logic.api.TurnType
 import net.lab0.skyscrapers.logic.exception.GameRuleViolationException
@@ -11,8 +11,8 @@ import net.lab0.skyscrapers.logic.exception.GameRuleViolationException
 class RuleBook(
   val turnRules: List<Rule<TurnType>>,
   val placementRules: List<Rule<TurnType.PlacementTurn>>,
+  val moveOnlyRules: List<Rule<MoveOnly>>,
   val moveRules: List<Rule<Move>>,
-  val moveAndTurnRules: List<Rule<MoveAndTurn>>,
   val buildRules: List<Rule<TurnType.MoveTurn.BuildTurn>>,
   val sealRules: List<Rule<TurnType.MoveTurn.SealTurn>>,
   val winRules: List<Rule<TurnType.MoveTurn.WinTurn>>,
@@ -28,8 +28,8 @@ class RuleBook(
         is TurnType.GiveUpTurn -> {} // check nothing
 
         is TurnType.MoveTurn -> {
+          throwIfViolatedRule(moveOnlyRules, turn, state)
           throwIfViolatedRule(moveRules, turn, state)
-          throwIfViolatedRule(moveAndTurnRules, turn, state)
 
           val nextBuilderState = state.move(turn)
 
@@ -77,7 +77,7 @@ class RuleBook(
   }
 
   fun canMove(
-    turn: Move,
+    turn: MoveOnly,
     state: GameState
-  ) = checkRules(moveRules, turn, state).isEmpty()
+  ) = checkRules(moveOnlyRules, turn, state).isEmpty()
 }
