@@ -17,7 +17,7 @@ repositories {
 
 dependencies {
 
-  implementation(project(":logic"))
+  implementation(project(":engine"))
   implementation(project(":client:clikt"))
 
   clikt()

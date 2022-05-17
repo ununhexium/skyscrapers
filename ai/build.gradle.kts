@@ -13,7 +13,7 @@ repositories {
 
 dependencies {
 
-  implementation(project(":logic"))
+  implementation(project(":engine"))
 
   // TEST
 

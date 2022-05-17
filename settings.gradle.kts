@@ -1,6 +1,6 @@
 
 rootProject.name = "skyscrapers"
-include("logic")
+include("engine")
 include("ai")
 include("blog")
 include("client")

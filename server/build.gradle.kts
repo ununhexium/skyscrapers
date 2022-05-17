@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-  implementation(project(":logic"))
+  implementation(project(":engine"))
 
   http4k()
 

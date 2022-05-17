@@ -12,7 +12,7 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":logic"))
+    implementation(project(":engine"))
     clikt()
 
     // TEST
