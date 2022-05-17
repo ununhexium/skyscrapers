@@ -1,4 +1,4 @@
-package net.lab0.skyscrapers.client.shell.jline3.execution
+package net.lab0.skyscrapers.client.clikt
 
 import net.lab0.skyscrapers.logic.api.Game
 import org.assertj.core.api.Assertions

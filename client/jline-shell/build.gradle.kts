@@ -18,7 +18,7 @@ repositories {
 dependencies {
 
   implementation(project(":logic"))
-//  implementation(Dependencies.clikt)
+  implementation(project(":client:clikt"))
 
   clikt()
   jline()

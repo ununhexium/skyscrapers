@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.client.shell.jline3
 
 import net.lab0.skyscrapers.logic.api.Game
-import net.lab0.skyscrapers.client.shell.jline3.execution.GameCli
+import net.lab0.skyscrapers.client.clikt.GameCli
 import net.lab0.skyscrapers.logic.exception.GameRuleViolationException
 import org.jline.reader.EndOfFileException
 import org.jline.reader.LineReader.Option

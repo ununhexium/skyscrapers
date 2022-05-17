@@ -1,4 +1,4 @@
-package net.lab0.skyscrapers.client.shell.jline3.execution
+package net.lab0.skyscrapers.client.clikt
 
 import com.github.ajalt.clikt.core.CliktCommand
 

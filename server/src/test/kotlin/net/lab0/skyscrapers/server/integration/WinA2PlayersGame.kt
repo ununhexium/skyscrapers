@@ -6,7 +6,6 @@ import net.lab0.skyscrapers.server.dto.BuildTurnDTO
 import net.lab0.skyscrapers.server.dto.ConnectionResponse
 import net.lab0.skyscrapers.server.dto.PhaseDTO
 import net.lab0.skyscrapers.server.dto.PlaceTurnDTO
-import net.lab0.skyscrapers.server.dto.PlayerDTO
 import net.lab0.skyscrapers.server.dto.PositionDTO
 import net.lab0.skyscrapers.server.dto.TurnTypeDTO
 import net.lab0.skyscrapers.server.dto.WinTurnDTO
@@ -14,7 +13,6 @@ import net.lab0.skyscrapers.server.routed
 import org.assertj.core.api.Assertions.assertThat
 import org.http4k.client.ApacheClient
 import org.http4k.core.Body
-import org.http4k.core.Filter
 import org.http4k.core.HttpTransaction
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
@@ -28,7 +26,6 @@ import org.http4k.filter.ResponseFilters
 import org.http4k.format.KotlinxSerialization.auto
 import org.http4k.server.Undertow
 import org.http4k.server.asServer
-import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Test
 import net.lab0.skyscrapers.logic.structure.Position as P
 
