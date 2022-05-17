@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.client.clikt
 
 import com.github.ajalt.clikt.core.CliktCommand
-import net.lab0.skyscrapers.logic.api.Game
+import net.lab0.skyscrapers.engine.api.Game
 import java.io.PrintWriter
 import java.util.concurrent.atomic.AtomicReference
 

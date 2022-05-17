@@ -4,9 +4,9 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.required
 import com.github.ajalt.clikt.parameters.types.int
-import net.lab0.skyscrapers.logic.action.DSL
-import net.lab0.skyscrapers.logic.api.Game
-import net.lab0.skyscrapers.logic.structure.Position
+import net.lab0.skyscrapers.engine.action.DSL
+import net.lab0.skyscrapers.engine.api.Game
+import net.lab0.skyscrapers.engine.structure.Position
 import java.util.concurrent.atomic.AtomicReference
 
 class PlaceAt(val ref: AtomicReference<Game?>) : CliktCommand(name = "at") {

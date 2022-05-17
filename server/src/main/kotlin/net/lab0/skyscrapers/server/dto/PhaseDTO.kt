@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.server.dto
 
 import kotlinx.serialization.Serializable
-import net.lab0.skyscrapers.logic.structure.Phase
+import net.lab0.skyscrapers.engine.structure.Phase
 
 @Serializable
 enum class PhaseDTO {

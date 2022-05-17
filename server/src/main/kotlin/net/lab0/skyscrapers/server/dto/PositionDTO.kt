@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.server.dto
 
 import kotlinx.serialization.Serializable
-import net.lab0.skyscrapers.logic.structure.Position
+import net.lab0.skyscrapers.engine.structure.Position
 
 @Serializable
 data class PositionDTO(val x: Int, val y: Int) {

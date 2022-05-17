@@ -5,9 +5,9 @@ import com.github.ajalt.clikt.parameters.options.convert
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.required
-import net.lab0.skyscrapers.logic.api.Game
-import net.lab0.skyscrapers.logic.api.TurnType
-import net.lab0.skyscrapers.logic.structure.Position
+import net.lab0.skyscrapers.engine.api.Game
+import net.lab0.skyscrapers.engine.api.TurnType
+import net.lab0.skyscrapers.engine.structure.Position
 import java.util.concurrent.atomic.AtomicReference
 
 class MoveBuilder(private val ref: AtomicReference<Game?>) : CliktCommand(name = "move-builder") {

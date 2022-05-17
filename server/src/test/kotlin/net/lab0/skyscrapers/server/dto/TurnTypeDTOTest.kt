@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.server.dto
 
-import net.lab0.skyscrapers.logic.api.TurnType
-import net.lab0.skyscrapers.logic.structure.Position
+import net.lab0.skyscrapers.engine.api.TurnType
+import net.lab0.skyscrapers.engine.structure.Position
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

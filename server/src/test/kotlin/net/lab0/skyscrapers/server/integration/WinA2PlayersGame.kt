@@ -27,7 +27,7 @@ import org.http4k.format.KotlinxSerialization.auto
 import org.http4k.server.Undertow
 import org.http4k.server.asServer
 import org.junit.jupiter.api.Test
-import net.lab0.skyscrapers.logic.structure.Position as P
+import net.lab0.skyscrapers.engine.structure.Position as P
 
 class WinA2PlayersGame {
   val service = ServiceImpl.new()

@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.server.dto
 
 import kotlinx.serialization.Serializable
-import net.lab0.skyscrapers.logic.api.TurnType
+import net.lab0.skyscrapers.engine.api.TurnType
 
 @Serializable
 class TurnTypeDTO private constructor(

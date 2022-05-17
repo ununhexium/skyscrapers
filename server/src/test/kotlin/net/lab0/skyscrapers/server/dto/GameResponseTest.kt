@@ -1,12 +1,12 @@
 package net.lab0.skyscrapers.server.dto
 
-import net.lab0.skyscrapers.logic.Player
-import net.lab0.skyscrapers.logic.api.BlocksData
-import net.lab0.skyscrapers.logic.api.GameState
-import net.lab0.skyscrapers.logic.structure.Bounds
-import net.lab0.skyscrapers.logic.structure.Height
-import net.lab0.skyscrapers.logic.structure.Matrix
-import net.lab0.skyscrapers.logic.structure.Phase
+import net.lab0.skyscrapers.engine.Player
+import net.lab0.skyscrapers.engine.api.BlocksData
+import net.lab0.skyscrapers.engine.api.GameState
+import net.lab0.skyscrapers.engine.structure.Bounds
+import net.lab0.skyscrapers.engine.structure.Height
+import net.lab0.skyscrapers.engine.structure.Matrix
+import net.lab0.skyscrapers.engine.structure.Phase
 import net.lab0.skyscrapers.server.GameResponse
 import net.lab0.skyscrapers.server.value.GameName
 import org.assertj.core.api.Assertions.assertThat

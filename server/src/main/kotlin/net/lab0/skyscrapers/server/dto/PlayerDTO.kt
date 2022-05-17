@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.server.dto
 
 import kotlinx.serialization.Serializable
-import net.lab0.skyscrapers.logic.Player
+import net.lab0.skyscrapers.engine.Player
 
 @Serializable
 data class PlayerDTO(val id: Int, val active: Boolean) {

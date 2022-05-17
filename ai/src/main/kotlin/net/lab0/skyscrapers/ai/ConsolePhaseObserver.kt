@@ -1,6 +1,6 @@
 package net.lab0.skyscrapers.ai
 
-import net.lab0.skyscrapers.logic.structure.Phase
+import net.lab0.skyscrapers.engine.structure.Phase
 
 object ConsolePhaseObserver : (Phase) -> Unit {
   override fun invoke(phase: Phase) {

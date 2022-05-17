@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.server
 
 import kotlinx.serialization.Serializable
-import net.lab0.skyscrapers.logic.api.GameState
+import net.lab0.skyscrapers.engine.api.GameState
 import net.lab0.skyscrapers.server.dto.BlocksDataDTO
 import net.lab0.skyscrapers.server.dto.BoundsDTO
 import net.lab0.skyscrapers.server.dto.MatrixDTO

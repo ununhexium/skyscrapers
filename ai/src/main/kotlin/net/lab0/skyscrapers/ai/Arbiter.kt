@@ -1,9 +1,9 @@
 package net.lab0.skyscrapers.ai
 
-import net.lab0.skyscrapers.logic.api.Game
-import net.lab0.skyscrapers.logic.api.GameState
-import net.lab0.skyscrapers.logic.api.TurnType
-import net.lab0.skyscrapers.logic.structure.Phase
+import net.lab0.skyscrapers.engine.api.Game
+import net.lab0.skyscrapers.engine.api.GameState
+import net.lab0.skyscrapers.engine.api.TurnType
+import net.lab0.skyscrapers.engine.structure.Phase
 
 class Arbiter(val ais: List<Ai>) {
   constructor(vararg ais: Ai) : this(ais.toList())

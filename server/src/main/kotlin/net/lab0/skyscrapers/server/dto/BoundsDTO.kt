@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.server.dto
 
 import kotlinx.serialization.Serializable
-import net.lab0.skyscrapers.logic.structure.Bounds
+import net.lab0.skyscrapers.engine.structure.Bounds
 
 @Serializable
 data class BoundsDTO(

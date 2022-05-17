@@ -1,6 +1,6 @@
 package net.lab0.skyscrapers.client.clikt
 
-import net.lab0.skyscrapers.logic.api.Game
+import net.lab0.skyscrapers.engine.api.Game
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

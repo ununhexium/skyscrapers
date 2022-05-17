@@ -1,6 +1,6 @@
 package net.lab0.skyscrapers.server
 
-import net.lab0.skyscrapers.logic.api.Game
+import net.lab0.skyscrapers.engine.api.Game
 import net.lab0.skyscrapers.server.dto.GameError
 import net.lab0.skyscrapers.server.value.GameName
 import org.assertj.core.api.Assertions.assertThat
