@@ -1,8 +1,8 @@
 package net.lab0.skyscrapers.engine.api
 
 import net.lab0.skyscrapers.engine.Player
-import net.lab0.skyscrapers.engine.structure.CompositePosition
 import net.lab0.skyscrapers.engine.structure.Bounds
+import net.lab0.skyscrapers.engine.structure.CompositePosition
 import net.lab0.skyscrapers.engine.structure.Height
 import net.lab0.skyscrapers.engine.structure.Matrix
 import net.lab0.skyscrapers.engine.structure.Phase

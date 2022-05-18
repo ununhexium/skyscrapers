@@ -5,7 +5,6 @@ import net.lab0.skyscrapers.server.value.GameName
 import org.http4k.core.Body
 import org.http4k.core.Request
 import org.http4k.core.Response
-import org.http4k.core.Status
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.with
 import org.http4k.format.KotlinxSerialization.auto

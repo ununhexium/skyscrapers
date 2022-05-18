@@ -12,7 +12,6 @@ import net.lab0.skyscrapers.blog.engine.PageImpl
 import net.lab0.skyscrapers.blog.engine.Publication
 import net.lab0.skyscrapers.blog.engine.html.Pointer
 import net.lab0.skyscrapers.blog.engine.html.github
-import net.lab0.skyscrapers.blog.engine.html.googleSearchImageLink
 import net.lab0.skyscrapers.blog.engine.html.image
 import net.lab0.skyscrapers.blog.engine.html.mono
 

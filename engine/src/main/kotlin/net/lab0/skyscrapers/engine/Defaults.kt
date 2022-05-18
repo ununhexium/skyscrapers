@@ -1,15 +1,15 @@
 package net.lab0.skyscrapers.engine
 
 import net.lab0.skyscrapers.engine.api.BlocksData
-import net.lab0.skyscrapers.engine.api.MoveOnly
 import net.lab0.skyscrapers.engine.api.Move
+import net.lab0.skyscrapers.engine.api.MoveOnly
 import net.lab0.skyscrapers.engine.api.Rule
 import net.lab0.skyscrapers.engine.rule.CheckCurrentPlayer
 import net.lab0.skyscrapers.engine.rule.PhaseRule
 import net.lab0.skyscrapers.engine.rule.RuleBook
 import net.lab0.skyscrapers.engine.rule.move.BoardMoveContainmentRule
-import net.lab0.skyscrapers.engine.rule.move.ClimbingRule
 import net.lab0.skyscrapers.engine.rule.move.BuildersMoveToEmptyCells
+import net.lab0.skyscrapers.engine.rule.move.ClimbingRule
 import net.lab0.skyscrapers.engine.rule.move.MovementRangeRule
 import net.lab0.skyscrapers.engine.rule.move.PlayersMoveTheirOwnBuilders
 import net.lab0.skyscrapers.engine.rule.move.SealsPreventMovingRule

@@ -1,6 +1,4 @@
 import dependencies.Dependencies.http4k
-import dependencies.TestDependencies.junit5Api
-import dependencies.TestDependencies.junit5Engine
 
 plugins {
   application

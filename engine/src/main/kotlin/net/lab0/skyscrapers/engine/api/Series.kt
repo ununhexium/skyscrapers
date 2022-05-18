@@ -1,7 +1,5 @@
 package net.lab0.skyscrapers.engine.api
 
-import kotlin.jvm.Throws
-
 /**
  * A group of games between the same players.
  */

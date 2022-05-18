@@ -1,6 +1,6 @@
 package dependencies
 
-import org.gradle.api.artifacts.dsl.DependencyHandler
+import Versions
 
 object Dependencies {
   //  val material = "com.google.android.material:material:${Versions.material}"

@@ -1,8 +1,7 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import dependencies.Dependencies.http4k
+import dependencies.TestDependencies.assertJ
 import dependencies.TestDependencies.junit5Api
 import dependencies.TestDependencies.junit5Engine
-import dependencies.TestDependencies.assertJ
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 
 plugins {

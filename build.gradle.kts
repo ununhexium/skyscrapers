@@ -1,8 +1,8 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import dependencies.TestDependencies.assertJ
 import dependencies.TestDependencies.junit5Api
 import dependencies.TestDependencies.junit5Engine
-import dependencies.TestDependencies.assertJ
 import dependencies.TestDependencies.mockK
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   kotlin("jvm") version "1.6.20"

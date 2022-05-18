@@ -5,7 +5,6 @@ import kotlinx.html.br
 import kotlinx.html.head
 import kotlinx.html.html
 import kotlinx.html.p
-import kotlinx.html.script
 import kotlinx.html.stream.appendHTML
 import kotlinx.html.style
 import kotlinx.html.title

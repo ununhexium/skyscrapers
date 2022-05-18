@@ -1,7 +1,6 @@
 package net.lab0.skyscrapers.blog.engine.html
 
 import kotlinx.html.BODY
-import kotlinx.html.DIV
 import kotlinx.html.HTMLTag
 import kotlinx.html.SPAN
 import kotlinx.html.a

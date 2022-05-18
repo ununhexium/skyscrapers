@@ -1,7 +1,6 @@
 package net.lab0.skyscrapers.client.clikt
 
 import net.lab0.skyscrapers.engine.api.Series
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
