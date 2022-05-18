@@ -278,17 +278,6 @@ internal class GameImplTest {
     }
 
     @Test
-    fun `the player can't give up in the placement phase`() {
-      val g = Game.new()
-
-      assertThrows<GameRuleViolationException> {
-        g.play(
-          DSL.player(0).building.giveUp()
-        )
-      }
-    }
-
-    @Test
     fun `can't move during placement phase`() {
       val g = Game.new()
 

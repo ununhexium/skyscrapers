@@ -93,5 +93,11 @@ internal class SeriesImplTest {
     assertThat(series.getRound(1)?.state?.winner).isEqualTo(0)
   }
 
-
+  @Test
+  fun `can customize the new game with a factory`() {
+    val factory = { Game.new(2, 2, 2, 1) }
+    val series = SeriesImpl(1, factory)
+    series.start()
+    assertThat(series.getCurrentRound()?.state).isEqualTo(factory().state)
+  }
 }

@@ -2,12 +2,12 @@ package net.lab0.skyscrapers.client.shell.jline3
 
 import net.lab0.skyscrapers.engine.Defaults
 import net.lab0.skyscrapers.engine.api.Game
+import net.lab0.skyscrapers.engine.api.Series
 import net.lab0.skyscrapers.engine.structure.Phase
 import net.lab0.skyscrapers.engine.utils.StateBrowser
 import org.jline.builtins.Completers
 import org.jline.builtins.Completers.TreeCompleter
 import org.jline.builtins.Completers.TreeCompleter.Node
-import org.jline.builtins.Completers.TreeCompleter.node as treeNode
 import org.jline.reader.Candidate
 import org.jline.reader.Completer
 import org.jline.reader.LineReader
@@ -16,15 +16,15 @@ import org.jline.reader.impl.completer.AggregateCompleter
 import org.jline.reader.impl.completer.ArgumentCompleter
 import org.jline.reader.impl.completer.NullCompleter
 import org.jline.reader.impl.completer.StringsCompleter
-import java.util.concurrent.atomic.AtomicReference
+import org.jline.builtins.Completers.TreeCompleter.node as treeNode
 
-class GameCompleter(val ref: AtomicReference<Game?>) : Completer {
+class GameCompleter(val series: Series) : Completer {
   override fun complete(
     reader: LineReader,
     line: ParsedLine,
     candidates: MutableList<Candidate>
   ) {
-    val game = ref.get()
+    val game = series.getCurrentRound()
 
     val completer = AggregateCompleter(
       StringsCompleter("show"),

@@ -5,10 +5,8 @@ import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
 import net.lab0.skyscrapers.engine.Defaults
-import net.lab0.skyscrapers.engine.api.Game
-import java.util.concurrent.atomic.AtomicReference
 
-class New(private val ref: AtomicReference<Game?>) : CliktCommand(name = "new") {
+class NewSeries : CliktCommand(name = "new-series") {
   private val width by option("-w", "--width", help = "Width of the board")
     .int()
     .default(Defaults.WIDTH)
@@ -26,13 +24,6 @@ class New(private val ref: AtomicReference<Game?>) : CliktCommand(name = "new") 
     .default(Defaults.BUILDERS_PER_PLAYER)
 
   override fun run() {
-    ref.set(
-      Game.new(
-        width = width,
-        height = height,
-        playerCount = players,
-        buildersPerPlayer = builders,
-      )
-    )
+    TODO("Not yet implemented")
   }
 }

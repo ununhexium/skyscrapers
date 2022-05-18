@@ -31,6 +31,9 @@ interface Series {
    */
   fun getRound(index: Int): Game?
 
+  fun getCurrentRound(): Game? =
+    currentRound?.let { getRound(it) }
+
   /**
    * The number of rounds that have been played.
    */

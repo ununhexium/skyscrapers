@@ -2,22 +2,21 @@ package net.lab0.skyscrapers.client.clikt
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.subcommands
-import net.lab0.skyscrapers.engine.api.Game
+import net.lab0.skyscrapers.engine.api.Series
 import java.io.PrintWriter
-import java.util.concurrent.atomic.AtomicReference
 
 class GameCli : CliktCommand() {
 
   companion object {
-    fun new(ref: AtomicReference<Game?>, writer: PrintWriter): CliktCommand =
+    fun new(series: Series, writer: PrintWriter): CliktCommand =
       GameCli().subcommands(
-        New(ref),
-        ShowCli(ref, writer),
+        Next(series),
+        ShowCli(series, writer),
         PlaceBuilder().subcommands(
-          PlaceBuilderRandomly(ref),
-          PlaceAt(ref),
+          PlaceBuilderRandomly(series),
+          PlaceAt(series),
         ),
-        MoveBuilder(ref)
+        MoveBuilder(series)
       )
   }
 

@@ -1,6 +1,11 @@
 package net.lab0.skyscrapers.engine.api
 
-class SeriesImpl constructor(override val requiredWinningRounds: Int) : Series {
+class SeriesImpl(
+  override val requiredWinningRounds: Int,
+  val gameFactory: () -> Game = { Game.new() }
+) : Series {
+
+  companion object : NewSeries
 
   private val games = mutableListOf<Game>()
   private var gamePointer: Int? = null
@@ -10,7 +15,7 @@ class SeriesImpl constructor(override val requiredWinningRounds: Int) : Series {
       ?: return false
 
     f(game)
-    if(game.state.isFinished()) gamePointer = null
+    if (game.state.isFinished()) gamePointer = null
 
     return true
   }
@@ -22,7 +27,7 @@ class SeriesImpl constructor(override val requiredWinningRounds: Int) : Series {
       "Can't start a new game as the current one is not finished. It's time for player #${games.last().state.currentPlayer} to play."
     )
 
-    games.add(Game.new())
+    games.add(gameFactory())
     gamePointer = games.lastIndex
   }
 

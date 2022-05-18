@@ -1,33 +1,29 @@
 package net.lab0.skyscrapers.client.clikt
 
-import net.lab0.skyscrapers.engine.api.Game
+import net.lab0.skyscrapers.engine.api.Series
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.PrintWriter
 import java.io.StringWriter
-import java.util.concurrent.atomic.AtomicReference
 
 internal class GameCliTest {
-  lateinit var ref: AtomicReference<Game?>
+  lateinit var series: Series
 
   @BeforeEach
   fun beforeEach() {
-    ref = AtomicReference(null)
+    series = Series.newBestOf1()
   }
 
   @Test
   fun `can start a new game with params`() {
-    GameCli.new(ref, PrintWriter(StringWriter())).main(
+    GameCli.new(series, PrintWriter(StringWriter())).main(
       listOf(
-        "new", "--width=9", "--height=8", "--players=7", "--builders=6"
+        "next"
       )
     )
 
-    val game = ref.get()!!
-    Assertions.assertThat(game.state.maxBuildersPerPlayer).isEqualTo(6)
-    Assertions.assertThat(game.state.players).hasSize(7)
-    Assertions.assertThat(game.state.bounds.height).isEqualTo(8)
-    Assertions.assertThat(game.state.bounds.width).isEqualTo(9)
+    assertThat(series.getCurrentRound()).isNotNull
   }
 }

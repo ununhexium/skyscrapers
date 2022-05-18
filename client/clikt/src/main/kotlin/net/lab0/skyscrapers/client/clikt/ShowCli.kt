@@ -1,18 +1,14 @@
 package net.lab0.skyscrapers.client.clikt
 
 import com.github.ajalt.clikt.core.CliktCommand
-import net.lab0.skyscrapers.engine.api.Game
+import net.lab0.skyscrapers.engine.api.Series
 import java.io.PrintWriter
-import java.util.concurrent.atomic.AtomicReference
 
-class ShowCli(private val ref: AtomicReference<Game?>, private val writer: PrintWriter) :
+class ShowCli(private val series: Series, private val writer: PrintWriter) :
   CliktCommand(name = "show") {
   override fun run() {
-    val game = ref.get()
-    if (game == null) {
-      writer.println("No game is instantiated")
-    } else {
-      writer.println(game.state.toCompositeString())
-    }
+    series.getCurrentRound()?.let {
+      writer.println(it.state.toCompositeString())
+    } ?: writer.println("No game is instantiated")
   }
 }

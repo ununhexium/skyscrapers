@@ -5,12 +5,11 @@ import com.github.ajalt.clikt.parameters.options.convert
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.required
-import net.lab0.skyscrapers.engine.api.Game
+import net.lab0.skyscrapers.engine.api.Series
 import net.lab0.skyscrapers.engine.api.TurnType
 import net.lab0.skyscrapers.engine.structure.Position
-import java.util.concurrent.atomic.AtomicReference
 
-class MoveBuilder(private val ref: AtomicReference<Game?>) : CliktCommand(name = "move-builder") {
+class MoveBuilder(private val series: Series) : CliktCommand(name = "move-builder") {
   private val from by option("-f", "--from")
     .convert { posStr ->
       posStr.split(",")
@@ -26,7 +25,7 @@ class MoveBuilder(private val ref: AtomicReference<Game?>) : CliktCommand(name =
   private val andWin by option("--andWin").flag()
 
   override fun run() {
-    val game = ref.get() ?: error("The game doesn't exist")
+    val game = series.getCurrentRound() ?: error("The game doesn't exist")
 
     val build = andBuild
     val seal = andSeal
@@ -48,7 +47,7 @@ class MoveBuilder(private val ref: AtomicReference<Game?>) : CliktCommand(name =
         from,
         to,
       )
-      else -> error("Must either build or seal")
+      else -> error("Must either build, seal or win")
     }
 
     game.play(turn)

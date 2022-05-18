@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.client.shell.jline3
 
-import net.lab0.skyscrapers.engine.api.Game
 import net.lab0.skyscrapers.client.clikt.GameCli
+import net.lab0.skyscrapers.engine.api.Series
 import net.lab0.skyscrapers.engine.exception.GameRuleViolationException
 import org.jline.reader.EndOfFileException
 import org.jline.reader.LineReader.Option
@@ -9,7 +9,6 @@ import org.jline.reader.LineReaderBuilder
 import org.jline.reader.UserInterruptException
 import org.jline.reader.impl.DefaultParser
 import org.jline.terminal.TerminalBuilder
-import java.util.concurrent.atomic.AtomicReference
 
 
 fun main(args: Array<String>) {
@@ -26,15 +25,15 @@ class Application {
 
     val parser = DefaultParser()
 
-    val ref = AtomicReference<Game?>(null)
+    val series = Series.newBestOf1()
 
-    val cli = GameCli.new(ref, terminal.writer())
+    val cli = GameCli.new(series, terminal.writer())
 
     val reader = LineReaderBuilder
       .builder()
       .terminal(terminal)
       .parser(parser)
-      .completer(GameCompleter(ref))
+      .completer(GameCompleter(series))
       .option(Option.AUTO_MENU_LIST, true)
       .build()
 
@@ -42,8 +41,8 @@ class Application {
     while (running) {
       try {
         val line = reader.readLine(
-          ref
-            .get()
+          series
+            .getCurrentRound()
             ?.state
             ?.currentPlayer
             ?.let { "player ${'A'.code + it}>" }
