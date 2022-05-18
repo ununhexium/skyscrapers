@@ -129,6 +129,9 @@ data class GameState(
   val currentPlayer: Int
     get() = players.first().id
 
+  val winner
+    get() = if (isFinished()) players.first { it.active }.id else null
+
   override fun toString(): String {
 
     return """

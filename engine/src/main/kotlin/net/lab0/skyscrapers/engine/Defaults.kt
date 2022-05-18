@@ -24,7 +24,6 @@ import net.lab0.skyscrapers.engine.rule.move.seal.SealingRangeRule
 import net.lab0.skyscrapers.engine.rule.move.seal.SealsPreventSealingRule
 import net.lab0.skyscrapers.engine.rule.move.win.WinConditionRule
 import net.lab0.skyscrapers.engine.rule.placement.BoardPlacementContainmentRule
-import net.lab0.skyscrapers.engine.rule.placement.CantGiveUpDuringPlacementRule
 import net.lab0.skyscrapers.engine.rule.placement.PlaceBuilderOnEmptyCell
 import net.lab0.skyscrapers.engine.structure.Bounds
 import net.lab0.skyscrapers.engine.structure.Height
@@ -50,7 +49,6 @@ object Defaults {
     turnRules = listOf(
       PhaseRule,
       CheckCurrentPlayer,
-      CantGiveUpDuringPlacementRule,
     ),
 
     placementRules = listOf(

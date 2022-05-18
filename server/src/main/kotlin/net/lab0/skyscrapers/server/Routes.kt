@@ -15,6 +15,7 @@ import org.http4k.routing.routes
 
 fun routed(service: Service) = ServerFilters.CatchAll {
   when (it) {
+    is Error -> throw it // non-recoverable
     else -> Response(Status.INTERNAL_SERVER_ERROR).body(
       it::class.toString() + (it.message ?: "No error message")
     )

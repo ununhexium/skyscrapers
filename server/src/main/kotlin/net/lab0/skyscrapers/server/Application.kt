@@ -6,5 +6,5 @@ import org.http4k.server.asServer
 fun main() {
   val service = ServiceImpl.new()
 
-  val server = routed(service).asServer(Undertow(45678)).start()
+  routed(service).asServer(Undertow(45678)).start()
 }
