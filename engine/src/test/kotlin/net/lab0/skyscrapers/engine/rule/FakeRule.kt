@@ -1,6 +1,5 @@
 package net.lab0.skyscrapers.engine.rule
 
-import net.lab0.skyscrapers.engine.api.GameRuleViolation
 import net.lab0.skyscrapers.engine.api.GameState
 import net.lab0.skyscrapers.engine.api.Rule
 import net.lab0.skyscrapers.engine.api.TurnType

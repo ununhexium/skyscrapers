@@ -1,11 +1,8 @@
 package net.lab0.skyscrapers.engine.rule
 
-import io.mockk.every
-import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
 import net.lab0.skyscrapers.engine.api.Game
-import net.lab0.skyscrapers.engine.api.Rule
 import net.lab0.skyscrapers.engine.api.TurnType
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

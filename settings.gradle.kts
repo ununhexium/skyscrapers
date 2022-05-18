@@ -10,3 +10,5 @@ include("server")
 include("api")
 include("client:clikt")
 findProject(":client:clikt")?.name = "clikt"
+include("api:client")
+findProject(":api:client")?.name = "client"

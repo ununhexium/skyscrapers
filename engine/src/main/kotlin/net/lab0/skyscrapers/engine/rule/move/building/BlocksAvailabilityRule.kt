@@ -2,7 +2,6 @@ package net.lab0.skyscrapers.engine.rule.move.building
 
 import net.lab0.skyscrapers.engine.api.Rule
 import net.lab0.skyscrapers.engine.api.TurnType
-import net.lab0.skyscrapers.engine.rule.AbstractRule
 
 class BlocksAvailabilityRule :
   Rule<TurnType.MoveTurn.BuildTurn>,

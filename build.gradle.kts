@@ -1,6 +1,8 @@
-import dependencies.Dependencies
-import dependencies.TestDependencies
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import dependencies.TestDependencies.junit5Api
+import dependencies.TestDependencies.junit5Engine
+import dependencies.TestDependencies.assertJ
+import dependencies.TestDependencies.mockK
 
 plugins {
   kotlin("jvm") version "1.6.20"
@@ -22,9 +24,12 @@ subprojects {
 
     // TEST
 
-    testImplementation(TestDependencies.assertJ)
+    testImplementation(assertJ)
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    testImplementation(mockK)
+
+    testImplementation(junit5Api)
+    testRuntimeOnly(junit5Engine)
   }
 }
 

@@ -5,7 +5,6 @@ import net.lab0.skyscrapers.engine.api.TurnType
 import net.lab0.skyscrapers.engine.rule.GameRuleViolationImpl
 import net.lab0.skyscrapers.engine.structure.Position
 import org.assertj.core.api.Assertions
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 internal class PlayersMoveTheirOwnBuildersTest {

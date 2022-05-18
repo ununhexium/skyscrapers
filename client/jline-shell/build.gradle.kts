@@ -20,14 +20,11 @@ dependencies {
   implementation(project(":engine"))
   implementation(project(":client:clikt"))
 
-  clikt()
-  jline()
-  jlineBuiltins()
+  implementation(clikt)
+  implementation(jline)
+  implementation(jlineBuiltins)
 
   // TEST
-
-  testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
 }
 
 tasks.getByName<Test>("test") {

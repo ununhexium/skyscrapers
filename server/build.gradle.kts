@@ -1,4 +1,6 @@
 import dependencies.Dependencies.http4k
+import dependencies.TestDependencies.junit5Api
+import dependencies.TestDependencies.junit5Engine
 
 plugins {
   application
@@ -16,15 +18,13 @@ repositories {
 dependencies {
   implementation(project(":engine"))
 
-  http4k()
+  implementation(http4k("core"))
+  implementation(http4k("server-undertow"))
+  implementation(http4k("client-apache"))
+  implementation(http4k("format-kotlinx-serialization"))
 
   // TEST
-
-  testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-
-  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
-
-  testImplementation("org.http4k:http4k-client-okhttp:${Versions.http4k}")
+  testImplementation(http4k("client-okhttp"))
 }
 
 application {

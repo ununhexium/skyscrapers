@@ -1,6 +1,5 @@
 package net.lab0.skyscrapers.engine.api
 
-import net.lab0.skyscrapers.engine.rule.AbstractRule
 import net.lab0.skyscrapers.engine.rule.RuleWithDependencies
 
 interface Rule<T> {

@@ -2,7 +2,6 @@ package net.lab0.skyscrapers.engine.utils
 
 import net.lab0.skyscrapers.engine.Defaults
 import net.lab0.skyscrapers.engine.api.GameState
-import net.lab0.skyscrapers.engine.utils.StateBrowser
 import net.lab0.skyscrapers.engine.structure.Position
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

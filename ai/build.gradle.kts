@@ -1,4 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import dependencies.Dependencies.http4k
+import dependencies.TestDependencies.junit5Api
+import dependencies.TestDependencies.junit5Engine
+import dependencies.TestDependencies.assertJ
+
 
 plugins {
   kotlin("jvm")
@@ -17,9 +22,9 @@ dependencies {
 
   // TEST
 
-  testImplementation("org.assertj:assertj-core:3.22.0")
-  testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+  testImplementation(assertJ)
+  testImplementation(junit5Api)
+  testRuntimeOnly(junit5Engine)
 }
 
 tasks {
