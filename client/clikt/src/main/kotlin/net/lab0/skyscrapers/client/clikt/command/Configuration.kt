@@ -1,14 +1,14 @@
-package net.lab0.skyscrapers.client.clikt
+package net.lab0.skyscrapers.client.clikt.command
 
-import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import net.lab0.skyscrapers.client.clikt.MyCliktCommand
 import net.lab0.skyscrapers.client.clikt.configuration.Configurer
 import java.io.Writer
 
-class Configuration(writer: Writer, val configurer: Configurer) :
+class Configuration(writer: Writer?, val configurer: Configurer) :
   MyCliktCommand(writer, name = "config") {
   val reset by option(
     "--reset",
@@ -23,10 +23,9 @@ class Configuration(writer: Writer, val configurer: Configurer) :
     if (reset) {
       configurer.resetConfiguration()
       myEcho("Configuration reset.")
-      echo("")
     } else {
       val config = JSON.encodeToString(configurer.loadConfiguration())
-      writer.write(config)
+      myEcho(config)
     }
   }
 }

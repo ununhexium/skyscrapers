@@ -4,7 +4,7 @@ import com.github.ajalt.clikt.core.CliktCommand
 import java.io.Writer
 
 abstract class MyCliktCommand(
-  val writer: Writer,
+  val writer: Writer?,
   help: String = "",
   epilog: String = "",
   name: String? = null,
@@ -29,7 +29,10 @@ abstract class MyCliktCommand(
    * testable echo
    */
   fun myEcho(string: String) {
-    writer.write(string)
-    echo(string)
+    if (writer == null) {
+      echo(string)
+    } else {
+      writer.write(string)
+    }
   }
 }

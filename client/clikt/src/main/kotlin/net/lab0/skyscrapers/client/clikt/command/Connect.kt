@@ -1,4 +1,4 @@
-package net.lab0.skyscrapers.client.clikt
+package net.lab0.skyscrapers.client.clikt.command
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.sksamuel.hoplite.ConfigLoader
