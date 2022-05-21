@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.engine.rule.move
 
+import net.lab0.skyscrapers.editor
 import net.lab0.skyscrapers.engine.DefaultGames
 import net.lab0.skyscrapers.engine.GameImpl
 import net.lab0.skyscrapers.engine.api.TurnType
@@ -21,7 +22,7 @@ internal class ClimbingRuleTest {
     )
     val rule = ClimbingRule()
 
-    (g as GameImpl).backdoor.forceState(g.state.height(target, 1))
+    (g as GameImpl).backdoor.forceState(g.state.editor().height(target, 1))
 
     assertThat(rule.checkRule(g.state, turn)).isEmpty()
   }
@@ -38,7 +39,7 @@ internal class ClimbingRuleTest {
     )
     val rule = ClimbingRule()
 
-    (g as GameImpl).backdoor.forceState(g.state.height(target, 2))
+    (g as GameImpl).backdoor.forceState(g.state.editor().height(target, 2))
 
     assertThat(rule.checkRule(g.state, turn)).isEqualTo(
       listOf(

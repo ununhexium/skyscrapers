@@ -18,6 +18,7 @@ repositories {
 dependencies {
 
   implementation(project(":engine"))
+  implementation(project(":api:structure"))
 
   // TEST
 

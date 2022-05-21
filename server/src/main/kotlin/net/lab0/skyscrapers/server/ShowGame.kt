@@ -1,6 +1,7 @@
 package net.lab0.skyscrapers.server
 
 import net.lab0.skyscrapers.server.dto.GameError
+import net.lab0.skyscrapers.server.dto.GameResponse
 import org.http4k.core.Body
 import org.http4k.core.Request
 import org.http4k.core.Response

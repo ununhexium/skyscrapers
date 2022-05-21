@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.engine.rule.move.win
 
+import net.lab0.skyscrapers.editor
 import net.lab0.skyscrapers.engine.DefaultGames
 import net.lab0.skyscrapers.engine.GameImpl
 import net.lab0.skyscrapers.engine.api.TurnType
@@ -14,7 +15,7 @@ internal class WinConditionRuleTest {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
 
     (g as GameImpl).backdoor.forceState(
-      g.state.height(
+      g.state.editor().height(
         Position(1, 1),
         g.state.blocks.maxHeight().value
       )
@@ -32,7 +33,7 @@ internal class WinConditionRuleTest {
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
 
     (g as GameImpl).backdoor.forceState(
-      g.state.height(
+      g.state.editor().height(
         Position(1, 1),
         2
       )

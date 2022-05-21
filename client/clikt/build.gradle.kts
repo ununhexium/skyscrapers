@@ -13,6 +13,7 @@ repositories {
 
 dependencies {
     implementation(project(":engine"))
+    implementation(project(":api:structure"))
     implementation(clikt)
 
     // TEST

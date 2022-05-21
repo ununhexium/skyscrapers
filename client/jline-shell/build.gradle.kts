@@ -17,8 +17,9 @@ repositories {
 
 dependencies {
 
-  implementation(project(":engine"))
+  implementation(project(":api:structure"))
   implementation(project(":client:clikt"))
+  implementation(project(":engine"))
 
   implementation(clikt)
   implementation(jline)

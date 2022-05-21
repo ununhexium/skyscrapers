@@ -13,6 +13,8 @@ repositories {
 
 
 dependencies {
+  implementation(project(":api:structure"))
+
   // TEST
 }
 

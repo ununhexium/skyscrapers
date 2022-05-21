@@ -1,5 +1,4 @@
 plugins {
-    id("java")
 }
 
 group = "net.lab0.skyscrapers"

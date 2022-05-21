@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.engine.rule.move
 
+import net.lab0.skyscrapers.editor
 import net.lab0.skyscrapers.engine.DefaultGames
 import net.lab0.skyscrapers.engine.GameImpl
 import net.lab0.skyscrapers.engine.api.TurnType
@@ -58,7 +59,7 @@ internal class BuildersMoveToEmptyCellsTest {
       Position(2, 2)
     )
 
-    (g as GameImpl).backdoor.forceState(g.state.placeBuilder(0, target))
+    (g as GameImpl).backdoor.forceState(g.state.editor().placeBuilder(0, target))
 
     assertThat(rule.checkRule(g.state, turn)).isEqualTo(
       listOf(

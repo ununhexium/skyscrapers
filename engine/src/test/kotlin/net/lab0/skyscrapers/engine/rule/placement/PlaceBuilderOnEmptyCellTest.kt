@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.engine.rule.placement
 
+import net.lab0.skyscrapers.editor
 import net.lab0.skyscrapers.engine.GameImpl
 import net.lab0.skyscrapers.engine.api.Game
 import net.lab0.skyscrapers.engine.api.TurnType
@@ -24,7 +25,7 @@ internal class PlaceBuilderOnEmptyCellTest {
     val rule = PlaceBuilderOnEmptyCell
     val turn = TurnType.PlacementTurn(0, Position(0, 0))
 
-    (g as GameImpl).backdoor.forceState(g.state.placeBuilder(0, Position(0, 0)))
+    (g as GameImpl).backdoor.forceState(g.state.editor().placeBuilder(0, Position(0, 0)))
 
     assertThat(rule.checkRule(g.state, turn)).isEqualTo(
       listOf(

@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.engine.rule.move.building
 
+import net.lab0.skyscrapers.editor
 import net.lab0.skyscrapers.engine.DefaultGames
 import net.lab0.skyscrapers.engine.GameImpl
 import net.lab0.skyscrapers.engine.api.BlocksData
@@ -43,7 +44,7 @@ internal class BlocksAvailabilityRuleTest {
 
     val rule = BlocksAvailabilityRule()
 
-    (g as GameImpl).backdoor.forceState(g.state.height(build, 1))
+    (g as GameImpl).backdoor.forceState(g.state.editor().height(build, 1))
 
     assertThat(rule.checkRule(g.state, turn)).isEqualTo(
       listOf(

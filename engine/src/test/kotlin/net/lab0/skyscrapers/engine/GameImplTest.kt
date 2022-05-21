@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.engine
 
+import net.lab0.skyscrapers.editor
 import net.lab0.skyscrapers.engine.DefaultGames.newGameWithSequentiallyPlacedBuilders
 import net.lab0.skyscrapers.engine.action.DSL
 import net.lab0.skyscrapers.engine.api.BlocksData
@@ -13,7 +14,6 @@ import net.lab0.skyscrapers.engine.exception.InvalidPlayersCount
 import net.lab0.skyscrapers.engine.structure.BuildersMatrix
 import net.lab0.skyscrapers.engine.structure.BuildingsMatrix
 import net.lab0.skyscrapers.engine.structure.Height
-import net.lab0.skyscrapers.engine.structure.Matrix
 import net.lab0.skyscrapers.engine.structure.Phase
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DynamicTest
@@ -461,7 +461,7 @@ internal class GameImplTest {
       val end = P(1, 1)
       val build = P(0, 0)
 
-      g.backdoor.forceState(g.state.height(end, 2)) // too high
+      g.backdoor.forceState(g.state.editor().height(end, 2)) // too high
 
       assertThrows<GameRuleViolationException> {
         g.play(
@@ -630,7 +630,7 @@ internal class GameImplTest {
       GameStateAssert.assertThat(g.state).isEqualTo(
         state0.copy(
           players = listOf(Player(1), Player(0)),
-          seals = Matrix.from(
+          seals = net.lab0.skyscrapers.engine.structure.Matrix.from(
             """
             |1 0 0 0 0
             |0 0 0 0 0
@@ -639,7 +639,7 @@ internal class GameImplTest {
             |0 0 0 0 0
           """.trimMargin(),
           ) { it == "1" },
-          builders = Matrix.from(
+          builders = net.lab0.skyscrapers.engine.structure.Matrix.from(
             """
             |. 1 0 1 .
             |0 . . . .
@@ -679,7 +679,7 @@ internal class GameImplTest {
       val target = P(0, 1)
       val building = P(0, 0)
 
-      (g as GameImpl).backdoor.forceState(g.state.seal(building))
+      (g as GameImpl).backdoor.forceState(g.state.editor().seal(building))
 
       val state0 = g.state
 
@@ -706,7 +706,7 @@ internal class GameImplTest {
       val target = P(0, 1)
       val seal = P(0, 0)
 
-      (g as GameImpl).backdoor.forceState(g.state.seal(seal))
+      (g as GameImpl).backdoor.forceState(g.state.editor().seal(seal))
 
       val state0 = g.state
 
@@ -797,7 +797,9 @@ internal class GameImplTest {
       val target = P(1, 1)
       (g as GameImpl).backdoor.forceState(
         g.state
+          .editor()
           .height(start, 2)
+          .editor()
           .height(target, 3)
       )
 

@@ -1,6 +1,6 @@
 package net.lab0.skyscrapers.server.integration
 
-import net.lab0.skyscrapers.server.GameResponse
+import net.lab0.skyscrapers.server.dto.GameResponse
 import net.lab0.skyscrapers.server.ServiceImpl
 import net.lab0.skyscrapers.server.dto.BuildTurnDTO
 import net.lab0.skyscrapers.server.dto.ConnectionResponse
@@ -117,27 +117,42 @@ class WinA2PlayersGame {
       ).parse<GameResponse>()
     }
 
-    val turn0: GameResponse = place(player0, P(1, 1))
-    val turn1: GameResponse = place(player1, P(3, 1))
-    val turn2: GameResponse = place(player0, P(3, 3))
-    val turn3: GameResponse = place(player1, P(1, 3))
+    //turn0: GameResponse =
+    place(player0, P(1, 1))
+    //turn1: GameResponse =
+    place(player1, P(3, 1))
+    //turn2: GameResponse =
+    place(player0, P(3, 3))
+    //turn3: GameResponse =
+    place(player1, P(1, 3))
 
     // build round trip 1
-    val turn4: GameResponse = build(player0, P(1, 1), P(2, 1), P(1, 1))
-    val turn5: GameResponse = build(player1, P(3, 1), P(3, 2), P(3, 1))
-    val turn6: GameResponse = build(player0, P(2, 1), P(1, 1), P(2, 1))
-    val turn7: GameResponse = build(player1, P(3, 2), P(3, 1), P(3, 2))
+    //turn4: GameResponse =
+    build(player0, P(1, 1), P(2, 1), P(1, 1))
+    //turn5: GameResponse =
+    build(player1, P(3, 1), P(3, 2), P(3, 1))
+    //turn6: GameResponse =
+    build(player0, P(2, 1), P(1, 1), P(2, 1))
+    //turn7: GameResponse =
+    build(player1, P(3, 2), P(3, 1), P(3, 2))
 
     // build round trip 2
-    val turn8: GameResponse = build(player0, P(1, 1), P(2, 1), P(1, 1))
-    val turn9: GameResponse = build(player1, P(3, 1), P(3, 2), P(3, 1))
-    val turn10: GameResponse = build(player0, P(2, 1), P(1, 1), P(2, 1))
-    val turn11: GameResponse = build(player1, P(3, 2), P(3, 1), P(3, 2))
+    //turn8: GameResponse =
+    build(player0, P(1, 1), P(2, 1), P(1, 1))
+    //turn9: GameResponse =
+    build(player1, P(3, 1), P(3, 2), P(3, 1))
+    //turn10: GameResponse =
+    build(player0, P(2, 1), P(1, 1), P(2, 1))
+    //turn11: GameResponse =
+    build(player1, P(3, 2), P(3, 1), P(3, 2))
 
     // build round trip 3
-    val turn12: GameResponse = build(player0, P(1, 1), P(2, 1), P(1, 1))
-    val turn13: GameResponse = build(player1, P(3, 1), P(3, 2), P(3, 1))
-    val turn14: GameResponse = win(player0, P(2, 1), P(1, 1))
+    //turn12: GameResponse =
+    build(player0, P(1, 1), P(2, 1), P(1, 1))
+    //turn13: GameResponse =
+    build(player1, P(3, 1), P(3, 2), P(3, 1))
+    //turn14: GameResponse =
+    win(player0, P(2, 1), P(1, 1))
 
     // player0 wins
     val finalResponse: GameResponse = send(Request(GET, "/games/foo")).parse()

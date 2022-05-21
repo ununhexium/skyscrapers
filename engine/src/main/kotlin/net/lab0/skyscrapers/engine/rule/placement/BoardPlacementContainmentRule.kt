@@ -9,7 +9,7 @@ object BoardPlacementContainmentRule : AbstractRule<TurnType.PlacementTurn>(
   "The builder must be placed inside the board",
   { state: GameState,
     turn: TurnType.PlacementTurn ->
-    if (!state.isWithinBounds(turn.position))
+    if (turn.position !in state.bounds)
       "Can't place outside ${turn.position} of the board"
     else null
   }

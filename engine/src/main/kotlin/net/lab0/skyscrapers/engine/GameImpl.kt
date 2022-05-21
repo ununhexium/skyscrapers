@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.engine
 
+import net.lab0.skyscrapers.editor
 import net.lab0.skyscrapers.engine.api.BlocksData
 import net.lab0.skyscrapers.engine.api.Build
 import net.lab0.skyscrapers.engine.api.Game
@@ -88,7 +89,10 @@ class GameImpl(
         (0 until playerCount).map { Player(it) },
         maxBuildersPerPlayer,
         initialBlocks,
-        Matrix(height, width) { Height(0) },
+        Matrix(
+          height,
+          width
+        ) { Height(0) },
         Matrix(height, width) { false },
         Matrix(height, width) { null },
       )
@@ -123,7 +127,7 @@ class GameImpl(
 
   private fun moveAndWin(turn: TurnType.MoveTurn) {
     internalHistory.add(
-      state.move(turn).copy(
+      state.editor().move(turn).copy(
         players = state.players.map {
           if (it.id == turn.player) it else it.copy(
             active = false
@@ -175,7 +179,7 @@ class GameImpl(
       state.copy(
         players = rotateToNextPlayer(state.players),
 
-        builders = state.move(turn).builders,
+        builders = state.editor().move(turn).builders,
 
         blocks = state.blocks.removeBlockOfHeight(nextHeight),
 
@@ -191,7 +195,7 @@ class GameImpl(
     internalHistory.add(
       state.copy(
         players = rotateToNextPlayer(state.players),
-        builders = state.move(turn).builders,
+        builders = state.editor().move(turn).builders,
         blocks = state.blocks.removeBlockOfHeight(Height.SEAL),
         seals = state.seals.copyAndSet(turn.seal, true)
       )

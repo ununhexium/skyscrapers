@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.server
 
+import net.lab0.skyscrapers.server.dto.GameResponse
 import net.lab0.skyscrapers.server.dto.TurnTypeDTO
 import org.http4k.core.Body
 import org.http4k.core.Request

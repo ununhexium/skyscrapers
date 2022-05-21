@@ -42,7 +42,7 @@ class MoveBuilder(private val series: Series) : CliktCommand(name = "move-builde
         to,
         seal,
       )
-      andWin ->TurnType.MoveTurn.WinTurn(
+      andWin -> TurnType.MoveTurn.WinTurn(
         game.state.currentPlayer,
         from,
         to,

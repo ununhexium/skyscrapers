@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.engine.rule.move.building
 
+import net.lab0.skyscrapers.editor
 import net.lab0.skyscrapers.engine.DefaultGames
 import net.lab0.skyscrapers.engine.GameImpl
 import net.lab0.skyscrapers.engine.api.TurnType
@@ -31,7 +32,7 @@ internal class SealsPreventBuildingRuleTest {
     val target = Position(1, 1)
     val build = Position(2, 2)
 
-    (g as GameImpl).backdoor.forceState(g.state.seal(build))
+    (g as GameImpl).backdoor.forceState(g.state.editor().seal(build))
 
     val state = g.state
     val turn = TurnType.MoveTurn.BuildTurn(

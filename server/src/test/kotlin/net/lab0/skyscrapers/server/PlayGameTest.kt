@@ -1,6 +1,7 @@
 package net.lab0.skyscrapers.server
 
 import net.lab0.skyscrapers.engine.api.Game
+import net.lab0.skyscrapers.server.dto.GameResponse
 import net.lab0.skyscrapers.server.dto.PlaceTurnDTO
 import net.lab0.skyscrapers.server.dto.PositionDTO
 import net.lab0.skyscrapers.server.dto.TurnTypeDTO

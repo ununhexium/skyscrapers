@@ -51,12 +51,12 @@ class RandomAi(
       .flatMap { start ->
         start
           .getSurroundingPositions()
-          .filter { it.inBounds(state.bounds) }
+          .filter { it in state.bounds }
           .filterNot { state.hasBuilder(it) }
           .flatMap { target ->
             target
               .getSurroundingPositions()
-              .filter { it.inBounds(state.bounds) }
+              .filter { it in state.bounds }
               .filter { state.builders[it] == null }
               .filterNot { state.seals[it] }
               .flatMap { buildOrSeal ->

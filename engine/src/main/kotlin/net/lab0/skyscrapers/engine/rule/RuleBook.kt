@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.engine.rule
 
+import net.lab0.skyscrapers.editor
 import net.lab0.skyscrapers.engine.api.GameRuleViolation
 import net.lab0.skyscrapers.engine.api.GameState
 import net.lab0.skyscrapers.engine.api.Move
@@ -31,7 +32,7 @@ class RuleBook(
           throwIfViolatedRule(moveOnlyRules, turn, state)
           throwIfViolatedRule(moveRules, turn, state)
 
-          val nextBuilderState = state.move(turn)
+          val nextBuilderState = state.editor().move(turn)
 
           when (turn) {
             is TurnType.MoveTurn.BuildTurn ->
