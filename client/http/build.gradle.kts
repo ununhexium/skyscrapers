@@ -13,8 +13,7 @@ repositories {
 }
 
 dependencies {
-  implementation(project(":api:dto"))
-  implementation(project(":api:structure"))
+  api(project(":api:dto"))
 
   implementation(arrow)
   implementation(http4k.core)

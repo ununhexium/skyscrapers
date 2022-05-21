@@ -1,7 +1,12 @@
 import dependencies.Dependencies.clikt
+import dependencies.Dependencies.hoplite
+import dependencies.Dependencies.kotlinxSerializationJson
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    application
     kotlin("jvm")
+    kotlin("plugin.serialization") version Versions.kotlin
 }
 
 group = "net.lab0.skyscrapers"
@@ -12,13 +17,24 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":engine"))
-    implementation(project(":api:structure"))
+    implementation(project(":client:http"))
+
     implementation(clikt)
+    implementation(hoplite.core)
+    implementation(hoplite.json)
+    implementation(kotlinxSerializationJson)
 
     // TEST
 }
 
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
+}
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions.jvmTarget = Versions.java
+}
+
+application {
+    mainClass.set("net.lab0.skyscrapers.client.clikt.ApplicationKt")
 }

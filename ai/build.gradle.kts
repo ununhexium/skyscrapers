@@ -31,8 +31,4 @@ tasks {
   getByName<Test>("test") {
     useJUnitPlatform()
   }
-
-  withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
-  }
 }

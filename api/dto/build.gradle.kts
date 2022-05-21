@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":api:structure"))
+    api(project(":api:structure"))
 
     implementation(http4k("format-kotlinx-serialization"))
 }

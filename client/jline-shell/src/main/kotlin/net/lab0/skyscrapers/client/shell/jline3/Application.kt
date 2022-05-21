@@ -27,7 +27,7 @@ class Application {
 
     val series = Series.newBestOf1()
 
-    val cli = GameCli.new(series, terminal.writer())
+    val cli = GameCli.new(terminal.writer())
 
     val reader = LineReaderBuilder
       .builder()

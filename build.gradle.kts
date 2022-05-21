@@ -1,3 +1,4 @@
+import Versions
 import dependencies.TestDependencies.assertJ
 import dependencies.TestDependencies.http4k
 import dependencies.TestDependencies.junit5Api
@@ -36,6 +37,12 @@ subprojects {
     testImplementation(junit5Api)
     testRuntimeOnly(junit5Engine)
   }
+
+  tasks {
+    withType<KotlinCompile> {
+      kotlinOptions.jvmTarget = Versions.java
+    }
+  }
 }
 
 /**
@@ -55,10 +62,6 @@ tasks {
     useJUnitPlatform()
 
     this.recursively()
-  }
-
-  withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
   }
 
   clean {

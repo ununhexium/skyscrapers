@@ -7,6 +7,11 @@ object Dependencies {
 
   val clikt = "com.github.ajalt.clikt:clikt:${Versions.clikt}"
 
+  object hoplite {
+    val core = "com.sksamuel.hoplite:hoplite-core:${Versions.hoplite}"
+    val json = "com.sksamuel.hoplite:hoplite-json:${Versions.hoplite}"
+  }
+
   fun http4k(part: String) =
     "org.http4k:http4k-$part:${Versions.http4k}"
 
@@ -19,6 +24,10 @@ object Dependencies {
 
   val jline = "org.jline:jline:${Versions.jline}"
   val jlineBuiltins = "org.jline:jline-builtins:${Versions.jline}"
+
+  val kaml = "com.charleskorn.kaml:kaml:${Versions.kaml}"
+
+  val kodein = "org.kodein.di:kodein-di-jvm:${Versions.kodein}"
 
   val kotlinxHtml = "org.jetbrains.kotlinx:kotlinx-html:${Versions.kotlinxHtml}"
   val kotlinxHtmlJvm =
