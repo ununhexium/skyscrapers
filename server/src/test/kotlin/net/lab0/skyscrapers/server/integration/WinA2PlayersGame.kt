@@ -31,7 +31,7 @@ import net.lab0.skyscrapers.engine.structure.Position as P
 
 class WinA2PlayersGame {
   val service = ServiceImpl.new()
-  val port = 45678
+  val port = 45679
   val server = routed(service).asServer(Undertow(port)).start()
 
   @Test

@@ -12,8 +12,8 @@ internal class GameCliTest {
   @Test
   fun `connection integration test`() {
     val service = ServiceImpl.new()
-    // TODOL these constructs should move to some test module
-    val server = routed(service).asServer(Undertow()).start()
+    // TODO: these constructs should move to some test module
+    val server = routed(service).asServer(Undertow(45678)).start()
     val writer = StringWriter()
 
     val cli = GameCli.new(writer)

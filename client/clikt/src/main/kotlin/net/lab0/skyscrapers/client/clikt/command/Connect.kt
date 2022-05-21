@@ -26,9 +26,14 @@ class Connect(
         )
       },
       rightOperation = {
-        myEcho("The server has the following games:")
-        it.listGames().forEach {
-          myEcho(it.value)
+        val names = it.listGames()
+        if (names.isEmpty()) {
+          myEcho("The server has no games.")
+        } else {
+          myEcho("The server has the following games:")
+          names.forEach {
+            myEcho(it.value)
+          }
         }
       }
     )

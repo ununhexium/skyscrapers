@@ -15,7 +15,26 @@ import java.io.StringWriter
 
 internal class ConnectTest {
   @Test
-  fun `can connect to a server`() {
+  fun `can connect to a server without games`() {
+    val output = StringWriter()
+    val skyClient = mockk<SkyscraperClient>()
+    val skyMenuClient = mockk<SkyscraperMenuClient>()
+    every { skyClient.connect(any()) } returns Either.Right(skyMenuClient)
+    every { skyMenuClient.listGames() } returns listOf()
+
+    val cli = GameCli.new(output, skyscraperClient = skyClient)
+    cli.parse("connect")
+
+    verify {
+      skyClient.connect(any())
+      skyMenuClient.listGames()
+    }
+
+    output.toString() shouldContain "The server has no games."
+  }
+
+  @Test
+  fun `can connect to a server with games`() {
     val output = StringWriter()
     val skyClient = mockk<SkyscraperClient>()
     val skyMenuClient = mockk<SkyscraperMenuClient>()

@@ -1,7 +1,9 @@
-package net.lab0.skyscrapers.server
+package net.lab0.skyscrapers.server.endpoint
 
+import net.lab0.skyscrapers.server.Service
 import net.lab0.skyscrapers.server.dto.ErrorResponse
 import net.lab0.skyscrapers.server.dto.GameResponse
+import net.lab0.skyscrapers.server.pathGameName
 import org.http4k.core.Body
 import org.http4k.core.Request
 import org.http4k.core.Response

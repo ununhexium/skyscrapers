@@ -1,8 +1,10 @@
-package net.lab0.skyscrapers.server
+package net.lab0.skyscrapers.server.endpoint
 
 import net.lab0.skyscrapers.engine.api.Game
+import net.lab0.skyscrapers.server.ServiceImpl
 import net.lab0.skyscrapers.server.dto.ErrorResponse
 import net.lab0.skyscrapers.server.dto.GameResponse
+import net.lab0.skyscrapers.server.routed
 import net.lab0.skyscrapers.server.value.GameName
 import org.assertj.core.api.Assertions.assertThat
 import org.http4k.core.Body

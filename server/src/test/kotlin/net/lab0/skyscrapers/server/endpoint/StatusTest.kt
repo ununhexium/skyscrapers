@@ -1,8 +1,10 @@
-package net.lab0.skyscrapers.server
+package net.lab0.skyscrapers.server.endpoint
 
-import io.kotest.matchers.be
 import io.kotest.matchers.should
+import net.lab0.skyscrapers.server.ServiceImpl
 import net.lab0.skyscrapers.server.dto.StatusResponse
+import net.lab0.skyscrapers.server.haveResponseBe
+import net.lab0.skyscrapers.server.routed
 import net.lab0.skyscrapers.server.value.GameName
 import org.http4k.core.Method.GET
 import org.http4k.core.Request
