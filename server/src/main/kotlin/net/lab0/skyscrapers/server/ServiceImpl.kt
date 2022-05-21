@@ -20,6 +20,7 @@ class ServiceImpl(val games: MutableMap<GameName, Game>) : Service {
   override fun createGame(name: GameName): Game =
     Game.new().also { games[name] = it }
 
+  // TODO: connecting to a game is joining a game. Rename to "join"
   override fun connect(gameName: GameName): PlayerAndToken {
     val game = getGame(gameName)
       ?: throw GameNotFound(gameName)
@@ -40,4 +41,7 @@ class ServiceImpl(val games: MutableMap<GameName, Game>) : Service {
 
     return p
   }
+
+  override fun getGameNames(): Set<GameName> =
+    games.keys.toSet()
 }

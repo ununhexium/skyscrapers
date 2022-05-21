@@ -1,6 +1,6 @@
 package net.lab0.skyscrapers.server
 
-import net.lab0.skyscrapers.server.dto.GameError
+import net.lab0.skyscrapers.server.dto.ErrorResponse
 import net.lab0.skyscrapers.server.dto.GameResponse
 import org.http4k.core.Body
 import org.http4k.core.Request
@@ -14,16 +14,16 @@ import org.http4k.format.KotlinxSerialization.auto
 fun showGame(service: Service, req: Request): Response {
   val gameName = req.pathGameName()
     ?: return Response(BAD_REQUEST).with(
-      Body.auto<GameError>().toLens() of
-          GameError("The name of the game must be specified. i.e: /api/v1/games/gameName")
+      Body.auto<ErrorResponse>().toLens() of
+          ErrorResponse("The name of the game must be specified. i.e: /api/v1/games/gameName")
     )
 
   val game = service.getGame(gameName)
 
   return if (game == null) {
     Response(NOT_FOUND).with(
-      Body.auto<GameError>().toLens() of
-          GameError("No game named '$gameName'")
+      Body.auto<ErrorResponse>().toLens() of
+          ErrorResponse("No game named '$gameName'")
     )
   } else {
     Response(OK).with(

@@ -1,6 +1,8 @@
 import dependencies.TestDependencies.assertJ
+import dependencies.TestDependencies.http4k
 import dependencies.TestDependencies.junit5Api
 import dependencies.TestDependencies.junit5Engine
+import dependencies.TestDependencies.kotest
 import dependencies.TestDependencies.mockK
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -25,6 +27,9 @@ subprojects {
     // TEST
 
     testImplementation(assertJ)
+    testImplementation(http4k.kotest)
+    testImplementation(kotest.core)
+    testImplementation(kotest.arrowJvm)
 
     testImplementation(mockK)
 

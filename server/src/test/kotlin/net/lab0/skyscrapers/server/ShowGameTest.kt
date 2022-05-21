@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.server
 
 import net.lab0.skyscrapers.engine.api.Game
-import net.lab0.skyscrapers.server.dto.GameError
+import net.lab0.skyscrapers.server.dto.ErrorResponse
 import net.lab0.skyscrapers.server.dto.GameResponse
 import net.lab0.skyscrapers.server.value.GameName
 import org.assertj.core.api.Assertions.assertThat
@@ -33,7 +33,7 @@ internal class ShowGameTest {
 
     assertThat(readGame.status).isEqualTo(NOT_FOUND)
     assertThat(
-      Body.auto<GameError>().toLens().extract(readGame)
-    ).isEqualTo(GameError("No game named 'missing'"))
+      Body.auto<ErrorResponse>().toLens().extract(readGame)
+    ).isEqualTo(ErrorResponse("No game named 'missing'"))
   }
 }

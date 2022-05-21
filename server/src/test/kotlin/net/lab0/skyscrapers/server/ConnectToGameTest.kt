@@ -2,7 +2,7 @@ package net.lab0.skyscrapers.server
 
 import net.lab0.skyscrapers.engine.api.Game
 import net.lab0.skyscrapers.server.dto.ConnectionResponse
-import net.lab0.skyscrapers.server.dto.GameError
+import net.lab0.skyscrapers.server.dto.ErrorResponse
 import net.lab0.skyscrapers.server.value.GameName
 import org.assertj.core.api.Assertions.assertThat
 import org.http4k.core.Body
@@ -45,9 +45,9 @@ internal class ConnectToGameTest {
     val response3 = routed(service)(Request(POST, "/api/v1/games/foo/connect"))
     assertThat(response3.status).isEqualTo(FORBIDDEN)
     assertThat(
-      Body.auto<GameError>().toLens().extract(response3)
+      Body.auto<ErrorResponse>().toLens().extract(response3)
     ).isEqualTo(
-      GameError("The game foo is full.")
+      ErrorResponse("The game foo is full.")
     )
 
 

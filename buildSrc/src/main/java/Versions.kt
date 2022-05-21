@@ -5,6 +5,7 @@ object Versions {
   val coroutines = "1.4.2"
 
   // impl libs
+  val arrow = "1.0.1"
   val clikt = "3.4.2"
   val jline = "3.21.0"
   val kotlinxHtml = "0.7.5"
@@ -15,5 +16,7 @@ object Versions {
   // test
   val assertJ = "3.22.0"
   val jupiter = "5.8.1"
+  val kotest = "5.3.0"
+  val kotestArrowJvm = "1.2.5"
   val mockk = "1.12.4"
 }

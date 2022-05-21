@@ -1,6 +1,6 @@
 package net.lab0.skyscrapers.server
 
-import net.lab0.skyscrapers.server.dto.GameError
+import net.lab0.skyscrapers.server.dto.ErrorResponse
 import net.lab0.skyscrapers.server.value.GameName
 import org.http4k.core.Body
 import org.http4k.core.Request
@@ -16,6 +16,6 @@ fun Request.pathGameName() =
 
 fun notFound(vararg messages: String) =
   Response(NOT_FOUND).with(
-    Body.auto<GameError>().toLens() of
-        GameError(messages.toList())
+    Body.auto<ErrorResponse>().toLens() of
+        ErrorResponse(messages.toList())
   )

@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.server
 
 import net.lab0.skyscrapers.engine.api.Game
-import net.lab0.skyscrapers.server.dto.GameError
+import net.lab0.skyscrapers.server.dto.ErrorResponse
 import net.lab0.skyscrapers.server.dto.GameResponse
 import net.lab0.skyscrapers.server.value.GameName
 import org.assertj.core.api.Assertions.assertThat
@@ -33,9 +33,9 @@ internal class NewGameTest {
     // now the game already exists
     val alreadyExists = routed(service)(Request(POST, "/api/v1/games/$gameName"))
     assertThat(
-      Body.auto<GameError>().toLens()[alreadyExists]
+      Body.auto<ErrorResponse>().toLens()[alreadyExists]
     ).isEqualTo(
-      GameError("The game $gameName already exists.")
+      ErrorResponse("The game $gameName already exists.")
     )
   }
 }

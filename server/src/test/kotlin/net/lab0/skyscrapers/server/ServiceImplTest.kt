@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.server
 
+import io.kotest.matchers.shouldBe
 import net.lab0.skyscrapers.server.exception.GameFullException
 import net.lab0.skyscrapers.server.value.GameName
 import org.assertj.core.api.Assertions.assertThat
@@ -33,5 +34,14 @@ internal class ServiceImplTest {
         service.connect(name)
       }
     ).hasMessage("The game foo is full.")
+  }
+
+  @Test
+  fun `can get the game names`() {
+    val names = listOf("1", "2", "abc").map { GameName(it) }
+    val service = ServiceImpl.new()
+    names.forEach { service.createGame(it) }
+
+    service.getGameNames() shouldBe names.toSet()
   }
 }

@@ -1,12 +1,16 @@
 package net.lab0.skyscrapers.server
 
+import net.lab0.skyscrapers.server.dto.StatusResponse
+import org.http4k.core.Body
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
 import org.http4k.core.then
+import org.http4k.core.with
 import org.http4k.filter.ServerFilters
+import org.http4k.format.KotlinxSerialization.auto
 import org.http4k.routing.Fallback
 import org.http4k.routing.bind
 import org.http4k.routing.routes
@@ -22,6 +26,7 @@ fun routed(service: Service) = ServerFilters.CatchAll {
 }.then(
   routes(
     "/" bind GET to { Response(Status.OK).body("up") },
+    "/api/v1/status" bind GET to { req -> status(service, req) },
     "/api/v1/games/{gameName}" bind GET to { req -> showGame(service, req) },
     "/api/v1/games/{gameName}" bind POST to { req -> createGame(service, req) },
     "/api/v1/games/{gameName}/connect" bind POST to { connectToGame(service, it) },

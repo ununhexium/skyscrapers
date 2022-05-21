@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.server
 
 import net.lab0.skyscrapers.server.dto.ConnectionResponse
-import net.lab0.skyscrapers.server.dto.GameError
+import net.lab0.skyscrapers.server.dto.ErrorResponse
 import net.lab0.skyscrapers.server.exception.GameFullException
 import org.http4k.core.Body
 import org.http4k.core.Request
@@ -33,8 +33,8 @@ fun connectToGame(service: Service, req: Request): Response {
         )
       } catch (e: GameFullException) {
         Response(FORBIDDEN).with(
-          Body.auto<GameError>().toLens() of
-              GameError(e.message ?: "No error message")
+          Body.auto<ErrorResponse>().toLens() of
+              ErrorResponse(e.message ?: "No error message")
         )
       }
     }
