@@ -15,7 +15,7 @@ repositories {
 dependencies {
   api(project(":api:dto"))
 
-  implementation(arrow)
+  api(arrow)
   implementation(http4k.core)
   implementation(http4k.clientOkhttp)
   implementation(http4k.formatKotlinxSerialization)

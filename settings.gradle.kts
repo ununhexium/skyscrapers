@@ -12,8 +12,8 @@ findProject(":api:structure")?.name = "structure"
 include("blog")
 
 include("client")
-include("client:jline-shell")
-findProject(":client:jline-shell")?.name = "jline-shell"
+//include("client:jline-shell")
+//findProject(":client:jline-shell")?.name = "jline-shell"
 include("client:clikt")
 findProject(":client:clikt")?.name = "clikt"
 include("client:http")

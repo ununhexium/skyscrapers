@@ -6,6 +6,9 @@ import net.lab0.skyscrapers.client.clikt.command.Configuration
 import net.lab0.skyscrapers.client.clikt.command.Connect
 import net.lab0.skyscrapers.client.clikt.configuration.Configurer
 import net.lab0.skyscrapers.client.clikt.configuration.Constants
+import net.lab0.skyscrapers.client.http.SkyscraperClient
+import net.lab0.skyscrapers.client.http.SkyscraperClientImpl
+import org.http4k.client.OkHttp
 import java.io.Writer
 
 class GameCli : CliktCommand() {
@@ -14,10 +17,11 @@ class GameCli : CliktCommand() {
 
     fun new(
       writer: Writer?,
-      configurer: Configurer = Configurer(Constants.configLocation)
+      configurer: Configurer = Configurer(Constants.configLocation),
+      skyscraperClient: SkyscraperClient = SkyscraperClientImpl(OkHttp()),
     ): CliktCommand {
       return GameCli().subcommands(
-        Connect(),
+        Connect(writer, configurer, skyscraperClient),
         Configuration(writer, configurer),
 //        Next(series),
 //        ShowCli(series, writer),

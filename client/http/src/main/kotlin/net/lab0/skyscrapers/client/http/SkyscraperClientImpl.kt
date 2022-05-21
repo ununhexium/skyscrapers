@@ -15,7 +15,8 @@ class SkyscraperClientImpl(val handler: HttpHandler) : SkyscraperClient {
   override fun connect(url: String): Either<Status, SkyscraperMenuClient> {
     val apiUrl = Uri.of(url) / "v1"
 
-    val res = handler(Request(Method.GET, apiUrl / "status"))
+    val req = Request(Method.GET, apiUrl / "status")
+    val res = handler(req)
     return if (res.status == Status.OK) {
       Either.Right(SkyscraperMenuClientImpl(apiUrl))
     } else {

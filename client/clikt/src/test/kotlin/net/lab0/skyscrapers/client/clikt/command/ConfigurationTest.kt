@@ -1,12 +1,13 @@
-package net.lab0.skyscrapers.client.clikt
+package net.lab0.skyscrapers.client.clikt.command
 
-import com.github.ajalt.clikt.core.Context
 import io.kotest.matchers.string.shouldContain
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import net.lab0.skyscrapers.client.clikt.GameCli
 import net.lab0.skyscrapers.client.clikt.configuration.Configurer
 import net.lab0.skyscrapers.client.clikt.configuration.DefaultConfig
+import net.lab0.skyscrapers.client.clikt.parse
 import org.junit.jupiter.api.Test
 import java.io.StringWriter
 

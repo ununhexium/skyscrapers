@@ -28,11 +28,21 @@ abstract class MyCliktCommand(
   /**
    * testable echo
    */
-  fun myEcho(string: String) {
+  fun myEcho(
+    message: String,
+    trailingNewline: Boolean = true,
+    err: Boolean = false,
+    lineSeparator: String = currentContext.console.lineSeparator,
+  ) {
     if (writer == null) {
-      echo(string)
+      echo(
+        message,
+        trailingNewline,
+        err,
+        lineSeparator,
+      )
     } else {
-      writer.write(string)
+      writer.write(message)
     }
   }
 }

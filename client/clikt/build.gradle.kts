@@ -1,3 +1,4 @@
+import dependencies.Dependencies.http4k
 import dependencies.Dependencies.clikt
 import dependencies.Dependencies.hoplite
 import dependencies.Dependencies.kotlinxSerializationJson
@@ -24,7 +25,11 @@ dependencies {
     implementation(hoplite.json)
     implementation(kotlinxSerializationJson)
 
+    implementation(http4k.clientOkhttp)
+
     // TEST
+    testImplementation(http4k.serverUndertow)
+    testImplementation(project(":server"))
 }
 
 tasks.getByName<Test>("test") {
