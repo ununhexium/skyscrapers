@@ -1,54 +1,35 @@
 package net.lab0.skyscrapers.client.clikt.command
 
-import arrow.core.Either
 import io.kotest.matchers.string.shouldContain
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
+import net.lab0.skyscrapers.client.ServerIntegrationTest
 import net.lab0.skyscrapers.client.clikt.GameCli
+import net.lab0.skyscrapers.client.clikt.configuration.Configurer
 import net.lab0.skyscrapers.client.clikt.parse
-import net.lab0.skyscrapers.client.http.SkyscraperClient
-import net.lab0.skyscrapers.client.http.SkyscraperMenuClient
-import net.lab0.skyscrapers.server.value.GameName
+import net.lab0.skyscrapers.client.http.SkyscraperClientImpl
+import org.http4k.client.OkHttp
 import org.junit.jupiter.api.Test
 import java.io.StringWriter
 
-internal class ConnectTest {
-  @Test
-  fun `can connect to a server without games`() {
-    val output = StringWriter()
-    val skyClient = mockk<SkyscraperClient>()
-    val skyMenuClient = mockk<SkyscraperMenuClient>()
-    every { skyClient.status(any()) } returns Either.Right(skyMenuClient)
-    every { skyMenuClient.listGames() } returns listOf()
-
-    val cli = GameCli.new(output, skyscraperClient = skyClient)
-    cli.parse("connect")
-
-    verify {
-      skyClient.status(any())
-      skyMenuClient.listGames()
-    }
-
-    output.toString() shouldContain "The server has no games."
-  }
+internal class ConnectTest : ServerIntegrationTest {
+  val skyClient = SkyscraperClientImpl(OkHttp())
 
   @Test
-  fun `can connect to a server with games`() {
-    val output = StringWriter()
-    val skyClient = mockk<SkyscraperClient>()
-    val skyMenuClient = mockk<SkyscraperMenuClient>()
-    every { skyClient.status(any()) } returns Either.Right(skyMenuClient)
-    every { skyMenuClient.listGames() } returns listOf(GameName("fubar"))
+  fun `can connect to a server`() {
+    useServer { url ->
+      val output = StringWriter()
+      val configurer = mockk<Configurer>()
+      every { configurer.loadConfiguration().server.apiUrl } returns url
 
-    val cli = GameCli.new(output, skyscraperClient = skyClient)
-    cli.parse("connect")
+      val cli = GameCli.new(
+        output,
+        configurer = configurer,
+        skyscraperClient = skyClient
+      )
+      cli.parse("connect")
 
-    verify {
-      skyClient.status(any())
-      skyMenuClient.listGames()
+      output.toString() shouldContain "Connected to $url"
     }
-
-    output.toString() shouldContain "fubar"
   }
 }

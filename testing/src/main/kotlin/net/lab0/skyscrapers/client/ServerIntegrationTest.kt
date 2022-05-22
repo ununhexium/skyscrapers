@@ -15,7 +15,7 @@ interface ServerIntegrationTest {
     f: (url: String) -> Unit
   ) {
     val server = routed(service).asServer(Undertow(port)).start()
-    val url = "http://localhost:$port/api/"
+    val url = "http://localhost:$port/api/v1/"
 
     f(url)
 

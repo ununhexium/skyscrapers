@@ -21,14 +21,16 @@ class NewGame(
   ).required()
 
   override fun run() {
-    client.status(configurer.loadConfiguration().server.apiUrl)
-      .map { menuClient ->
-        menuClient.create(GameName(name))
+    val url = configurer.loadConfiguration().server.apiUrl
+    client.status(url)
+      .mapLeft { myEcho(it.description) }
+      .map { status ->
+        client
+          .create(url, GameName(name))
           .bimap(
             { errors -> errors.forEach { myEcho(it) } },
             { myEcho("Created game '$name'.") },
           )
       }
-      .mapLeft { myEcho(it.description) }
   }
 }

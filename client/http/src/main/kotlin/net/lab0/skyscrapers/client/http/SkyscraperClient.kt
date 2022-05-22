@@ -1,6 +1,12 @@
 package net.lab0.skyscrapers.client.http
 
 import arrow.core.Either
+import net.lab0.skyscrapers.engine.api.GameState
+import net.lab0.skyscrapers.engine.api.TurnType
+import net.lab0.skyscrapers.server.dto.ConnectionResponse
+import net.lab0.skyscrapers.server.dto.GameResponse
+import net.lab0.skyscrapers.server.dto.StatusResponse
+import net.lab0.skyscrapers.server.value.GameName
 import org.http4k.core.Status
 
 interface SkyscraperClient {
@@ -11,5 +17,23 @@ interface SkyscraperClient {
    *
    * @return a menu client if successful is successful, `null` otherwise.
    */
-  fun status(url: String): Either<Status, SkyscraperMenuClient>
+  fun status(url: String): Either<Status, StatusResponse>
+
+  fun state(apiUrl:String, name: GameName): Either<Errors, GameState>
+
+  fun play(turn: TurnType): Either<Errors, GameState>
+  /**
+   * Lists the games available on the server
+   */
+  fun listGames(apiUrl:String): List<GameName>
+
+  /**
+   * Create a game on the server.
+   */
+  fun create(apiUrl:String, name: GameName): Either<Errors, GameResponse>
+
+  /**
+   * Join a game
+   */
+  fun join(apiUrl:String, name: GameName): Either<Errors, ConnectionResponse>
 }

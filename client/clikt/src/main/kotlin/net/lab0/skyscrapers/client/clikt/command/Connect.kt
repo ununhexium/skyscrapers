@@ -27,15 +27,6 @@ class Connect(
       },
       rightOperation = {
         myEcho("Connected to $url")
-        val names = it.listGames()
-        if (names.isEmpty()) {
-          myEcho("The server has no games.")
-        } else {
-          myEcho("The server has the following games:")
-          names.forEach {
-            myEcho(it.value)
-          }
-        }
       }
     )
   }

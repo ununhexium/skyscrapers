@@ -1,6 +1,8 @@
 package net.lab0.skyscrapers.client.clikt.command
 
 import io.kotest.assertions.arrow.core.shouldBeRight
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import net.lab0.skyscrapers.client.ServerIntegrationTest
 import net.lab0.skyscrapers.client.http.SkyscraperClientImpl
 import net.lab0.skyscrapers.server.value.GameName
@@ -12,10 +14,8 @@ internal class NewGameTest : ServerIntegrationTest {
   fun `can create a new game`() {
     useServer { url ->
       val client = SkyscraperClientImpl(OkHttp())
-      val menu = client.status(url).shouldBeRight()
-
-      val cli =
-      menu.create(GameName("Springfield")).shouldBeRight()
+      val out = client.create(url, GameName("Springfield")).shouldBeRight()
+      out.name shouldBe "Springfield"
     }
   }
 }
