@@ -42,7 +42,7 @@ abstract class MyCliktCommand(
         lineSeparator,
       )
     } else {
-      writer.write(message)
+      writer.write(message + "\n")
     }
   }
 }
