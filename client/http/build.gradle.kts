@@ -1,5 +1,5 @@
-import dependencies.Dependencies.http4k
 import dependencies.Dependencies.arrow
+import dependencies.Dependencies.http4k
 
 plugins {
   kotlin("jvm")

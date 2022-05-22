@@ -1,6 +1,6 @@
 package net.lab0.skyscrapers.server.endpoint
 
-import net.lab0.skyscrapers.engine.api.Game
+import net.lab0.skyscrapers.engine.GameFactoryImpl
 import net.lab0.skyscrapers.server.ServiceImpl
 import net.lab0.skyscrapers.server.dto.GameResponse
 import net.lab0.skyscrapers.server.dto.PlaceTurnDTO
@@ -22,7 +22,7 @@ internal class PlayGameTest {
   @Test
   fun `can place a builder`() {
     val gameName = GameName("foo")
-    val service = ServiceImpl.new(mapOf(gameName to Game.new()))
+    val service = ServiceImpl.new(mapOf(gameName to GameFactoryImpl().new()))
     val player0 = service.connect(gameName)
     val player1 = service.connect(gameName)
 

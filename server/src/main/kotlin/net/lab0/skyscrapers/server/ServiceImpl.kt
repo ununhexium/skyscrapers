@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.server
 
+import net.lab0.skyscrapers.engine.GameFactoryImpl
 import net.lab0.skyscrapers.engine.api.Game
 import net.lab0.skyscrapers.server.exception.GameFullException
 import net.lab0.skyscrapers.server.exception.GameNotFound
@@ -18,7 +19,7 @@ class ServiceImpl(val games: MutableMap<GameName, Game>) : Service {
     games[name]
 
   override fun createGame(name: GameName): Game =
-    Game.new().also { games[name] = it }
+    GameFactoryImpl().new().also { games[name] = it }
 
   // TODO: connecting to a game is joining a game. Rename to "join"
   override fun connect(gameName: GameName): PlayerAndToken {

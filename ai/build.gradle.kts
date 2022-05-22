@@ -1,7 +1,6 @@
 import dependencies.TestDependencies.assertJ
 import dependencies.TestDependencies.junit5Api
 import dependencies.TestDependencies.junit5Engine
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 
 plugins {

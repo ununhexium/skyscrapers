@@ -1,6 +1,6 @@
 package net.lab0.skyscrapers.server.endpoint
 
-import net.lab0.skyscrapers.engine.api.Game
+import net.lab0.skyscrapers.engine.GameFactoryImpl
 import net.lab0.skyscrapers.server.ServiceImpl
 import net.lab0.skyscrapers.server.dto.ErrorResponse
 import net.lab0.skyscrapers.server.dto.GameResponse
@@ -14,7 +14,7 @@ import org.http4k.core.Status
 import org.http4k.format.KotlinxSerialization.auto
 import org.junit.jupiter.api.Test
 
-internal class NewGameTest {
+internal class GameFactoryTest {
   @Test
   fun `creates a new game when requesting new game`() {
     val service = ServiceImpl.new()
@@ -29,7 +29,7 @@ internal class NewGameTest {
     assertThat(
       Body.auto<GameResponse>().toLens().extract(created)
     ).isEqualTo(
-      GameResponse(gameName, Game.new().state)
+      GameResponse(gameName, GameFactoryImpl().new().state)
     )
 
     // now the game already exists

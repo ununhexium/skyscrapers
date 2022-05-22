@@ -26,8 +26,6 @@ class GameImpl(
   initialBlocks: BlocksData,
 ) : Game {
 
-  companion object : NewGame
-
   private val internalHistory = LinkedList<GameState>()
 
   override val history

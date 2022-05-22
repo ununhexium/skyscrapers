@@ -1,9 +1,9 @@
 package net.lab0.skyscrapers.server.integration
 
-import net.lab0.skyscrapers.server.dto.GameResponse
 import net.lab0.skyscrapers.server.ServiceImpl
 import net.lab0.skyscrapers.server.dto.BuildTurnDTO
 import net.lab0.skyscrapers.server.dto.ConnectionResponse
+import net.lab0.skyscrapers.server.dto.GameResponse
 import net.lab0.skyscrapers.server.dto.PhaseDTO
 import net.lab0.skyscrapers.server.dto.PlaceTurnDTO
 import net.lab0.skyscrapers.server.dto.PositionDTO

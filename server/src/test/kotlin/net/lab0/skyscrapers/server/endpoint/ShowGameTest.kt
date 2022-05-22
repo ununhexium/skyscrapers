@@ -1,6 +1,6 @@
 package net.lab0.skyscrapers.server.endpoint
 
-import net.lab0.skyscrapers.engine.api.Game
+import net.lab0.skyscrapers.engine.GameFactoryImpl
 import net.lab0.skyscrapers.server.ServiceImpl
 import net.lab0.skyscrapers.server.dto.ErrorResponse
 import net.lab0.skyscrapers.server.dto.GameResponse
@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test
 internal class ShowGameTest {
   @Test
   fun `can show a game`() {
-    val newGame = Game.new()
+    val newGame = GameFactoryImpl().new()
     val service = ServiceImpl.new(mapOf(GameName("foo") to newGame))
 
     val readGame = routed(service)(Request(GET, "/api/v1/games/foo"))

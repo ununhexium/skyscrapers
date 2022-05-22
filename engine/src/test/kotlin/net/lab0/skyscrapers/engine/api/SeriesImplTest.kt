@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.engine.api
 
+import net.lab0.skyscrapers.engine.GameFactoryImpl
 import net.lab0.skyscrapers.engine.structure.Position
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -95,7 +96,7 @@ internal class SeriesImplTest {
 
   @Test
   fun `can customize the new game with a factory`() {
-    val factory = { Game.new(2, 2, 2, 1) }
+    val factory = { GameFactoryImpl().new(2, 2, 2, 1) }
     val series = SeriesImpl(1, factory)
     series.start()
     assertThat(series.getCurrentRound()?.state).isEqualTo(factory().state)

@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.engine.rule
 
 import net.lab0.skyscrapers.engine.DefaultGames
-import net.lab0.skyscrapers.engine.api.Game
+import net.lab0.skyscrapers.engine.GameFactoryImpl
 import net.lab0.skyscrapers.engine.api.TurnType
 import net.lab0.skyscrapers.engine.structure.Position
 import org.assertj.core.api.Assertions.assertThat
@@ -14,13 +14,13 @@ internal class PhaseRuleTest {
     val turn = TurnType.GiveUpTurn(0)
     val g = DefaultGames.newGameWithSequentiallyPlacedBuilders()
 
-    assertThat(rule.checkRule(Game.new().state, turn)).isEmpty()
+    assertThat(rule.checkRule(GameFactoryImpl().new().state, turn)).isEmpty()
     assertThat(rule.checkRule(g.state, turn)).isEmpty()
   }
 
   @Test
   fun `can place builders during the placement phase`() {
-    val g = Game.new()
+    val g = GameFactoryImpl().new()
 
     val turn = TurnType.PlacementTurn(0, Position(0, 0))
     val rule = PhaseRule
@@ -60,7 +60,7 @@ internal class PhaseRuleTest {
 
   @Test
   fun `can't move builders during the placement phase`() {
-    val g = Game.new()
+    val g = GameFactoryImpl().new()
     val turn = TurnType.MoveTurn.SealTurn(
       0,
       Position(0, 0),

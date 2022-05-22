@@ -1,6 +1,6 @@
 package net.lab0.skyscrapers.ai
 
-import net.lab0.skyscrapers.engine.api.Game
+import net.lab0.skyscrapers.engine.GameFactoryImpl
 import net.lab0.skyscrapers.engine.api.GameState
 import net.lab0.skyscrapers.engine.api.TurnType
 import net.lab0.skyscrapers.engine.structure.Phase
@@ -13,7 +13,7 @@ class Arbiter(val ais: List<Ai>) {
     turnObserver: ((TurnType) -> Unit)?,
     phaseObserver: ((Phase) -> Unit)?,
   ) {
-    val game = Game.new(playerCount = ais.size)
+    val game = GameFactoryImpl().new(playerCount = ais.size)
     phaseObserver?.let { it(game.state.phase) }
 
     stateObserver?.let { it(game.state) }

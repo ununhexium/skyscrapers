@@ -1,6 +1,5 @@
 package net.lab0.skyscrapers.engine.api
 
-import net.lab0.skyscrapers.engine.NewGame
 import net.lab0.skyscrapers.engine.exception.GameRuleViolationException
 import net.lab0.skyscrapers.engine.rule.RuleBook
 
@@ -21,8 +20,6 @@ import net.lab0.skyscrapers.engine.rule.RuleBook
  *
  */
 interface Game {
-  companion object : NewGame
-
   val height: Int
   val width: Int
 

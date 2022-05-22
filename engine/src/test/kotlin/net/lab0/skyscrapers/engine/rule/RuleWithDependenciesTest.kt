@@ -2,7 +2,7 @@ package net.lab0.skyscrapers.engine.rule
 
 import io.mockk.spyk
 import io.mockk.verify
-import net.lab0.skyscrapers.engine.api.Game
+import net.lab0.skyscrapers.engine.GameFactoryImpl
 import net.lab0.skyscrapers.engine.api.TurnType
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 internal class RuleWithDependenciesTest {
   companion object {
     val rule = FakeRule.abidden()
-    val state = Game.new().state
+    val state = GameFactoryImpl().new().state
     val turn = TurnType.GiveUpTurn(0)
     val violation = GameRuleViolationImpl(rule, "")
   }

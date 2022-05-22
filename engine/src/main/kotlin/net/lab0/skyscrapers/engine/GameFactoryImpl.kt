@@ -6,14 +6,14 @@ import net.lab0.skyscrapers.engine.exception.InvalidBoardSize
 import net.lab0.skyscrapers.engine.exception.InvalidPlayersCount
 import net.lab0.skyscrapers.engine.rule.RuleBook
 
-interface NewGame {
-  fun new(
-    width: Int = Defaults.WIDTH,
-    height: Int = Defaults.HEIGHT,
-    playerCount: Int = Defaults.PLAYER_COUNT,
-    buildersPerPlayer: Int = Defaults.BUILDERS_PER_PLAYER,
-    blocks: BlocksData = Defaults.BLOCKS,
-    ruleBook: RuleBook = Defaults.RULE_BOOK
+open class GameFactoryImpl : GameFactory {
+  override fun new(
+    width: Int,
+    height: Int,
+    playerCount: Int,
+    buildersPerPlayer: Int,
+    blocks: BlocksData,
+    ruleBook: RuleBook,
   ): Game {
     if (playerCount < 1)
       throw InvalidPlayersCount(playerCount)

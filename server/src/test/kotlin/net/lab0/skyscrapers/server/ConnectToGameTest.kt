@@ -1,6 +1,6 @@
 package net.lab0.skyscrapers.server
 
-import net.lab0.skyscrapers.engine.api.Game
+import net.lab0.skyscrapers.engine.GameFactoryImpl
 import net.lab0.skyscrapers.server.dto.ConnectionResponse
 import net.lab0.skyscrapers.server.dto.ErrorResponse
 import net.lab0.skyscrapers.server.value.GameName
@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test
 internal class ConnectToGameTest {
   @Test
   fun `can connect to a game`() {
-    val service = ServiceImpl.new(mapOf(GameName("foo") to Game.new()))
+    val service = ServiceImpl.new(mapOf(GameName("foo") to GameFactoryImpl().new()))
     val response = routed(service)(Request(POST, "/api/v1/games/foo/connect"))
 
     assertThat(response.status).isEqualTo(CREATED)
@@ -36,7 +36,7 @@ internal class ConnectToGameTest {
 
   @Test
   fun `refuse to connect if too many players`() {
-    val service = ServiceImpl.new(mapOf(GameName("foo") to Game.new(playerCount = 2)))
+    val service = ServiceImpl.new(mapOf(GameName("foo") to GameFactoryImpl().new(playerCount = 2)))
     val response0 = routed(service)(Request(POST, "/api/v1/games/foo/connect"))
     assertThat(response0.status).isEqualTo(CREATED)
     val response1 = routed(service)(Request(POST, "/api/v1/games/foo/connect"))

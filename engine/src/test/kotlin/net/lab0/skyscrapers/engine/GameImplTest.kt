@@ -70,18 +70,18 @@ internal class GameImplTest {
     @Test
     fun `the game must have at least 1 player`() {
       assertThrows<InvalidPlayersCount> {
-        Game.new(playerCount = 0)
+        GameFactoryImpl().new(playerCount = 0)
       }
     }
 
     @Test
     fun `the game's board must be at least the number of builders + 1`() {
       assertThrows<InvalidBoardSize> {
-        Game.new(width = 2, height = 2, playerCount = 2, buildersPerPlayer = 2)
+        GameFactoryImpl().new(width = 2, height = 2, playerCount = 2, buildersPerPlayer = 2)
       }
 
       assertThrows<InvalidBoardSize> {
-        Game.new(
+        GameFactoryImpl().new(
           width = -1,
           height = 10,
           playerCount = 2,
@@ -93,14 +93,14 @@ internal class GameImplTest {
        * This is valid (although not playable)
        * as 9 builders is less than 10 board cells
        */
-      Game.new(width = 1, height = 10, playerCount = 3, buildersPerPlayer = 3)
+      GameFactoryImpl().new(width = 1, height = 10, playerCount = 3, buildersPerPlayer = 3)
     }
 
     @TestFactory
     fun `the initial height of the buildings is 0`(): Iterable<DynamicTest> {
       val width = 3
       val height = 4
-      val g: Game = Game.new(width, height)
+      val g: Game = GameFactoryImpl().new(width, height)
 
       return (0 until width).flatMap { column ->
         (0 until height).map { row ->
@@ -113,13 +113,13 @@ internal class GameImplTest {
 
     @Test
     fun `the game starts in the placement phase`() {
-      val g = Game.new()
+      val g = GameFactoryImpl().new()
       assertThat(g.state.phase).isEqualTo(Phase.PLACEMENT)
     }
 
     @Test
     fun `the game board starts with 0 builders on it`() {
-      val g: Game = Game.new(playerCount = 2, buildersPerPlayer = 1)
+      val g: Game = GameFactoryImpl().new(playerCount = 2, buildersPerPlayer = 1)
       assertThat(g.state.getBuilders(0)).hasSize(0)
       assertThat(g.state.getBuilders(1)).hasSize(0)
     }
@@ -128,13 +128,13 @@ internal class GameImplTest {
     fun `some blocks to build must be present`() {
       assertThat(
         assertThrows<InvalidBlocksConfiguration> {
-          Game.new(blocks = BlocksData.EMPTY)
+          GameFactoryImpl().new(blocks = BlocksData.EMPTY)
         }
       ).hasMessage("There must be at least 1 block for the game to make sense")
 
       assertThat(
         assertThrows<InvalidBlocksConfiguration> {
-          Game.new(
+          GameFactoryImpl().new(
             blocks = BlocksData(Height(2) to 0)
           )
         }
@@ -145,7 +145,7 @@ internal class GameImplTest {
     fun `there must be no gap the the blocks heights`() {
       assertThat(
         assertThrows<InvalidBlocksConfiguration> {
-          Game.new(
+          GameFactoryImpl().new(
             blocks = BlocksData(Height(1) to 10, Height(3) to 5)
           )
         }
@@ -156,7 +156,7 @@ internal class GameImplTest {
     fun `there must be more blocks of lower height than higher height`() {
       assertThat(
         assertThrows<InvalidBlocksConfiguration> {
-          Game.new(
+          GameFactoryImpl().new(
             blocks = BlocksData(Height(0) to 0, Height(1) to 1, Height(2) to 99)
           )
         }
@@ -167,7 +167,7 @@ internal class GameImplTest {
     fun `each block must be proposed at least once`() {
       assertThat(
         assertThrows<InvalidBlocksConfiguration> {
-          Game.new(
+          GameFactoryImpl().new(
             blocks = BlocksData(
               Height(0) to 1,
               Height(1) to 1,
@@ -187,13 +187,13 @@ internal class GameImplTest {
 
     @Test
     fun `the game starts with the placing phase`() {
-      val g = Game.new()
+      val g = GameFactoryImpl().new()
       assertThat(g.state.phase).isEqualTo(Phase.PLACEMENT)
     }
 
     @Test
     fun `the players can place their builder`() {
-      val g: Game = Game.new()
+      val g: Game = GameFactoryImpl().new()
       val player = 0
 
       g.play(
@@ -205,7 +205,7 @@ internal class GameImplTest {
 
     @Test
     fun `players must add their builders in alternating turns`() {
-      val g: Game = Game.new()
+      val g: Game = GameFactoryImpl().new()
 
       g.play(
         DSL.player(0).placement.addBuilder(0, 0)
@@ -230,14 +230,14 @@ internal class GameImplTest {
 
     @Test
     fun `the game starts at turn 0`() {
-      val g: Game = Game.new(playerCount = 2)
+      val g: Game = GameFactoryImpl().new(playerCount = 2)
       assertThat(g.turn).isEqualTo(0)
       assertThat(g.state.currentPlayer).isEqualTo(0)
     }
 
     @Test
     fun `the turn increases each time a player plays`() {
-      val g: Game = Game.new(playerCount = 2)
+      val g: Game = GameFactoryImpl().new(playerCount = 2)
 
       g.play(
         DSL.player(0).placement.addBuilder(0, 0)
@@ -256,7 +256,7 @@ internal class GameImplTest {
 
     @Test
     fun `can't place a builder on top of another builder`() {
-      val g = Game.new()
+      val g = GameFactoryImpl().new()
 
       g.play(
         DSL.player(0).placement.addBuilder(0, 0)
@@ -271,7 +271,7 @@ internal class GameImplTest {
 
     @Test
     fun `the game phase changes to building once all the builders have been placed`() {
-      val g = Game.new(playerCount = 2, buildersPerPlayer = 1)
+      val g = GameFactoryImpl().new(playerCount = 2, buildersPerPlayer = 1)
       g.play(
         DSL.player(0).placement.addBuilder(0, 0)
       )
@@ -279,7 +279,7 @@ internal class GameImplTest {
 
     @Test
     fun `can't move during placement phase`() {
-      val g = Game.new()
+      val g = GameFactoryImpl().new()
 
       // put a builder at 0,0
       g.play(
@@ -301,7 +301,7 @@ internal class GameImplTest {
 
     @Test
     fun `can't place outside of the board`() {
-      val g = Game.new()
+      val g = GameFactoryImpl().new()
 
       assertThrows<GameRuleViolationException> {
         g.play(

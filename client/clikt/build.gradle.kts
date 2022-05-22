@@ -1,6 +1,6 @@
-import dependencies.Dependencies.http4k
 import dependencies.Dependencies.clikt
 import dependencies.Dependencies.hoplite
+import dependencies.Dependencies.http4k
 import dependencies.Dependencies.kotlinxSerializationJson
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 

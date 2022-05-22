@@ -1,8 +1,10 @@
 package net.lab0.skyscrapers.engine.api
 
+import net.lab0.skyscrapers.engine.GameFactoryImpl
+
 class SeriesImpl(
   override val requiredWinningRounds: Int,
-  val gameFactory: () -> Game = { Game.new() }
+  val gameFactory: () -> Game = { GameFactoryImpl().new() }
 ) : Series {
 
   companion object : NewSeries
