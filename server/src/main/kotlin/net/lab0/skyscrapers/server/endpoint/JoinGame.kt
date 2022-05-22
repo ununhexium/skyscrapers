@@ -17,7 +17,7 @@ import org.http4k.format.KotlinxSerialization.auto
 /**
  * Gives a random token to that connection, to identify it as a user
  */
-fun connectToGame(service: Service, req: Request): Response {
+fun joinGame(service: Service, req: Request): Response {
   val gameName = req.pathGameName()
 
   return if (gameName == null) {

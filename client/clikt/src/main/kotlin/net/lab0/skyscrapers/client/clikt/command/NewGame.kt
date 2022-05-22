@@ -5,7 +5,6 @@ import com.github.ajalt.clikt.parameters.options.required
 import net.lab0.skyscrapers.client.clikt.MyCliktCommand
 import net.lab0.skyscrapers.client.clikt.configuration.Configurer
 import net.lab0.skyscrapers.client.http.SkyscraperClient
-import net.lab0.skyscrapers.client.http.SkyscraperMenuClient
 import net.lab0.skyscrapers.server.value.GameName
 import java.io.Writer
 
@@ -22,7 +21,7 @@ class NewGame(
   ).required()
 
   override fun run() {
-    client.connect(configurer.loadConfiguration().server.apiUrl)
+    client.status(configurer.loadConfiguration().server.apiUrl)
       .map { menuClient ->
         menuClient.create(GameName(name))
           .bimap(

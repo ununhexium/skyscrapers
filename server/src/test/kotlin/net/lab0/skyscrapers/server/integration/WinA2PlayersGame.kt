@@ -50,13 +50,13 @@ class WinA2PlayersGame {
       send(
         Request(
           POST,
-          "/games/foo/connect"
+          "/games/foo/join"
         )
       ).parse()
 
     // connect as player 1
     val player1: ConnectionResponse =
-      send(Request(POST, "/games/foo/connect")).parse()
+      send(Request(POST, "/games/foo/join")).parse()
 
     println(player0)
     println(player1)

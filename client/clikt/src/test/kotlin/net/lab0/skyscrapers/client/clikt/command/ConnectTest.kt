@@ -19,14 +19,14 @@ internal class ConnectTest {
     val output = StringWriter()
     val skyClient = mockk<SkyscraperClient>()
     val skyMenuClient = mockk<SkyscraperMenuClient>()
-    every { skyClient.connect(any()) } returns Either.Right(skyMenuClient)
+    every { skyClient.status(any()) } returns Either.Right(skyMenuClient)
     every { skyMenuClient.listGames() } returns listOf()
 
     val cli = GameCli.new(output, skyscraperClient = skyClient)
     cli.parse("connect")
 
     verify {
-      skyClient.connect(any())
+      skyClient.status(any())
       skyMenuClient.listGames()
     }
 
@@ -38,14 +38,14 @@ internal class ConnectTest {
     val output = StringWriter()
     val skyClient = mockk<SkyscraperClient>()
     val skyMenuClient = mockk<SkyscraperMenuClient>()
-    every { skyClient.connect(any()) } returns Either.Right(skyMenuClient)
+    every { skyClient.status(any()) } returns Either.Right(skyMenuClient)
     every { skyMenuClient.listGames() } returns listOf(GameName("fubar"))
 
     val cli = GameCli.new(output, skyscraperClient = skyClient)
     cli.parse("connect")
 
     verify {
-      skyClient.connect(any())
+      skyClient.status(any())
       skyMenuClient.listGames()
     }
 

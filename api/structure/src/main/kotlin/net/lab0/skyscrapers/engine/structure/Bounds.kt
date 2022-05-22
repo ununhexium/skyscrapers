@@ -4,6 +4,7 @@ package net.lab0.skyscrapers.engine.structure
  * @param width exclusive
  * @param height exclusive
  */
+// TODO: bounds should be defined by ranges, not width / height
 data class Bounds(val width: Int, val height: Int) {
   /**
    * @return each position, assuming minX = minY = 0 and

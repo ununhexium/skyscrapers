@@ -13,10 +13,10 @@ interface SkyscraperMenuClient {
   /**
    * Create a game on the server.
    */
-  fun create(name: GameName): Either<List<String>, GameResponse>
+  fun create(name: GameName): Either<Errors, GameResponse>
 
   /**
    * Join a game
    */
-  fun join(name: GameName): SkyscraperGameClient
+  fun join(name: GameName): Either<Errors, SkyscraperGameClient>
 }

@@ -11,5 +11,5 @@ interface SkyscraperClient {
    *
    * @return a menu client if successful is successful, `null` otherwise.
    */
-  fun connect(url: String): Either<Status, SkyscraperMenuClient>
+  fun status(url: String): Either<Status, SkyscraperMenuClient>
 }

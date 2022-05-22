@@ -25,8 +25,9 @@ class GameCli : CliktCommand() {
         Connect(writer, configurer, skyscraperClient),
         Configuration(writer, configurer),
         NewGame(writer, configurer, skyscraperClient),
+//        Show(writer, configurer, skyscraperClient),
+
 //        Next(series),
-//        ShowCli(series, writer),
 //        PlaceBuilder().subcommands(
 //          PlaceBuilderRandomly(series),
 //          PlaceAt(series),

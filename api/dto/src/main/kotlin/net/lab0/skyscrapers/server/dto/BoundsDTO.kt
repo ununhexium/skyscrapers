@@ -8,5 +8,8 @@ data class BoundsDTO(
   val width: Int,
   val height: Int
 ) {
+  fun toBounds(): Bounds  =
+    Bounds(width, height)
+
   constructor(b: Bounds) : this(b.width, b.height)
 }

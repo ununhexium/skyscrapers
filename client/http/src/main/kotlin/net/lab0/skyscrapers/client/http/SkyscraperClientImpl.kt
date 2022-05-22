@@ -8,7 +8,7 @@ import org.http4k.core.Status
 import org.http4k.core.Uri
 
 class SkyscraperClientImpl(val handler: HttpHandler) : SkyscraperClient {
-  override fun connect(url: String): Either<Status, SkyscraperMenuClient> {
+  override fun status(url: String): Either<Status, SkyscraperMenuClient> {
     val apiUrl = Uri.of(url) / "v1"
 
     val req = Request(Method.GET, apiUrl / "status")

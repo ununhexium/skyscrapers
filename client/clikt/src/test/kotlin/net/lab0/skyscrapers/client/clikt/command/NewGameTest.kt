@@ -12,7 +12,9 @@ internal class NewGameTest : ServerIntegrationTest {
   fun `can create a new game`() {
     useServer { url ->
       val client = SkyscraperClientImpl(OkHttp())
-      val menu = client.connect(url).shouldBeRight()
+      val menu = client.status(url).shouldBeRight()
+
+      val cli =
       menu.create(GameName("Springfield")).shouldBeRight()
     }
   }

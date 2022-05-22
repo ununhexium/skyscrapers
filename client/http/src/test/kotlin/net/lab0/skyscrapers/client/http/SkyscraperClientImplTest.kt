@@ -12,10 +12,10 @@ internal class SkyscraperClientImplTest : ServerIntegrationTest {
     useServer { url ->
       val client = SkyscraperClientImpl(OkHttp())
 
-      client.connect(url).shouldBeRight()
+      client.status(url).shouldBeRight()
 
       // ssh port: nothing useful for us there
-      client.connect("http://localhost:22/api/").shouldBeLeft()
+      client.status("http://localhost:22/api/").shouldBeLeft()
     }
   }
 }

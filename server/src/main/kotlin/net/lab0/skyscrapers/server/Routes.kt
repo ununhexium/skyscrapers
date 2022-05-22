@@ -1,6 +1,6 @@
 package net.lab0.skyscrapers.server
 
-import net.lab0.skyscrapers.server.endpoint.connectToGame
+import net.lab0.skyscrapers.server.endpoint.joinGame
 import net.lab0.skyscrapers.server.endpoint.createGame
 import net.lab0.skyscrapers.server.endpoint.listGames
 import net.lab0.skyscrapers.server.endpoint.playGame
@@ -32,7 +32,7 @@ fun routed(service: Service) = ServerFilters.CatchAll {
     "/api/v1/games/" bind GET to { listGames(service) },
     "/api/v1/games/{gameName}" bind GET to { req -> showGame(service, req) },
     "/api/v1/games/{gameName}" bind POST to { req -> createGame(service, req) },
-    "/api/v1/games/{gameName}/connect" bind POST to { connectToGame(service, it) },
+    "/api/v1/games/{gameName}/join" bind POST to { joinGame(service, it) },
     "/api/v1/games/{gameName}/play" bind POST to { req -> playGame(service, req) },
     Fallback bind { req: Request -> Response(Status.NOT_FOUND).body("Not found: ${req.method} ${req.uri}") },
   )

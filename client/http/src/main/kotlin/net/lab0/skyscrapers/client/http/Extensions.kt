@@ -16,3 +16,4 @@ operator fun Uri.div(s: Valued<String>): Uri =
 inline fun <reified T: Any> Response.extract(): T =
   Body.auto<T>().toLens().extract(this)
 
+typealias Errors = List<String>

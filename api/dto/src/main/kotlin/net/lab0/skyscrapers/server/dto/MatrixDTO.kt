@@ -5,5 +5,8 @@ import net.lab0.skyscrapers.engine.structure.Matrix
 
 @Serializable
 data class MatrixDTO<T>(val data: List<List<T>>) {
+  fun toMatrix() =
+    Matrix(data)
+
   constructor(matrix: Matrix<T>) : this(matrix.data)
 }

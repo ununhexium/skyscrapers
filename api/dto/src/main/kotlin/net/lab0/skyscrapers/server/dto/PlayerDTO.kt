@@ -6,4 +6,7 @@ import net.lab0.skyscrapers.engine.Player
 @Serializable
 data class PlayerDTO(val id: Int, val active: Boolean) {
   constructor(p: Player) : this(p.id, p.active)
+
+  fun toPlayer() =
+    Player(id, active)
 }

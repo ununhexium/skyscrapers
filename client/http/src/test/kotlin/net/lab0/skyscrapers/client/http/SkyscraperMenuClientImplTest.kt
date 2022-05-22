@@ -1,6 +1,5 @@
 package net.lab0.skyscrapers.client.http
 
-import arrow.core.Either
 import io.kotest.assertions.arrow.core.shouldBeLeft
 import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.matchers.collections.shouldContain
@@ -16,7 +15,7 @@ internal class SkyscraperMenuClientImplTest : net.lab0.skyscrapers.client.Server
   @Test
   fun `can list games on the server`() {
     useServer { url ->
-      val menu = client.connect(url).shouldBeRight()
+      val menu = client.status(url).shouldBeRight()
 
       val list = menu.listGames()
       list shouldBe listOf()
@@ -28,7 +27,7 @@ internal class SkyscraperMenuClientImplTest : net.lab0.skyscrapers.client.Server
     val service = ServiceImpl.new()
 
     useServer(service = service) { url ->
-      val menu = client.connect(url).shouldBeRight()
+      val menu = client.status(url).shouldBeRight()
       val gameName = "fus ro dah"
       val fusRoDah = GameName(gameName)
       menu.create(fusRoDah).shouldBeRight()
@@ -42,7 +41,7 @@ internal class SkyscraperMenuClientImplTest : net.lab0.skyscrapers.client.Server
     val service = ServiceImpl.new()
 
     useServer(service = service) { url ->
-      val menu = client.connect(url).shouldBeRight()
+      val menu = client.status(url).shouldBeRight()
       val gameName = "fus ro dah"
       val fusRoDah = GameName(gameName)
 

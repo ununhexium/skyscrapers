@@ -10,8 +10,10 @@ import org.http4k.core.HttpHandler
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status
+import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Uri
 import org.http4k.format.KotlinxSerialization.auto
+import org.http4k.routing.static
 
 class SkyscraperMenuClientImpl(
   val handler: HttpHandler,
@@ -30,15 +32,22 @@ class SkyscraperMenuClientImpl(
     val req = Request(Method.POST, apiUrl / "games" / name)
     val res = handler(req)
 
-    return if (res.status == Status.CREATED) {
+    return if (res.status == CREATED) {
       Either.Right(res.extract())
     } else {
       Either.Left(res.extract<ErrorResponse>().errors)
     }
   }
 
-  override fun join(gameName: GameName): SkyscraperGameClient {
-    TODO("Not yet implemented")
+  // TODO: maybe it will need a lobby later, to wait until the game is full..?
+  override fun join(name: GameName): Either<Errors, SkyscraperGameClient> {
+    val req = Request(Method.POST, apiUrl / "games" / name / "join")
+    val res = handler(req)
+
+    return if (res.status == CREATED) {
+      Either.Right(SkyscraperGameClientImpl(handler, apiUrl, name))
+    } else {
+      Either.Left(res.extract<ErrorResponse>().errors)
+    }
   }
 }
-

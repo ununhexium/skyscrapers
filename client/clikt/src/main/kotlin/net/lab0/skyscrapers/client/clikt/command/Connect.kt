@@ -17,7 +17,7 @@ class Connect(
     val config = configurer.loadConfiguration()
     val url = config.server.apiUrl
 
-    val result = skyscraperClient.connect(url)
+    val result = skyscraperClient.status(url)
     result.bimap(
       leftOperation = {
         myEcho(
