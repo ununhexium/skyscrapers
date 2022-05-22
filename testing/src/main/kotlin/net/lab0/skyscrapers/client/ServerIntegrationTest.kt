@@ -8,6 +8,7 @@ import kotlin.random.Random
 
 interface ServerIntegrationTest {
   fun useServer(
+    // TODO: could be next free port in some range instead of a random port that might be in use
     port: Int = Random.nextInt(10_000, 20_000),
     f: (url: String) -> Unit
   ) {

@@ -2,7 +2,6 @@ package net.lab0.skyscrapers.client.clikt.configuration
 
 val DefaultConfig = Global(
   Server(
-    "localhost",
-    45678
+    "http://localhost:45678/api/"
   )
 )

@@ -1,27 +1,22 @@
 package net.lab0.skyscrapers.client.clikt
 
 import io.kotest.matchers.string.shouldNotContain
-import net.lab0.skyscrapers.server.ServiceImpl
-import net.lab0.skyscrapers.server.routed
-import org.http4k.server.Undertow
-import org.http4k.server.asServer
+import net.lab0.skyscrapers.client.ServerIntegrationTest
 import org.junit.jupiter.api.Test
 import java.io.StringWriter
 
-internal class GameCliTest {
+internal class GameCliTest: ServerIntegrationTest {
   @Test
   fun `connection integration test`() {
-    val service = ServiceImpl.new()
-    // TODO: these constructs should move to some test module
-    val server = routed(service).asServer(Undertow(45678)).start()
-    val writer = StringWriter()
 
-    val cli = GameCli.new(writer)
-    cli.parse("config", "--reset")
-    cli.parse("connect")
+    useServer {
+      val writer = StringWriter()
 
-    writer.toString() shouldNotContain "Failed to connect to the server"
+      val cli = GameCli.new(writer)
+      cli.parse("config", "--reset")
+      cli.parse("connect")
 
-    server.stop()
+      writer.toString() shouldNotContain "Failed to connect to the server"
+    }
   }
 }

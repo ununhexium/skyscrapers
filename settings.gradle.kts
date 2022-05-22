@@ -22,3 +22,4 @@ findProject(":client:http")?.name = "http"
 include("engine")
 
 include("server")
+include("testing")

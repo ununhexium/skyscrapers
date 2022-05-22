@@ -21,8 +21,7 @@ internal class ConfigurationTest {
 
     val cli = GameCli.new(output, configurer = configurer)
     cli.parse("config")
-    output.toString() shouldContain "port"
-    output.toString() shouldContain "host"
+    output.toString() shouldContain "apiUrl"
 
     verify {
       configurer.loadConfiguration()

@@ -7,7 +7,7 @@ import net.lab0.skyscrapers.client.ServerIntegrationTest
 import org.http4k.client.OkHttp
 import org.junit.jupiter.api.Test
 
-internal class SkyscraperMenuClientImplTest : ServerIntegrationTest {
+internal class SkyscraperMenuClientImplTest : net.lab0.skyscrapers.client.ServerIntegrationTest {
   @Test
   fun `can list games on the server`() {
     useServer { url ->

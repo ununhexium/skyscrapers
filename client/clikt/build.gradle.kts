@@ -30,6 +30,7 @@ dependencies {
     // TEST
     testImplementation(http4k.serverUndertow)
     testImplementation(project(":server"))
+    testImplementation(project(":testing"))
 }
 
 tasks.getByName<Test>("test") {

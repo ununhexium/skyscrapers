@@ -15,7 +15,7 @@ class Connect(
 ) {
   override fun run() {
     val config = configurer.loadConfiguration()
-    val url = "http://${config.server.host}:${config.server.port}/api/"
+    val url = config.server.apiUrl
 
     val result = skyscraperClient.connect(url)
     result.bimap(
