@@ -17,9 +17,12 @@ import org.http4k.core.Status
 import org.http4k.core.Uri
 import org.http4k.format.KotlinxSerialization.auto
 
-class SkyscraperClientImpl(val handler: HttpHandler) : SkyscraperClient {
-  override fun status(url: String): Either<Status, StatusResponse> {
-    val apiUrl = Uri.of(url)
+class SkyscraperClientImpl(
+  val handler: HttpHandler,
+  val apiUrl: String
+) : SkyscraperClient {
+  override fun status(): Either<Status, StatusResponse> {
+    val apiUrl = Uri.of(apiUrl)
 
     val req = Request(Method.GET, apiUrl / "status")
     val res = handler(req)
@@ -30,10 +33,7 @@ class SkyscraperClientImpl(val handler: HttpHandler) : SkyscraperClient {
     }
   }
 
-  override fun state(
-    apiUrl: String,
-    name: GameName
-  ): Either<Errors, GameState> {
+  override fun state(name: GameName): Either<Errors, GameState> {
     val req = Request(Method.GET, Uri.of(apiUrl) / "games" / name)
     val res = handler(req)
 
@@ -48,7 +48,7 @@ class SkyscraperClientImpl(val handler: HttpHandler) : SkyscraperClient {
     TODO("Not yet implemented")
   }
 
-  override fun listGames(apiUrl: String): List<GameName> {
+  override fun listGames(): List<GameName> {
     val req = Request(Method.GET, Uri.of(apiUrl) / "games")
     val res = handler(req)
 
@@ -56,7 +56,7 @@ class SkyscraperClientImpl(val handler: HttpHandler) : SkyscraperClient {
     return list.names.map { GameName(it) }
   }
 
-  override fun create(apiUrl:String, name: GameName): Either<List<String>, GameResponse> {
+  override fun create(name: GameName): Either<List<String>, GameResponse> {
     val req = Request(Method.POST, Uri.of(apiUrl) / "games" / name)
     val res = handler(req)
 
@@ -68,7 +68,7 @@ class SkyscraperClientImpl(val handler: HttpHandler) : SkyscraperClient {
   }
 
   // TODO: maybe it will need a lobby later, to wait until the game is full..?
-  override fun join(apiUrl:String, name: GameName): Either<Errors, ConnectionResponse> {
+  override fun join(name: GameName): Either<Errors, ConnectionResponse> {
     val req = Request(Method.POST, Uri.of(apiUrl) / "games" / name / "join")
     val res = handler(req)
 

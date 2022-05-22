@@ -19,12 +19,11 @@ class GameCli : CliktCommand() {
     fun new(
       writer: Writer?,
       configurer: Configurer = Configurer(Constants.configLocation),
-      skyscraperClient: SkyscraperClient = SkyscraperClientImpl(OkHttp()),
     ): CliktCommand {
       return GameCli().subcommands(
-        Connect(writer, configurer, skyscraperClient),
+        Connect(writer, configurer),
         Configuration(writer, configurer),
-        NewGame(writer, configurer, skyscraperClient),
+        NewGame(writer, configurer),
 //        Show(writer, configurer, skyscraperClient),
 
 //        Next(series),

@@ -13,27 +13,26 @@ interface SkyscraperClient {
   /**
    * Choose which server to play on
    *
-   * @param url The URL to the server, up to ".../api/"
-   *
    * @return a menu client if successful is successful, `null` otherwise.
    */
-  fun status(url: String): Either<Status, StatusResponse>
+  fun status(): Either<Status, StatusResponse>
 
-  fun state(apiUrl:String, name: GameName): Either<Errors, GameState>
+  fun state(name: GameName): Either<Errors, GameState>
 
   fun play(turn: TurnType): Either<Errors, GameState>
+
   /**
    * Lists the games available on the server
    */
-  fun listGames(apiUrl:String): List<GameName>
+  fun listGames(): List<GameName>
 
   /**
    * Create a game on the server.
    */
-  fun create(apiUrl:String, name: GameName): Either<Errors, GameResponse>
+  fun create(name: GameName): Either<Errors, GameResponse>
 
   /**
    * Join a game
    */
-  fun join(apiUrl:String, name: GameName): Either<Errors, ConnectionResponse>
+  fun join(name: GameName): Either<Errors, ConnectionResponse>
 }

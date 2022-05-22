@@ -13,8 +13,8 @@ internal class NewGameTest : ServerIntegrationTest {
   @Test
   fun `can create a new game`() {
     useServer { url ->
-      val client = SkyscraperClientImpl(OkHttp())
-      val out = client.create(url, GameName("Springfield")).shouldBeRight()
+      val client = SkyscraperClientImpl(OkHttp(), url)
+      val out = client.create(GameName("Springfield")).shouldBeRight()
       out.name shouldBe "Springfield"
     }
   }

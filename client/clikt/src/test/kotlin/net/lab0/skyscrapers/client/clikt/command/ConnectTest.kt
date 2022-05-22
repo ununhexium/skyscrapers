@@ -7,14 +7,10 @@ import net.lab0.skyscrapers.client.ServerIntegrationTest
 import net.lab0.skyscrapers.client.clikt.GameCli
 import net.lab0.skyscrapers.client.clikt.configuration.Configurer
 import net.lab0.skyscrapers.client.clikt.parse
-import net.lab0.skyscrapers.client.http.SkyscraperClientImpl
-import org.http4k.client.OkHttp
 import org.junit.jupiter.api.Test
 import java.io.StringWriter
 
 internal class ConnectTest : ServerIntegrationTest {
-  val skyClient = SkyscraperClientImpl(OkHttp())
-
   @Test
   fun `can connect to a server`() {
     useServer { url ->
@@ -22,11 +18,7 @@ internal class ConnectTest : ServerIntegrationTest {
       val configurer = mockk<Configurer>()
       every { configurer.loadConfiguration().server.apiUrl } returns url
 
-      val cli = GameCli.new(
-        output,
-        configurer = configurer,
-        skyscraperClient = skyClient
-      )
+      val cli = GameCli.new(output, configurer = configurer)
       cli.parse("connect")
 
       output.toString() shouldContain "Connected to $url"
