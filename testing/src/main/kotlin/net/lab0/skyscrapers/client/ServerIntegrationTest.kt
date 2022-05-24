@@ -21,7 +21,7 @@ interface ServerIntegrationTest {
   ) {
     val server = routed(service).asServer(Undertow(port)).start()
     try {
-      val url = "http://localhost:$port/api/v1/"
+      val url = "http://localhost:$port/"
       val handler = ClientFilters.SetBaseUriFrom(Uri.of(url)).then(OkHttp())
 
       f(handler)

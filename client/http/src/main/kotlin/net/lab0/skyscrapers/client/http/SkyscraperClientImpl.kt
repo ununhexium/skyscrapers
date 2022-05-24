@@ -17,13 +17,13 @@ import org.http4k.core.Status
 import org.http4k.format.KotlinxSerialization.auto
 
 /**
- * @param a handler that target the apoi base url (http://.../api/v1/)
+ * @param handler that targets the server (no /api/v1/...)
  */
 class SkyscraperClientImpl(
   val handler: HttpHandler,
 ) : SkyscraperClient {
   override fun status(): Either<Status, StatusResponse> {
-    val req = Request(Method.GET, "status")
+    val req = Request(Method.GET, "/api/v1/status")
     val res = handler(req)
     return if (res.status == Status.OK) {
       Either.Right(res.extract())
@@ -33,7 +33,7 @@ class SkyscraperClientImpl(
   }
 
   override fun state(name: GameName): Either<Errors, GameState> {
-    val req = Request(Method.GET, "games" / name)
+    val req = Request(Method.GET, "/api/v1/games" / name)
     val res = handler(req)
 
     if (res.status == Status.OK) {
@@ -48,7 +48,7 @@ class SkyscraperClientImpl(
   }
 
   override fun listGames(): List<GameName> {
-    val req = Request(Method.GET, "games")
+    val req = Request(Method.GET, "/api/v1/games")
     val res = handler(req)
 
     val list = Body.auto<ListGamesResponse>().toLens()(res)
@@ -56,7 +56,7 @@ class SkyscraperClientImpl(
   }
 
   override fun create(name: GameName): Either<List<String>, GameResponse> {
-    val req = Request(Method.POST, "games" / name)
+    val req = Request(Method.POST, "/api/v1/games" / name)
     val res = handler(req)
 
     return if (res.status == Status.CREATED) {
@@ -68,7 +68,7 @@ class SkyscraperClientImpl(
 
   // TODO: maybe it will need a lobby later, to wait until the game is full..?
   override fun join(name: GameName): Either<Errors, ConnectionResponse> {
-    val req = Request(Method.POST, "games" / name / "join")
+    val req = Request(Method.POST, "/api/v1/games" / name / "join")
     val res = handler(req)
 
     return if (res.status == Status.CREATED) {

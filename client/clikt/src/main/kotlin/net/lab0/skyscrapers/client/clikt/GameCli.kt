@@ -8,7 +8,6 @@ import net.lab0.skyscrapers.client.clikt.command.NewGame
 import net.lab0.skyscrapers.client.clikt.command.Show
 import net.lab0.skyscrapers.client.clikt.configuration.Configurer
 import net.lab0.skyscrapers.client.clikt.configuration.Constants
-import net.lab0.skyscrapers.client.http.SkyscraperClient
 import net.lab0.skyscrapers.client.http.SkyscraperClientImpl
 import org.http4k.client.OkHttp
 import org.http4k.core.HttpHandler

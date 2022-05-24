@@ -3,16 +3,15 @@ package net.lab0.skyscrapers.client.clikt
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
-import net.lab0.skyscrapers.client.ServerIntegrationTest
-import org.junit.jupiter.api.Disabled
+import net.lab0.skyscrapers.client.FakeServerTest
 import org.junit.jupiter.api.Test
 import java.io.StringWriter
 
-internal class GameCliTest : ServerIntegrationTest {
+internal class GameCliTest : FakeServerTest {
   @Test
   fun `connection integration test`() {
 
-    useServer(port = 45678) {
+    fakeServer {
       val writer = StringWriter()
 
       val cli = GameCli.new(writer, handler = it)
@@ -26,7 +25,7 @@ internal class GameCliTest : ServerIntegrationTest {
 
   @Test
   fun `create a new game`() {
-    useServer(port = 45678) {
+    fakeServer {
       val writer = StringWriter()
 
       val cli = GameCli.new(writer, handler = it)
@@ -39,7 +38,7 @@ internal class GameCliTest : ServerIntegrationTest {
 
   @Test
   fun `show a game`() {
-    useServer(port = 45678) {
+    fakeServer {
       val writer = StringWriter()
 
       val cli = GameCli.new(writer, handler = it)

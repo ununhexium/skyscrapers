@@ -1,8 +1,8 @@
 package net.lab0.skyscrapers.engine.rule.placement
 
 import net.lab0.skyscrapers.editor
-import net.lab0.skyscrapers.engine.GameImpl
 import net.lab0.skyscrapers.engine.GameFactoryImpl
+import net.lab0.skyscrapers.engine.GameImpl
 import net.lab0.skyscrapers.engine.api.TurnType
 import net.lab0.skyscrapers.engine.rule.GameRuleViolationImpl
 import net.lab0.skyscrapers.engine.structure.Position
