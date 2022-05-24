@@ -4,7 +4,6 @@ import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
 import net.lab0.skyscrapers.client.ServerIntegrationTest
-import net.lab0.skyscrapers.client.clikt.configuration.DefaultConfig
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.io.StringWriter
@@ -16,12 +15,12 @@ internal class GameCliTest : ServerIntegrationTest {
     useServer(port = 45678) {
       val writer = StringWriter()
 
-      val cli = GameCli.new(writer)
+      val cli = GameCli.new(writer, handler = it)
       cli.parse("config", "--reset")
       cli.parse("connect")
 
       writer.toString() shouldNotContain "Failed to connect to the server"
-      writer.toString() shouldContain "Connected to ${DefaultConfig.server.apiUrl}"
+      writer.toString() shouldContain "Connected."
     }
   }
 
@@ -30,24 +29,23 @@ internal class GameCliTest : ServerIntegrationTest {
     useServer(port = 45678) {
       val writer = StringWriter()
 
-      val cli = GameCli.new(writer)
+      val cli = GameCli.new(writer, handler = it)
       cli.parse("config", "--reset")
-      cli.parse("new-game", "--name", "foo")
+      cli.parse("new-game", "foo")
 
       writer.toString() shouldContain "Created game 'foo'."
     }
   }
 
-  @Disabled // TODO continue
   @Test
   fun `show a game`() {
     useServer(port = 45678) {
       val writer = StringWriter()
 
-      val cli = GameCli.new(writer)
+      val cli = GameCli.new(writer, handler = it)
       cli.parse("config", "--reset")
-      cli.parse("new-game", "--name", "foo")
-      cli.parse("show", "--name", "foo")
+      cli.parse("new-game", "foo")
+      cli.parse("show", "foo")
 
       writer.toString() shouldNotBe ""
     }

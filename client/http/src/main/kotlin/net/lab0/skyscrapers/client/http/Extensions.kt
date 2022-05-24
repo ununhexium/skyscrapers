@@ -13,7 +13,13 @@ operator fun Uri.div(s: String): Uri =
 operator fun Uri.div(s: Valued<String>): Uri =
   this.extend(Uri.of(s.value))
 
-inline fun <reified T: Any> Response.extract(): T =
+operator fun String.div(s: String): String =
+  if (this.endsWith('/')) this + s else "$this/$s"
+
+operator fun String.div(s: Valued<String>): String =
+  if (this.endsWith('/')) this + s.value else "$this/${s.value}"
+
+inline fun <reified T : Any> Response.extract(): T =
   Body.auto<T>().toLens().extract(this)
 
 typealias Errors = List<String>

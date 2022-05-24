@@ -13,6 +13,9 @@ repositories {
 
 dependencies {
     api(project(":server"))
+    api(http4k.core)
+
+    implementation(http4k.clientOkhttp)
     implementation(http4k.serverUndertow)
 }
 

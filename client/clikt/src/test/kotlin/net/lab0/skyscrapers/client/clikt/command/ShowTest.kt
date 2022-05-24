@@ -1,34 +1,26 @@
 package net.lab0.skyscrapers.client.clikt.command
 
 import io.kotest.matchers.string.shouldContain
-import io.mockk.every
-import io.mockk.mockk
 import net.lab0.skyscrapers.client.ServerIntegrationTest
 import net.lab0.skyscrapers.client.clikt.GameCli
-import net.lab0.skyscrapers.client.clikt.configuration.Configurer
 import net.lab0.skyscrapers.client.clikt.parse
 import net.lab0.skyscrapers.server.value.GameName
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.io.StringWriter
 
-internal class ShowTest: ServerIntegrationTest {
-
-  @Disabled // TODO: continue
+internal class ShowTest : ServerIntegrationTest {
   @Test
   fun `can show a game`() {
-    useServer { url ->
-      val configurer = mockk<Configurer>()
-      every { configurer.loadConfiguration().server.apiUrl } returns url
+    useServer { handler ->
       val writer = StringWriter()
-      val cli = GameCli.new(writer)
+      val cli = GameCli.new(writer, handler = handler)
 
       val fubar = GameName("fubar")
-      cli.parse("new-game", "--named", fubar.value)
-      cli.parse("join", "--game", fubar.value)
-      cli.parse("show", "--game", fubar.value)
+      cli.parse("new-game", fubar.value)
+//      cli.parse("join", fubar.value)
+//      cli.parse("show", fubar.value)
 
-      writer.toString() shouldContain "Game at turn 0"
+      writer.toString() shouldContain "Created game 'fubar'"
     }
   }
 }

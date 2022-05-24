@@ -5,11 +5,16 @@ import com.github.ajalt.clikt.core.subcommands
 import net.lab0.skyscrapers.client.clikt.command.Configuration
 import net.lab0.skyscrapers.client.clikt.command.Connect
 import net.lab0.skyscrapers.client.clikt.command.NewGame
+import net.lab0.skyscrapers.client.clikt.command.Show
 import net.lab0.skyscrapers.client.clikt.configuration.Configurer
 import net.lab0.skyscrapers.client.clikt.configuration.Constants
 import net.lab0.skyscrapers.client.http.SkyscraperClient
 import net.lab0.skyscrapers.client.http.SkyscraperClientImpl
 import org.http4k.client.OkHttp
+import org.http4k.core.HttpHandler
+import org.http4k.core.Uri
+import org.http4k.core.then
+import org.http4k.filter.ClientFilters
 import java.io.Writer
 
 class GameCli : CliktCommand() {
@@ -19,12 +24,22 @@ class GameCli : CliktCommand() {
     fun new(
       writer: Writer?,
       configurer: Configurer = Configurer(Constants.configLocation),
+      handler: HttpHandler? = null,
     ): CliktCommand {
+      val client = {
+        SkyscraperClientImpl(
+          handler ?: ClientFilters
+            .SetBaseUriFrom(
+              Uri.of(configurer.loadConfiguration().server.apiUrl)
+            ).then(OkHttp())
+        )
+      }
+
       return GameCli().subcommands(
-        Connect(writer, configurer),
+        Connect(writer, client),
         Configuration(writer, configurer),
-        NewGame(writer, configurer),
-//        Show(writer, configurer, skyscraperClient),
+        NewGame(writer, client),
+        Show(writer, client),
 
 //        Next(series),
 //        PlaceBuilder().subcommands(
