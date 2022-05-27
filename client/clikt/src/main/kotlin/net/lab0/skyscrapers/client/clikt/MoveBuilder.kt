@@ -6,8 +6,8 @@
 //import com.github.ajalt.clikt.parameters.options.option
 //import com.github.ajalt.clikt.parameters.options.required
 //import net.lab0.skyscrapers.engine.api.Series
-//import net.lab0.skyscrapers.engine.api.TurnType
-//import net.lab0.skyscrapers.engine.structure.Position
+//import net.lab0.skyscrapers.api.structure.TurnType
+//import net.lab0.skyscrapers.api.structure.Position
 //
 //class MoveBuilder(private val series: Series) : CliktCommand(name = "move-builder") {
 //  private val from by option("-f", "--from")

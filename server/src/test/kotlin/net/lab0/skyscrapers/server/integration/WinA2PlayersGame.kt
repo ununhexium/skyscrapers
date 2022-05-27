@@ -1,14 +1,14 @@
 package net.lab0.skyscrapers.server.integration
 
 import net.lab0.skyscrapers.server.ServiceImpl
-import net.lab0.skyscrapers.server.dto.BuildTurnDTO
-import net.lab0.skyscrapers.server.dto.ConnectionResponse
-import net.lab0.skyscrapers.server.dto.GameResponse
-import net.lab0.skyscrapers.server.dto.PhaseDTO
-import net.lab0.skyscrapers.server.dto.PlaceTurnDTO
-import net.lab0.skyscrapers.server.dto.PositionDTO
-import net.lab0.skyscrapers.server.dto.TurnTypeDTO
-import net.lab0.skyscrapers.server.dto.WinTurnDTO
+import net.lab0.skyscrapers.api.dto.BuildTurnDTO
+import net.lab0.skyscrapers.api.dto.ConnectionResponse
+import net.lab0.skyscrapers.api.dto.GameResponse
+import net.lab0.skyscrapers.api.dto.PhaseDTO
+import net.lab0.skyscrapers.api.dto.PlaceTurnDTO
+import net.lab0.skyscrapers.api.dto.PositionDTO
+import net.lab0.skyscrapers.api.dto.TurnTypeDTO
+import net.lab0.skyscrapers.api.dto.WinTurnDTO
 import net.lab0.skyscrapers.server.routed
 import org.assertj.core.api.Assertions.assertThat
 import org.http4k.client.ApacheClient
@@ -27,7 +27,7 @@ import org.http4k.format.KotlinxSerialization.auto
 import org.http4k.server.Undertow
 import org.http4k.server.asServer
 import org.junit.jupiter.api.Test
-import net.lab0.skyscrapers.engine.structure.Position as P
+import net.lab0.skyscrapers.api.structure.Position as P
 
 class WinA2PlayersGame {
   val service = ServiceImpl.new()

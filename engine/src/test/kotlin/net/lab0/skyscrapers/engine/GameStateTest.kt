@@ -1,10 +1,11 @@
 package net.lab0.skyscrapers.engine
 
-import net.lab0.skyscrapers.engine.api.BlocksData
-import net.lab0.skyscrapers.engine.api.GameState
-import net.lab0.skyscrapers.engine.structure.Bounds
-import net.lab0.skyscrapers.engine.structure.Height
-import net.lab0.skyscrapers.engine.structure.Matrix
+import net.lab0.skyscrapers.api.structure.BlocksData
+import net.lab0.skyscrapers.api.structure.GameState
+import net.lab0.skyscrapers.api.structure.Bounds
+import net.lab0.skyscrapers.api.structure.Height
+import net.lab0.skyscrapers.api.structure.Matrix
+import net.lab0.skyscrapers.api.structure.Player
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

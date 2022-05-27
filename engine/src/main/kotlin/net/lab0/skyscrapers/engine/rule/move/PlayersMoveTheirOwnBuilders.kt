@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.engine.rule.move
 
-import net.lab0.skyscrapers.engine.api.GameState
-import net.lab0.skyscrapers.engine.api.Move
+import net.lab0.skyscrapers.api.structure.GameState
+import net.lab0.skyscrapers.api.structure.Move
 import net.lab0.skyscrapers.engine.rule.AbstractRule
 
 object PlayersMoveTheirOwnBuilders : AbstractRule<Move>(

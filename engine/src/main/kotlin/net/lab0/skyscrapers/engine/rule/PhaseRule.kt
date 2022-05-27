@@ -1,8 +1,8 @@
 package net.lab0.skyscrapers.engine.rule
 
-import net.lab0.skyscrapers.engine.api.GameState
-import net.lab0.skyscrapers.engine.api.TurnType
-import net.lab0.skyscrapers.engine.structure.Phase
+import net.lab0.skyscrapers.api.structure.GameState
+import net.lab0.skyscrapers.api.structure.TurnType
+import net.lab0.skyscrapers.api.structure.Phase
 
 object PhaseRule : AbstractRule<TurnType>(
   "Check that this is the right type of turn",

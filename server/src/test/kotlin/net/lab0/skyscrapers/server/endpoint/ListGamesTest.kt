@@ -1,9 +1,9 @@
 package net.lab0.skyscrapers.server.endpoint
 
 import net.lab0.skyscrapers.server.ServiceImpl
-import net.lab0.skyscrapers.server.dto.ListGamesResponse
+import net.lab0.skyscrapers.api.dto.ListGamesResponse
 import net.lab0.skyscrapers.server.routed
-import net.lab0.skyscrapers.server.value.GameName
+import net.lab0.skyscrapers.api.dto.value.GameName
 import org.assertj.core.api.Assertions.assertThat
 import org.http4k.core.Body
 import org.http4k.core.Method.GET

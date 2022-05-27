@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.engine.action
 
-import net.lab0.skyscrapers.engine.api.TurnType
-import net.lab0.skyscrapers.engine.structure.Position
+import net.lab0.skyscrapers.api.structure.TurnType
+import net.lab0.skyscrapers.api.structure.Position
 
 object DSL {
   fun player(player: Int) = PhaseStepDSL(player)

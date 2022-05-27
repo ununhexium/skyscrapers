@@ -1,5 +1,7 @@
 package net.lab0.skyscrapers.engine.structure
 
+import net.lab0.skyscrapers.api.structure.Matrix
+import net.lab0.skyscrapers.api.structure.Position
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -91,8 +93,8 @@ internal class MatrixTest {
     val matrix = Matrix(data)
     val reference = Matrix(data)
 
-    val onePosition = net.lab0.skyscrapers.engine.structure.Position(0, 0)
-    val fourPosition = net.lab0.skyscrapers.engine.structure.Position(0, 1)
+    val onePosition = Position(0, 0)
+    val fourPosition = Position(0, 1)
 
     val swapped = matrix.copyAndSwap(onePosition, fourPosition)
 

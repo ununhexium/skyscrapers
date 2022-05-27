@@ -1,6 +1,6 @@
 package net.lab0.skyscrapers.ai
 
-import net.lab0.skyscrapers.engine.api.TurnType
+import net.lab0.skyscrapers.api.structure.TurnType
 
 object ConsoleTurnPrinter : (TurnType) -> Unit {
   override fun invoke(turn: TurnType) {

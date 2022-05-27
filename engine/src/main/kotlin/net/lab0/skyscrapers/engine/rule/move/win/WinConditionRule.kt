@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.engine.rule.move.win
 
-import net.lab0.skyscrapers.engine.api.GameState
-import net.lab0.skyscrapers.engine.api.TurnType
+import net.lab0.skyscrapers.api.structure.GameState
+import net.lab0.skyscrapers.api.structure.TurnType
 import net.lab0.skyscrapers.engine.rule.AbstractRule
 
 object WinConditionRule : AbstractRule<TurnType.MoveTurn.WinTurn>(

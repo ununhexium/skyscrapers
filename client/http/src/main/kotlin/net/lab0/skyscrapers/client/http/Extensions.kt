@@ -1,6 +1,6 @@
 package net.lab0.skyscrapers.client.http
 
-import net.lab0.skyscrapers.engine.Valued
+import net.lab0.skyscrapers.api.structure.Valued
 import org.http4k.core.Body
 import org.http4k.core.Response
 import org.http4k.core.Uri

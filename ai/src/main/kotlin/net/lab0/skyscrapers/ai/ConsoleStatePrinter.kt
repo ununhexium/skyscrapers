@@ -1,6 +1,6 @@
 package net.lab0.skyscrapers.ai
 
-import net.lab0.skyscrapers.engine.api.GameState
+import net.lab0.skyscrapers.api.structure.GameState
 
 object ConsoleStatePrinter : (GameState) -> Unit {
 

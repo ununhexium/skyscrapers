@@ -1,20 +1,21 @@
 package net.lab0.skyscrapers.engine
 
 import net.lab0.skyscrapers.editor
-import net.lab0.skyscrapers.engine.api.BlocksData
-import net.lab0.skyscrapers.engine.api.Build
+import net.lab0.skyscrapers.api.structure.BlocksData
+import net.lab0.skyscrapers.api.structure.Build
 import net.lab0.skyscrapers.engine.api.Game
-import net.lab0.skyscrapers.engine.api.GameState
-import net.lab0.skyscrapers.engine.api.GiveUp
-import net.lab0.skyscrapers.engine.api.Placement
-import net.lab0.skyscrapers.engine.api.Seal
-import net.lab0.skyscrapers.engine.api.TurnType
+import net.lab0.skyscrapers.api.structure.GameState
+import net.lab0.skyscrapers.api.structure.GiveUp
+import net.lab0.skyscrapers.api.structure.Placement
+import net.lab0.skyscrapers.api.structure.Seal
+import net.lab0.skyscrapers.api.structure.TurnType
 import net.lab0.skyscrapers.engine.exception.GameRuleViolationException
 import net.lab0.skyscrapers.engine.exception.InvalidBlocksConfiguration
 import net.lab0.skyscrapers.engine.rule.RuleBook
-import net.lab0.skyscrapers.engine.structure.Bounds
-import net.lab0.skyscrapers.engine.structure.Height
-import net.lab0.skyscrapers.engine.structure.Matrix
+import net.lab0.skyscrapers.api.structure.Bounds
+import net.lab0.skyscrapers.api.structure.Height
+import net.lab0.skyscrapers.api.structure.Matrix
+import net.lab0.skyscrapers.api.structure.Player
 import java.util.*
 
 class GameImpl(

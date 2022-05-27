@@ -1,14 +1,14 @@
 package net.lab0.skyscrapers.client.http
 
 import arrow.core.Either
-import net.lab0.skyscrapers.engine.api.GameState
-import net.lab0.skyscrapers.engine.api.TurnType
-import net.lab0.skyscrapers.server.dto.ConnectionResponse
-import net.lab0.skyscrapers.server.dto.ErrorResponse
-import net.lab0.skyscrapers.server.dto.GameResponse
-import net.lab0.skyscrapers.server.dto.ListGamesResponse
-import net.lab0.skyscrapers.server.dto.StatusResponse
-import net.lab0.skyscrapers.server.value.GameName
+import net.lab0.skyscrapers.api.structure.GameState
+import net.lab0.skyscrapers.api.structure.TurnType
+import net.lab0.skyscrapers.api.dto.ConnectionResponse
+import net.lab0.skyscrapers.api.dto.ErrorResponse
+import net.lab0.skyscrapers.api.dto.GameResponse
+import net.lab0.skyscrapers.api.dto.ListGamesResponse
+import net.lab0.skyscrapers.api.dto.StatusResponse
+import net.lab0.skyscrapers.api.dto.value.GameName
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method

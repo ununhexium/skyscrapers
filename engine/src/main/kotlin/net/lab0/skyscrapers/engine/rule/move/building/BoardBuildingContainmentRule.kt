@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.engine.rule.move.building
 
-import net.lab0.skyscrapers.engine.api.GameState
-import net.lab0.skyscrapers.engine.api.TurnType
+import net.lab0.skyscrapers.api.structure.GameState
+import net.lab0.skyscrapers.api.structure.TurnType
 import net.lab0.skyscrapers.engine.rule.AbstractRule
 
 object BoardBuildingContainmentRule : AbstractRule<TurnType.MoveTurn.BuildTurn>(

@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.engine.rule
 
-import net.lab0.skyscrapers.engine.api.GameState
-import net.lab0.skyscrapers.engine.api.TurnType
+import net.lab0.skyscrapers.api.structure.GameState
+import net.lab0.skyscrapers.api.structure.TurnType
 
 /**
  * Only the player's whose turn it is to pay may do so.

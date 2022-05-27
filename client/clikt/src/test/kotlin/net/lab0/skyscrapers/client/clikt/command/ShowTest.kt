@@ -4,7 +4,7 @@ import io.kotest.matchers.string.shouldContain
 import net.lab0.skyscrapers.client.FakeServerTest
 import net.lab0.skyscrapers.client.clikt.GameCli
 import net.lab0.skyscrapers.client.clikt.parse
-import net.lab0.skyscrapers.server.value.GameName
+import net.lab0.skyscrapers.api.dto.value.GameName
 import org.junit.jupiter.api.Test
 import java.io.StringWriter
 

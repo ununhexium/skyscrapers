@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.engine.rule
 
 import net.lab0.skyscrapers.engine.DefaultGames
-import net.lab0.skyscrapers.engine.api.TurnType
+import net.lab0.skyscrapers.api.structure.TurnType
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

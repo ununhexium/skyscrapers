@@ -3,25 +3,27 @@ package net.lab0.skyscrapers.engine
 import net.lab0.skyscrapers.editor
 import net.lab0.skyscrapers.engine.DefaultGames.newGameWithSequentiallyPlacedBuilders
 import net.lab0.skyscrapers.engine.action.DSL
-import net.lab0.skyscrapers.engine.api.BlocksData
+import net.lab0.skyscrapers.api.structure.BlocksData
 import net.lab0.skyscrapers.engine.api.Game
-import net.lab0.skyscrapers.engine.api.GameState
+import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.engine.assertj.GameStateAssert
 import net.lab0.skyscrapers.engine.exception.GameRuleViolationException
 import net.lab0.skyscrapers.engine.exception.InvalidBlocksConfiguration
 import net.lab0.skyscrapers.engine.exception.InvalidBoardSize
 import net.lab0.skyscrapers.engine.exception.InvalidPlayersCount
-import net.lab0.skyscrapers.engine.structure.BuildersMatrix
-import net.lab0.skyscrapers.engine.structure.BuildingsMatrix
-import net.lab0.skyscrapers.engine.structure.Height
-import net.lab0.skyscrapers.engine.structure.Phase
+import net.lab0.skyscrapers.api.structure.BuildersMatrix
+import net.lab0.skyscrapers.api.structure.BuildingsMatrix
+import net.lab0.skyscrapers.api.structure.Height
+import net.lab0.skyscrapers.api.structure.Matrix
+import net.lab0.skyscrapers.api.structure.Phase
+import net.lab0.skyscrapers.api.structure.Player
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
 import org.junit.jupiter.api.assertThrows
-import net.lab0.skyscrapers.engine.structure.Position as P
+import net.lab0.skyscrapers.api.structure.Position as P
 
 internal class GameImplTest {
 
@@ -630,7 +632,7 @@ internal class GameImplTest {
       GameStateAssert.assertThat(g.state).isEqualTo(
         state0.copy(
           players = listOf(Player(1), Player(0)),
-          seals = net.lab0.skyscrapers.engine.structure.Matrix.from(
+          seals = Matrix.from(
             """
             |1 0 0 0 0
             |0 0 0 0 0
@@ -639,7 +641,7 @@ internal class GameImplTest {
             |0 0 0 0 0
           """.trimMargin(),
           ) { it == "1" },
-          builders = net.lab0.skyscrapers.engine.structure.Matrix.from(
+          builders = Matrix.from(
             """
             |. 1 0 1 .
             |0 . . . .

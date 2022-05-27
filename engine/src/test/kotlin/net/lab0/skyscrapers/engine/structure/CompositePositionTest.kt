@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.engine.structure
 
+import net.lab0.skyscrapers.api.structure.CompositePosition
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

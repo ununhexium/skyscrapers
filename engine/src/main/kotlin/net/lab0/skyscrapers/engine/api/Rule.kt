@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.engine.api
 
+import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.engine.rule.RuleWithDependencies
 
 interface Rule<T> {

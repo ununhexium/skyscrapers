@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.server
 
-import net.lab0.skyscrapers.server.dto.ErrorResponse
-import net.lab0.skyscrapers.server.value.GameName
+import net.lab0.skyscrapers.api.dto.ErrorResponse
+import net.lab0.skyscrapers.api.dto.value.GameName
 import org.http4k.core.Body
 import org.http4k.core.Request
 import org.http4k.core.Response
