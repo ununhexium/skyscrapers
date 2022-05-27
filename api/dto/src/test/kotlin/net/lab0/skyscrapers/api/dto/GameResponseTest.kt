@@ -79,7 +79,7 @@ internal class GameResponseTest {
     Assertions.assertThat(dto).isEqualTo(
       GameResponse(
         "name",
-        StateDTO(
+        GameStateDTO(
           bounds = serializedBounds,
           players = serializedPlayers,
           maxBuildersPerPlayer = buildersPerPlayer,

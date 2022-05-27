@@ -5,6 +5,9 @@ import com.github.ajalt.clikt.core.subcommands
 import net.lab0.skyscrapers.client.clikt.command.Configuration
 import net.lab0.skyscrapers.client.clikt.command.Connect
 import net.lab0.skyscrapers.client.clikt.command.NewGame
+import net.lab0.skyscrapers.client.clikt.command.Place
+import net.lab0.skyscrapers.client.clikt.command.PlaceAt
+import net.lab0.skyscrapers.client.clikt.command.Play
 import net.lab0.skyscrapers.client.clikt.command.Show
 import net.lab0.skyscrapers.client.clikt.configuration.Configurer
 import net.lab0.skyscrapers.client.clikt.configuration.Constants
@@ -39,6 +42,11 @@ class GameCli : CliktCommand() {
         Configuration(writer, configurer),
         NewGame(writer, client),
         Show(writer, client),
+        Play(writer).subcommands(
+          Place(writer).subcommands(
+            PlaceAt(writer, client)
+          )
+        ),
 
 //        Next(series),
 //        PlaceBuilder().subcommands(

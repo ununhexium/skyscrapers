@@ -29,6 +29,7 @@ dependencies {
 
     // TEST
     testImplementation(http4k.serverUndertow)
+    testImplementation(project(":engine"))
     testImplementation(project(":server"))
     testImplementation(project(":testing"))
 }

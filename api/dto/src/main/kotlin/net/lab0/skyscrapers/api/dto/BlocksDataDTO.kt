@@ -6,7 +6,7 @@ import net.lab0.skyscrapers.api.structure.Height
 
 @Serializable
 data class BlocksDataDTO(val blocks: Map<Int, Int>) {
-  fun toBlocks() = BlocksData(
+  fun toModel() = BlocksData(
     blocks.mapKeys { Height(it.key) }
   )
 

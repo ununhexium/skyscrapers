@@ -7,6 +7,6 @@ import net.lab0.skyscrapers.api.structure.Position
 data class PositionDTO(val x: Int, val y: Int) {
   constructor(pos: Position) : this(pos.x, pos.y)
 
-  fun toPosition() =
+  fun toModel() =
     Position(x, y)
 }

@@ -17,7 +17,7 @@ fun showGame(service: Service, req: Request): Response {
   val gameName = req.pathGameName()
     ?: return Response(BAD_REQUEST).with(
       Body.auto<ErrorResponse>().toLens() of
-          ErrorResponse("The name of the game must be specified. i.e: /api/v1/games/gameName")
+          ErrorResponse("The name of the game must be specified. i.e: /api/v1/games/{game_name}")
     )
 
   val game = service.getGame(gameName)

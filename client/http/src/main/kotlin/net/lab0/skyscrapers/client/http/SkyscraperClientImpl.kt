@@ -2,18 +2,22 @@ package net.lab0.skyscrapers.client.http
 
 import arrow.core.Either
 import net.lab0.skyscrapers.api.structure.GameState
-import net.lab0.skyscrapers.api.structure.TurnType
 import net.lab0.skyscrapers.api.dto.ConnectionResponse
 import net.lab0.skyscrapers.api.dto.ErrorResponse
 import net.lab0.skyscrapers.api.dto.GameResponse
+import net.lab0.skyscrapers.api.dto.GameStateDTO
 import net.lab0.skyscrapers.api.dto.ListGamesResponse
+import net.lab0.skyscrapers.api.dto.PlaceTurnDTO
+import net.lab0.skyscrapers.api.dto.PositionDTO
 import net.lab0.skyscrapers.api.dto.StatusResponse
 import net.lab0.skyscrapers.api.dto.value.GameName
+import net.lab0.skyscrapers.api.structure.Position
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status
+import org.http4k.core.with
 import org.http4k.format.KotlinxSerialization.auto
 
 /**
@@ -37,14 +41,10 @@ class SkyscraperClientImpl(
     val res = handler(req)
 
     if (res.status == Status.OK) {
-      return Either.Right(res.extract<GameResponse>().state.toState())
+      return Either.Right(res.extract<GameResponse>().state.toModel())
     } else {
       return Either.Left(res.extract<ErrorResponse>().errors)
     }
-  }
-
-  override fun play(turn: TurnType): Either<Errors, GameState> {
-    TODO("Not yet implemented")
   }
 
   override fun listGames(): List<GameName> {
@@ -73,6 +73,24 @@ class SkyscraperClientImpl(
 
     return if (res.status == Status.CREATED) {
       Either.Right(res.extract())
+    } else {
+      Either.Left(res.extract<ErrorResponse>().errors)
+    }
+  }
+
+  override fun place(
+    name: GameName,
+    player: Int,
+    position: Position
+  ): Either<Errors, GameState> {
+    val req = Request(Method.POST, "/api/v1/games" / name / "place").with(
+      Body.auto<PlaceTurnDTO>().toLens() of
+          PlaceTurnDTO(player, PositionDTO(position))
+    )
+    val res = handler(req)
+
+    return if (res.status == Status.CREATED) {
+      Either.Right(res.extract<GameStateDTO>().toModel())
     } else {
       Either.Left(res.extract<ErrorResponse>().errors)
     }

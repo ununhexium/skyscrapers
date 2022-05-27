@@ -24,14 +24,14 @@ internal class ServiceImplTest {
     val service = ServiceImpl.new()
     service.createGame(name)
 
-    val cnx0 = service.connect(name)
+    val cnx0 = service.join(name)
     assertThat(cnx0.player).isEqualTo(0)
-    val cnx1 = service.connect(name)
+    val cnx1 = service.join(name)
     assertThat(cnx1.player).isEqualTo(1)
 
     assertThat(
       assertThrows<GameFullException> {
-        service.connect(name)
+        service.join(name)
       }
     ).hasMessage("The game foo is full.")
   }
@@ -43,5 +43,39 @@ internal class ServiceImplTest {
     names.forEach { service.createGame(it) }
 
     service.getGameNames() shouldBe names.toSet()
+  }
+
+  @Test
+  fun `a player can play in a game that he joined`() {
+    val service = ServiceImpl.new()
+    val g = GameName("g")
+    service.createGame(g)
+    val p0 = service.join(g)
+    val p1 = service.join(g)
+
+    service.canPlay(g, p0.token) shouldBe true
+    service.canPlay(g, p1.token) shouldBe true
+    service.canPlay(GameName("Doesn't exist"), p1.token) shouldBe false
+  }
+
+  @Test
+  fun `a player can't play in a game that he didn't join`() {
+    val service = ServiceImpl.new()
+    val a = GameName("A")
+    val b = GameName("B")
+
+    service.createGame(a)
+    service.createGame(b)
+
+    val p0 = service.join(a)
+    val p1 = service.join(a)
+    val p2 = service.join(b)
+    val p3 = service.join(b)
+
+    service.canPlay(b, p0.token) shouldBe false
+    service.canPlay(b, p1.token) shouldBe false
+    service.canPlay(a, p2.token) shouldBe false
+    service.canPlay(a, p3.token) shouldBe false
+
   }
 }

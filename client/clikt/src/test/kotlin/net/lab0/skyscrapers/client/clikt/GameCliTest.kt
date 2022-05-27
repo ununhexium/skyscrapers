@@ -3,7 +3,9 @@ package net.lab0.skyscrapers.client.clikt
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
+import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.client.FakeServerTest
+import net.lab0.skyscrapers.server.ServiceImpl
 import org.junit.jupiter.api.Test
 import java.io.StringWriter
 
@@ -38,13 +40,31 @@ internal class GameCliTest : FakeServerTest {
 
   @Test
   fun `show a game`() {
-    fakeServer {
+    val service = ServiceImpl.new()
+    service.createGame(GameName("foo"))
+
+    fakeServer(service = service) {
       val writer = StringWriter()
 
       val cli = GameCli.new(writer, handler = it)
       cli.parse("config", "--reset")
-      cli.parse("new-game", "foo")
       cli.parse("show", "foo")
+
+      writer.toString() shouldNotBe ""
+    }
+  }
+
+  @Test
+  fun `place a builder`() {
+    val service = ServiceImpl.new()
+    service.createGame(GameName("foo"))
+
+    fakeServer(service = service) {
+      val writer = StringWriter()
+
+      val cli = GameCli.new(writer, handler = it)
+      cli.parse("config", "--reset")
+      cli.parse("play", "game", "foo", "place", "at", "0,0")
 
       writer.toString() shouldNotBe ""
     }

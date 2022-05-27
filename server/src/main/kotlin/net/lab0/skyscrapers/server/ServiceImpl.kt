@@ -7,13 +7,16 @@ import net.lab0.skyscrapers.server.exception.GameNotFound
 import net.lab0.skyscrapers.api.dto.value.GameName
 import java.util.*
 
-class ServiceImpl(val games: MutableMap<GameName, Game>) : Service {
+class ServiceImpl(
+  val games: MutableMap<GameName, Game>,
+) : Service {
   companion object {
     fun new(initialGames: Map<GameName, Game> = mutableMapOf()) =
       ServiceImpl(initialGames.toMutableMap())
   }
 
-  private val playersInGame = mutableMapOf<GameName, MutableList<PlayerAndToken>>()
+  private val playersInGame =
+    mutableMapOf<GameName, MutableList<PlayerAndToken>>()
 
   override fun getGame(name: GameName): Game? =
     games[name]
@@ -22,7 +25,7 @@ class ServiceImpl(val games: MutableMap<GameName, Game>) : Service {
     GameFactoryImpl().new().also { games[name] = it }
 
   // TODO: connecting to a game is joining a game. Rename to "join"
-  override fun connect(gameName: GameName): PlayerAndToken {
+  override fun join(gameName: GameName): PlayerAndToken {
     val game = getGame(gameName)
       ?: throw GameNotFound(gameName)
 
@@ -45,4 +48,8 @@ class ServiceImpl(val games: MutableMap<GameName, Game>) : Service {
 
   override fun getGameNames(): Set<GameName> =
     games.keys.toSet()
+
+  override fun canPlay(game: GameName, token: String): Boolean {
+    return playersInGame[game]?.map { it.token }?.contains(token) == true
+  }
 }

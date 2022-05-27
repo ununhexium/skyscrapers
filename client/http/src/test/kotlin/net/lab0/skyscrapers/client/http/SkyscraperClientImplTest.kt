@@ -9,6 +9,7 @@ import net.lab0.skyscrapers.client.FakeServerTest
 import net.lab0.skyscrapers.client.ServerIntegrationTest
 import net.lab0.skyscrapers.server.ServiceImpl
 import net.lab0.skyscrapers.api.dto.value.GameName
+import net.lab0.skyscrapers.api.structure.Position
 import org.http4k.client.OkHttp
 import org.http4k.core.Uri
 import org.http4k.core.then
@@ -93,6 +94,24 @@ internal class SkyscraperClientImplTest : FakeServerTest,
       client.create(fusRoDah).shouldBeLeft()
 
       client.listGames() shouldContain fusRoDah
+    }
+  }
+
+  @Test
+  fun `can place a builder`() {
+    val service = ServiceImpl.new()
+    val gameName = "Command & Conquer"
+    val cnc = GameName(gameName)
+    service.createGame(cnc)
+
+    fakeServer(service = service) { handler ->
+      val client = SkyscraperClientImpl(handler)
+
+      val firstBuilder = Position(0, 0)
+      client.place(cnc, 0, firstBuilder).shouldBeRight()
+
+      val state = client.state(cnc).shouldBeRight()
+      state.getBuilders(0) shouldBe listOf(firstBuilder)
     }
   }
 }

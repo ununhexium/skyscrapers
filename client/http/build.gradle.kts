@@ -21,6 +21,7 @@ dependencies {
   implementation(http4k.formatKotlinxSerialization)
 
   // TEST
+  testImplementation(project(":engine"))
   testImplementation(project(":server"))
   testImplementation(project(":testing"))
   testImplementation(http4k.serverUndertow)

@@ -28,7 +28,7 @@ fun joinGame(service: Service, req: Request): Response {
       Response(NOT_FOUND)
     } else {
       try {
-        val cnx = service.connect(gameName)
+        val cnx = service.join(gameName)
         Response(CREATED).with(
           Body.auto<ConnectionResponse>().toLens() of
               ConnectionResponse(cnx.player, cnx.token)

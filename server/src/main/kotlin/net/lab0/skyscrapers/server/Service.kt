@@ -6,6 +6,7 @@ import net.lab0.skyscrapers.api.dto.value.GameName
 interface Service {
   fun getGame(name: GameName): Game?
   fun createGame(name: GameName): Game
-  fun connect(gameName: GameName): PlayerAndToken
+  fun join(gameName: GameName): PlayerAndToken
   fun getGameNames(): Set<GameName>
+  fun canPlay(game: GameName, token: String): Boolean
 }

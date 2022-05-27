@@ -7,6 +7,7 @@ import net.lab0.skyscrapers.api.dto.ConnectionResponse
 import net.lab0.skyscrapers.api.dto.GameResponse
 import net.lab0.skyscrapers.api.dto.StatusResponse
 import net.lab0.skyscrapers.api.dto.value.GameName
+import net.lab0.skyscrapers.api.structure.Position
 import org.http4k.core.Status
 
 interface SkyscraperClient {
@@ -19,7 +20,13 @@ interface SkyscraperClient {
 
   fun state(name: GameName): Either<Errors, GameState>
 
-  fun play(turn: TurnType): Either<Errors, GameState>
+  fun place(
+    name: GameName,
+    player: Int,
+    position: Position,
+  ): Either<Errors, GameState>
+
+//  fun play(name: GameName, turn: TurnType): Either<Errors, GameState>
 
   /**
    * Lists the games available on the server

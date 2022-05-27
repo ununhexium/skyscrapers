@@ -16,7 +16,7 @@ fun createGame(service: Service, req: Request): Response {
 
   return if (gameName == null) {
     val errorResponse =
-      ErrorResponse("The game must have a name. e.g /api/v1/games/yourGameName.")
+      ErrorResponse("The game must have a name. e.g /api/v1/games/{game_name}")
 
     Response(Status.BAD_REQUEST).with(
       Body
