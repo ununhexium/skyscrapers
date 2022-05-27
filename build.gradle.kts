@@ -60,19 +60,23 @@ tasks {
   test {
     useJUnitPlatform()
 
-    this.recursively()
+    recursively()
   }
 
   clean {
     recursively()
   }
 
-//  TODO: reintroduce after https://github.com/Kotlin/kotlinx-kover/issues/179 is fixed.
-//  koverMergedVerify {
-//    rule {
-//      bound {
-//        minValue = 50
-//      }
-//    }
-//  }
+  kover {
+    // https://github.com/Kotlin/kotlinx-kover/issues/179#issuecomment-1137464869
+    intellijEngineVersion.set("1.0.669")
+  }
+
+  koverMergedVerify {
+    rule {
+      bound {
+        minValue = 50
+      }
+    }
+  }
 }
