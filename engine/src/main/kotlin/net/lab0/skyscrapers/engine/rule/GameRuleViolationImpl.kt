@@ -1,6 +1,6 @@
 package net.lab0.skyscrapers.engine.rule
 
-import net.lab0.skyscrapers.engine.api.GameRuleViolation
+import net.lab0.skyscrapers.api.structure.GameRuleViolation
 import net.lab0.skyscrapers.engine.api.Rule
 
 data class GameRuleViolationImpl(

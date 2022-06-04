@@ -1,8 +1,11 @@
 package net.lab0.skyscrapers.server.endpoint
 
+import io.kotest.matchers.collections.shouldHaveAtLeastSize
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import net.lab0.skyscrapers.api.dto.ErrorResponse
 import net.lab0.skyscrapers.api.dto.GameStateDTO
+import net.lab0.skyscrapers.api.dto.GameViolationsDTO
 import net.lab0.skyscrapers.api.dto.PlaceTurnDTO
 import net.lab0.skyscrapers.api.dto.PositionDTO
 import net.lab0.skyscrapers.api.dto.value.GameName
@@ -14,6 +17,7 @@ import net.lab0.skyscrapers.server.routed
 import org.http4k.core.Body
 import org.http4k.core.Method.POST
 import org.http4k.core.Request
+import org.http4k.core.Status.Companion.CONFLICT
 import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.FORBIDDEN
 import org.http4k.core.Status.Companion.UNAUTHORIZED
@@ -82,17 +86,14 @@ internal class PlaceTest {
     val response = routed(service)(
       Request(POST, "/api/v1/games/foo/place").with(
         Body.auto<PlaceTurnDTO>().toLens() of
-            PlaceTurnDTO(0, pos),
+            PlaceTurnDTO(1, pos),
         Header.AUTHORIZATION of Authorization.Bearer(player1.token)
       )
     )
 
-    response.status shouldBe FORBIDDEN
+    response.status shouldBe CONFLICT
 
-    val state = Body.auto<ErrorResponse>().toLens().extract(response)
-    state.errors shouldBe listOf(
-      "Can't access this game: give a Authorization: Bearer ... " +
-          "header that you got when connecting to access the game."
-    )
+    val state = Body.auto<GameViolationsDTO>().toLens().extract(response)
+    state.violations shouldHaveSize 1
   }
 }

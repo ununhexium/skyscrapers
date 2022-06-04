@@ -50,6 +50,9 @@ class ServiceImpl(
     games.keys.toSet()
 
   override fun canPlay(game: GameName, token: String): Boolean {
-    return playersInGame[game]?.map { it.token }?.contains(token) == true
+    return playersInGame[game]
+      ?.map { it.token }
+      // TODO: put the token extraction in the auth header lens
+      ?.contains(token.substring("Bearer: ".length)) == true
   }
 }

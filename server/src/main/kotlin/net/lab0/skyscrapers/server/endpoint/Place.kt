@@ -1,10 +1,11 @@
 package net.lab0.skyscrapers.server.endpoint
 
 import net.lab0.skyscrapers.server.Service
-import net.lab0.skyscrapers.api.dto.GameResponse
 import net.lab0.skyscrapers.api.dto.GameStateDTO
+import net.lab0.skyscrapers.api.dto.GameViolationDTO
+import net.lab0.skyscrapers.api.dto.GameViolationsDTO
 import net.lab0.skyscrapers.api.dto.PlaceTurnDTO
-import net.lab0.skyscrapers.api.dto.TurnTypeDTO
+import net.lab0.skyscrapers.engine.exception.GameRuleViolationException
 import net.lab0.skyscrapers.server.badRequest
 import net.lab0.skyscrapers.server.notFound
 import net.lab0.skyscrapers.server.pathGameName
@@ -23,9 +24,17 @@ fun place(service: Service, req: Request): Response {
     ?: return notFound("The game '$gameName' was not found.")
 
   val turn = Body.auto<PlaceTurnDTO>().toLens().extract(req)
-  game.play(turn.toModel())
 
-  return Response(Status.CREATED).with(
-    Body.auto<GameStateDTO>().toLens() of GameStateDTO(game.state)
-  )
+  return try{
+    game.play(turn.toModel())
+    Response(Status.CREATED).with(
+      Body.auto<GameStateDTO>().toLens() of GameStateDTO(game.state)
+    )
+  }catch(e:GameRuleViolationException) {
+    Response(Status.CONFLICT).with(
+      Body.auto<GameViolationsDTO>().toLens() of GameViolationsDTO(
+        e.violations.map { GameViolationDTO(it) }
+      )
+    )
+  }
 }
