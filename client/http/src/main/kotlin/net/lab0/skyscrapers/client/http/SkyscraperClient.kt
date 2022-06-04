@@ -1,8 +1,8 @@
 package net.lab0.skyscrapers.client.http
 
 import arrow.core.Either
+import net.lab0.skyscrapers.api.dto.AccessToken
 import net.lab0.skyscrapers.api.structure.GameState
-import net.lab0.skyscrapers.api.structure.TurnType
 import net.lab0.skyscrapers.api.dto.ConnectionResponse
 import net.lab0.skyscrapers.api.dto.GameResponse
 import net.lab0.skyscrapers.api.dto.StatusResponse
@@ -20,14 +20,6 @@ interface SkyscraperClient {
 
   fun state(name: GameName): Either<Errors, GameState>
 
-  fun place(
-    name: GameName,
-    player: Int,
-    position: Position,
-  ): Either<Errors, GameState>
-
-//  fun play(name: GameName, turn: TurnType): Either<Errors, GameState>
-
   /**
    * Lists the games available on the server
    */
@@ -42,4 +34,12 @@ interface SkyscraperClient {
    * Join a game
    */
   fun join(name: GameName): Either<Errors, ConnectionResponse>
+
+//  fun play(name: GameName, turn: TurnType): Either<Errors, GameState>
+
+  fun place(
+    name: GameName,
+    token: AccessToken,
+    position: Position,
+  ): Either<Errors, GameState>
 }

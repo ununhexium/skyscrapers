@@ -1,9 +1,9 @@
 package net.lab0.skyscrapers.server.filter
 
 import net.lab0.skyscrapers.api.dto.ErrorResponse
+import net.lab0.skyscrapers.api.http4k.AUTHORIZATION
 import net.lab0.skyscrapers.server.Service
 import net.lab0.skyscrapers.server.badRequest
-import net.lab0.skyscrapers.server.AUTHORIZATION
 import net.lab0.skyscrapers.server.pathGameName
 import org.http4k.core.Body
 import org.http4k.core.Filter
@@ -33,8 +33,7 @@ class GameAccessFilter(val service: Service) : Filter {
     val game = req.pathGameName()
       ?: return badRequest("The game name wasn't specified: ${req.uri}")
 
-
-    return if (service.canPlay(game, auth.token)) {
+    return if (service.canParticipate(game, auth.token)) {
       next(req)
     } else {
       Response(Status.UNAUTHORIZED).with(

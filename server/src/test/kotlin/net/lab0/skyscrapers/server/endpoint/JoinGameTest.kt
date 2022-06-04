@@ -26,7 +26,7 @@ internal class JoinGameTest {
     assertThat(response.status).isEqualTo(CREATED)
     val connection = Body.auto<ConnectionResponse>().toLens().extract(response)
     assertThat(connection.player).isEqualTo(0)
-    assertThat(connection.token).isNotEmpty()
+    assertThat(connection.token.value).isNotEmpty
   }
 
   @Test
@@ -56,6 +56,6 @@ internal class JoinGameTest {
 
     val connection = Body.auto<ConnectionResponse>().toLens().extract(response1)
     assertThat(connection.player).isEqualTo(1)
-    assertThat(connection.token).isNotEmpty()
+    assertThat(connection.token.value).isNotEmpty
   }
 }

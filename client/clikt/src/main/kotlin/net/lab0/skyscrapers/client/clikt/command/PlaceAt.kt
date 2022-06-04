@@ -3,6 +3,7 @@ package net.lab0.skyscrapers.client.clikt.command
 import com.github.ajalt.clikt.core.requireObject
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.convert
+import net.lab0.skyscrapers.api.dto.AccessToken
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.client.clikt.MyCliktCommand
@@ -14,6 +15,7 @@ class PlaceAt(writer: Writer?, val client: () -> SkyscraperClient) : MyCliktComm
   name = "at"
 ) {
   val game by requireObject<GameName>()
+  val token by requireObject<AccessToken>()
   val position by argument().convert { coordinates ->
     coordinates
       .split(",")
@@ -22,7 +24,6 @@ class PlaceAt(writer: Writer?, val client: () -> SkyscraperClient) : MyCliktComm
   }
 
   override fun run() {
-    // TODO: find how to auth the player
-    client().place(game, 0, position)
+    client().place(game, token, position)
   }
 }

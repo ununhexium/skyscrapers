@@ -33,11 +33,11 @@ class TurnTypeDTO private constructor(
     if (giveUp != null)
       return TurnType.GiveUpTurn(giveUp.player)
 
-    if (place != null)
-      return TurnType.PlacementTurn(
-        place.player,
-        place.position.toModel()
-      )
+//    if (place != null)
+//      return TurnType.PlacementTurn(
+//        place.player,
+//        place.position.toModel()
+//      )
 
     if (build != null)
       return TurnType.MoveTurn.BuildTurn(

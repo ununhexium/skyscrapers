@@ -17,6 +17,7 @@ dependencies {
   implementation(project(":engine"))
   implementation(project(":api:dto"))
   implementation(project(":api:structure"))
+  implementation(project(":api:http4k"))
 
   implementation(http4k("core"))
   implementation(http4k("server-undertow"))

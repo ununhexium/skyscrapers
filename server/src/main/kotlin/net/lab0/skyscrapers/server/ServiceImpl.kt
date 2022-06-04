@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.server
 
+import net.lab0.skyscrapers.api.dto.AccessToken
 import net.lab0.skyscrapers.engine.GameFactoryImpl
 import net.lab0.skyscrapers.engine.api.Game
 import net.lab0.skyscrapers.server.exception.GameFullException
@@ -16,7 +17,7 @@ class ServiceImpl(
   }
 
   private val playersInGame =
-    mutableMapOf<GameName, MutableList<PlayerAndToken>>()
+    mutableMapOf<String, MutableList<PlayerAndToken>>()
 
   override fun getGame(name: GameName): Game? =
     games[name]
@@ -30,7 +31,7 @@ class ServiceImpl(
       ?: throw GameNotFound(gameName)
 
     val existingPlayers =
-      playersInGame.computeIfAbsent(gameName) { mutableListOf() }
+      playersInGame.computeIfAbsent(gameName.value) { mutableListOf() }
 
     if (game.state.players.size == existingPlayers.size) {
       throw GameFullException(gameName)
@@ -38,7 +39,7 @@ class ServiceImpl(
 
     val p = PlayerAndToken(
       existingPlayers.size,
-      UUID.randomUUID().toString()
+      AccessToken.random()
     )
 
     existingPlayers.add(p)
@@ -49,10 +50,14 @@ class ServiceImpl(
   override fun getGameNames(): Set<GameName> =
     games.keys.toSet()
 
-  override fun canPlay(game: GameName, token: String): Boolean {
-    return playersInGame[game]
-      ?.map { it.token }
-      // TODO: put the token extraction in the auth header lens
-      ?.contains(token.substring("Bearer: ".length)) == true
+  override fun canParticipate(game: GameName, token: AccessToken): Boolean {
+    val players = playersInGame[game.value]
+    return players?.map { it.token.value }
+      ?.contains(token.value) == true
   }
+
+  override fun getPlayerId(game: GameName, token: AccessToken) =
+    playersInGame[game.value]
+      ?.first { it.token == token }
+      ?.id
 }

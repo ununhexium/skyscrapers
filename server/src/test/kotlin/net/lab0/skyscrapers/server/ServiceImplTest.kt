@@ -25,9 +25,9 @@ internal class ServiceImplTest {
     service.createGame(name)
 
     val cnx0 = service.join(name)
-    assertThat(cnx0.player).isEqualTo(0)
+    assertThat(cnx0.id).isEqualTo(0)
     val cnx1 = service.join(name)
-    assertThat(cnx1.player).isEqualTo(1)
+    assertThat(cnx1.id).isEqualTo(1)
 
     assertThat(
       assertThrows<GameFullException> {
@@ -53,9 +53,9 @@ internal class ServiceImplTest {
     val p0 = service.join(g)
     val p1 = service.join(g)
 
-    service.canPlay(g, p0.token) shouldBe true
-    service.canPlay(g, p1.token) shouldBe true
-    service.canPlay(GameName("Doesn't exist"), p1.token) shouldBe false
+    service.canParticipate(g, p0.token) shouldBe true
+    service.canParticipate(g, p1.token) shouldBe true
+    service.canParticipate(GameName("Doesn't exist"), p1.token) shouldBe false
   }
 
   @Test
@@ -72,10 +72,23 @@ internal class ServiceImplTest {
     val p2 = service.join(b)
     val p3 = service.join(b)
 
-    service.canPlay(b, p0.token) shouldBe false
-    service.canPlay(b, p1.token) shouldBe false
-    service.canPlay(a, p2.token) shouldBe false
-    service.canPlay(a, p3.token) shouldBe false
+    service.canParticipate(b, p0.token) shouldBe false
+    service.canParticipate(b, p1.token) shouldBe false
+    service.canParticipate(a, p2.token) shouldBe false
+    service.canParticipate(a, p3.token) shouldBe false
+  }
 
+  @Test
+  fun `can get the player's id based on their token`() {
+    val service = ServiceImpl.new()
+    val a = GameName("A")
+
+    service.createGame(a)
+
+    val p0 = service.join(a)
+    val p1 = service.join(a)
+
+    service.getPlayerId(a, p0.token) shouldBe 0
+    service.getPlayerId(a, p1.token) shouldBe 1
   }
 }

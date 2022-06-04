@@ -1,5 +1,7 @@
 package net.lab0.skyscrapers.server
 
+import net.lab0.skyscrapers.api.http4k.AUTH_MISSING_MESSAGE
+import net.lab0.skyscrapers.api.http4k.InvalidAuthentication
 import net.lab0.skyscrapers.server.endpoint.createGame
 import net.lab0.skyscrapers.server.endpoint.joinGame
 import net.lab0.skyscrapers.server.endpoint.listGames
@@ -14,17 +16,23 @@ import org.http4k.core.Response
 import org.http4k.core.Status
 import org.http4k.core.then
 import org.http4k.filter.ServerFilters
+import org.http4k.lens.LensFailure
 import org.http4k.routing.Fallback
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 
 
-fun routed(service: Service) = ServerFilters.CatchAll {
-  when (it) {
-    is Error -> throw it // non-recoverable
-    else -> Response(Status.INTERNAL_SERVER_ERROR).body(
-      it::class.toString() + (it.message ?: "No error message")
-    )
+fun routed(service: Service) = ServerFilters.CatchAll { ex ->
+  when (ex) {
+    is Error -> throw ex // non-recoverable
+    is LensFailure -> if (ex.failures.firstOrNull()?.meta?.description == AUTH_MISSING_MESSAGE) {
+      unauthorized("Can't access this game: give a Authorization: Bearer ... " +
+          "header that you got when connecting to access the game.")
+    } else {
+      internalServerError(ex.message)
+    }
+    is InvalidAuthentication -> unauthorized(ex.message)
+    else -> internalServerError(ex.message)
   }
 }.then(
   routes(

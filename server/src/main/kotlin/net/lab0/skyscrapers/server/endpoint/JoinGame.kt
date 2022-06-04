@@ -31,7 +31,7 @@ fun joinGame(service: Service, req: Request): Response {
         val cnx = service.join(gameName)
         Response(CREATED).with(
           Body.auto<ConnectionResponse>().toLens() of
-              ConnectionResponse(cnx.player, cnx.token)
+              ConnectionResponse(cnx.id, cnx.token)
         )
       } catch (e: GameFullException) {
         Response(FORBIDDEN).with(

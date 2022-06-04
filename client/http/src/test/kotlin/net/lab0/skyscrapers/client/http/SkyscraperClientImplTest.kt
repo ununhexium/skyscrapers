@@ -100,18 +100,20 @@ internal class SkyscraperClientImplTest : FakeServerTest,
   @Test
   fun `can place a builder`() {
     val service = ServiceImpl.new()
-    val gameName = "Command & Conquer"
+    val gameName = "go"
     val cnc = GameName(gameName)
     service.createGame(cnc)
+    val p0 = service.join(cnc)
+    val p1 = service.join(cnc)
 
     fakeServer(service = service) { handler ->
       val client = SkyscraperClientImpl(handler)
 
       val firstBuilder = Position(0, 0)
-      client.place(cnc, 0, firstBuilder).shouldBeRight()
+      client.place(cnc, p0.token, firstBuilder).shouldBeRight()
 
       val state = client.state(cnc).shouldBeRight()
-      state.getBuilders(0) shouldBe listOf(firstBuilder)
+      state.getBuilders(p0.id) shouldBe listOf(firstBuilder)
     }
   }
 }

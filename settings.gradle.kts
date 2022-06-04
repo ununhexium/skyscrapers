@@ -23,3 +23,5 @@ include("engine")
 
 include("server")
 include("testing")
+include("api:http4k")
+findProject(":api:http4k")?.name = "http4k"

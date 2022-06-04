@@ -66,7 +66,7 @@ class WinA2PlayersGame {
     val authAs = { player: ConnectionResponse ->
       ClientFilters
         .SetBaseUriFrom(Uri.of("http://localhost:$port/api/v1"))
-        .then(ClientFilters.BearerAuth(player.token))
+        .then(ClientFilters.BearerAuth(player.token.value))
         .then(ResponseFilters.ReportHttpTransaction { tx: HttpTransaction ->
           if (!tx.response.status.successful) {
             println("Call to ${tx.request.uri} returned ${tx.response.status} and took ${tx.duration.toMillis()}")
@@ -81,7 +81,7 @@ class WinA2PlayersGame {
       authAs(player)(
         Request(POST, "/games/foo/place").with(
           Body.auto<PlaceTurnDTO>().toLens() of
-              PlaceTurnDTO(player.player, PositionDTO(pos))
+              PlaceTurnDTO(player.token, PositionDTO(pos))
         )
       ).parse<GameResponse>()
     }

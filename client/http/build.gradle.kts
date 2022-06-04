@@ -14,6 +14,7 @@ repositories {
 
 dependencies {
   api(project(":api:dto"))
+  api(project(":api:http4k"))
 
   api(arrow)
   implementation(http4k.core)

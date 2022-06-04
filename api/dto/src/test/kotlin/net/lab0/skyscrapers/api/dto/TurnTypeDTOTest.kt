@@ -16,20 +16,20 @@ internal class TurnTypeDTOTest {
     )
   }
 
-  @Test
-  fun `can deserialize a place turn`() {
-    Assertions.assertThat(
-      TurnTypeDTO.place(
-        place = PlaceTurnDTO(
-          1,
-          PositionDTO(2, 3)
-        )
-      )
-        .toTurnType()
-    ).isEqualTo(
-      TurnType.PlacementTurn(1, Position(2, 3))
-    )
-  }
+//  @Test
+//  fun `can deserialize a place turn`() {
+//    Assertions.assertThat(
+//      TurnTypeDTO.place(
+//        place = PlaceTurnDTO(
+//          1,
+//          PositionDTO(2, 3)
+//        )
+//      )
+//        .toTurnType()
+//    ).isEqualTo(
+//      TurnType.PlacementTurn(1, Position(2, 3))
+//    )
+//  }
 
   @Test
   fun `can deserialize a build turn`() {

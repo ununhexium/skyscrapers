@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.server
 
+import net.lab0.skyscrapers.api.dto.AccessToken
 import net.lab0.skyscrapers.engine.api.Game
 import net.lab0.skyscrapers.api.dto.value.GameName
 
@@ -8,5 +9,15 @@ interface Service {
   fun createGame(name: GameName): Game
   fun join(gameName: GameName): PlayerAndToken
   fun getGameNames(): Set<GameName>
-  fun canPlay(game: GameName, token: String): Boolean
+
+  /**
+   * Check if a player can play on a game.
+   * Doesn't check if it can play on this specific turn,
+   * only if it has access rights and is an authorized player.
+   *
+   * @return `true` if the player authenticated with the token can play on the given game. 
+   */
+  fun canParticipate(game: GameName, token: AccessToken): Boolean
+
+  fun getPlayerId(game: GameName, token: AccessToken): Int?
 }
