@@ -2,6 +2,7 @@ package net.lab0.skyscrapers.client.clikt
 
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldMatch
 import io.kotest.matchers.string.shouldNotContain
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.client.FakeServerTest
@@ -55,6 +56,30 @@ internal class GameCliTest : FakeServerTest {
   }
 
   @Test
+  fun `join a game`() {
+    val service = ServiceImpl.new()
+    service.createGame(GameName("foo"))
+
+    fakeServer(service = service) {
+      val writer = StringWriter()
+
+      val cli = GameCli.new(writer, handler = it)
+      cli.parse("config", "--reset")
+      cli.parse("join", "foo")
+      cli.parse("current")
+
+      writer.toString() shouldMatch Regex(
+        ".*Joined the game foo as \\p{XDigit}{8}-(\\p{XDigit}{4}-){3}\\p{XDigit}{12}.*",
+        RegexOption.DOT_MATCHES_ALL
+      )
+      writer.toString() shouldMatch Regex(
+        ".*The current game is foo and the token for it is \\p{XDigit}{8}-(\\p{XDigit}{4}-){3}\\p{XDigit}{12}.*",
+        RegexOption.DOT_MATCHES_ALL
+      )
+    }
+  }
+
+  @Test
   fun `place a builder`() {
     val service = ServiceImpl.new()
     service.createGame(GameName("foo"))
@@ -64,6 +89,7 @@ internal class GameCliTest : FakeServerTest {
 
       val cli = GameCli.new(writer, handler = it)
       cli.parse("config", "--reset")
+      cli.parse("join", "game", "foo")
       cli.parse("play", "game", "foo", "place", "at", "0,0")
 
       writer.toString() shouldNotBe ""
