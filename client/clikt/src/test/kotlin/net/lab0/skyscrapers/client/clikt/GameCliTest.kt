@@ -82,15 +82,19 @@ internal class GameCliTest : FakeServerTest {
   @Test
   fun `place a builder`() {
     val service = ServiceImpl.new()
-    service.createGame(GameName("foo"))
+    val game = GameName("foo")
+    service.createGame(game)
 
     fakeServer(service = service) {
       val writer = StringWriter()
 
       val cli = GameCli.new(writer, handler = it)
       cli.parse("config", "--reset")
-      cli.parse("join", "game", "foo")
-      cli.parse("play", "game", "foo", "place", "at", "0,0")
+      cli.parse("join", "foo")
+
+      val p0 = service.join(game)
+
+      cli.parse("play", "place", "at", "0,0")
 
       writer.toString() shouldNotBe ""
     }

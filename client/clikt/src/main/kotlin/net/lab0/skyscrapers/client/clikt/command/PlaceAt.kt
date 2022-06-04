@@ -3,19 +3,24 @@ package net.lab0.skyscrapers.client.clikt.command
 import com.github.ajalt.clikt.core.requireObject
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.convert
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
 import net.lab0.skyscrapers.api.dto.AccessToken
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.client.clikt.MyCliktCommand
+import net.lab0.skyscrapers.client.clikt.configuration.Constants
+import net.lab0.skyscrapers.client.clikt.struct.LastGame
 import net.lab0.skyscrapers.client.http.SkyscraperClient
 import java.io.Writer
+import kotlin.io.path.bufferedReader
+import kotlin.io.path.inputStream
 
-class PlaceAt(writer: Writer?, val client: () -> SkyscraperClient) : MyCliktCommand(
-  writer,
-  name = "at"
-) {
-  val game by requireObject<GameName>()
-  val token by requireObject<AccessToken>()
+class PlaceAt(writer: Writer?, val client: () -> SkyscraperClient) :
+  MyCliktCommand(
+    writer,
+    name = "at"
+  ) {
   val position by argument().convert { coordinates ->
     coordinates
       .split(",")
@@ -24,6 +29,14 @@ class PlaceAt(writer: Writer?, val client: () -> SkyscraperClient) : MyCliktComm
   }
 
   override fun run() {
-    client().place(game, token, position)
+    val lastGame = Json.decodeFromStream<LastGame>(
+      Constants.lastJoin.inputStream()
+    )
+
+    client().place(
+      GameName(lastGame.gameName),
+      AccessToken(lastGame.token),
+      position
+    )
   }
 }

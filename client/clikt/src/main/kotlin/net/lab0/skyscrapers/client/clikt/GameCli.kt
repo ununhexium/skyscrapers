@@ -40,6 +40,7 @@ class GameCli : CliktCommand() {
       }
 
       return GameCli().subcommands(
+        // TODO: list available games
         Connect(writer, client),
         Configuration(writer, configurer),
         NewGame(writer, client),
