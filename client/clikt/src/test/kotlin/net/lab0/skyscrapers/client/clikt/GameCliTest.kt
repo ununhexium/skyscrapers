@@ -25,7 +25,7 @@ internal class GameCliTest :
 
       declare { it }
 
-      val cli = cliFactory.new(writer)
+      val cli = GameCli.new(writer)
       cli.parse("config", "--reset")
       cli.parse("connect")
 
@@ -40,7 +40,7 @@ internal class GameCliTest :
       declare { it }
 
       val writer = StringWriter()
-      val cli = cliFactory.new(writer)
+      val cli = GameCli.new(writer)
 
       cli.parse("config", "--reset")
       cli.parse("new-game", "foo")
@@ -58,7 +58,7 @@ internal class GameCliTest :
       declare { it }
       val writer = StringWriter()
 
-      val cli = cliFactory.new(writer)
+      val cli = GameCli.new(writer)
       cli.parse("config", "--reset")
       cli.parse("show", "foo")
 
@@ -75,7 +75,7 @@ internal class GameCliTest :
       declare { it }
       val writer = StringWriter()
 
-      val cli = cliFactory.new(writer)
+      val cli = GameCli.new(writer)
       cli.parse("config", "--reset")
       cli.parse("join", "foo")
       cli.parse("current", "foo")
@@ -101,7 +101,7 @@ internal class GameCliTest :
       declare { it }
       val writer = StringWriter()
 
-      val cli = cliFactory.new(writer)
+      val cli = GameCli.new(writer)
       cli.parse("config", "--reset")
       cli.parse("join", "foo")
 
@@ -123,7 +123,7 @@ internal class GameCliTest :
       declare { it }
       val writer = StringWriter()
 
-      val cli = cliFactory.new(writer)
+      val cli = GameCli.new(writer)
       cli.parse("config", "--reset")
       cli.parse("join", "foo")
 

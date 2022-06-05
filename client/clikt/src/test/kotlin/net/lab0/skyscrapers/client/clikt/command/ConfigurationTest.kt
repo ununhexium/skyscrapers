@@ -2,9 +2,9 @@ package net.lab0.skyscrapers.client.clikt.command
 
 import io.kotest.matchers.string.shouldContain
 import io.mockk.every
-import io.mockk.mockk
 import io.mockk.mockkClass
 import io.mockk.verify
+import net.lab0.skyscrapers.client.clikt.GameCli
 import net.lab0.skyscrapers.client.clikt.GameCliFactory
 import net.lab0.skyscrapers.client.clikt.KoinBase
 import net.lab0.skyscrapers.client.clikt.configuration.Configurer
@@ -34,7 +34,7 @@ internal class ConfigurationTest : KoinBase() {
     }
 
     val output = StringWriter()
-    val cli = factory.new(output)
+    val cli = GameCli.new(output)
 
     cli.parse("config")
     output.toString() shouldContain "apiUrl"
@@ -51,7 +51,7 @@ internal class ConfigurationTest : KoinBase() {
     }
 
     val output = StringWriter()
-    val cli = factory.new(output)
+    val cli = GameCli.new(output)
 
     cli.parse("config", "--reset")
     output.toString() shouldContain "Configuration reset."
