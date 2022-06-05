@@ -33,7 +33,7 @@ class Join(
       rightOperation = {
         myEcho("Joined the game ${game.value} as ${it.token.value}")
 
-        Constants.lastJoin.bufferedWriter().use { bw ->
+        Constants.lastJoin(game).bufferedWriter().use { bw ->
           bw.write(Json.encodeToString(LastGame(game.value, it.token.value)))
         }
       }

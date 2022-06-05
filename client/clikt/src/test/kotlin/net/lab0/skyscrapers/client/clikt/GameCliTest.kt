@@ -66,7 +66,7 @@ internal class GameCliTest : FakeServerTest {
       val cli = GameCli.new(writer, handler = it)
       cli.parse("config", "--reset")
       cli.parse("join", "foo")
-      cli.parse("current")
+      cli.parse("current", "foo")
 
       writer.toString() shouldMatch Regex(
         ".*Joined the game foo as \\p{XDigit}{8}-(\\p{XDigit}{4}-){3}\\p{XDigit}{12}.*",
@@ -94,7 +94,7 @@ internal class GameCliTest : FakeServerTest {
 
       val p0 = service.join(game)
 
-      cli.parse("play", "place", "at", "0,0")
+      cli.parse("place", "--game", "foo", "--at", "0,0")
 
       writer.toString() shouldContain "Placed a builder at 0,0"
     }
@@ -115,8 +115,8 @@ internal class GameCliTest : FakeServerTest {
 
       val p0 = service.join(game)
 
-      cli.parse("play", "place", "at", "0,0")
-      cli.parse("play", "place", "at", "0,1")
+      cli.parse("place", "--game", "foo", "--at", "0,0")
+      cli.parse("place", "--game", "foo", "--at", "0,1")
 
       writer.toString() shouldContain "Game rule violated."
       writer.toString() shouldContain "Name:"

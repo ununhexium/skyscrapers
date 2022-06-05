@@ -8,8 +8,6 @@ import net.lab0.skyscrapers.client.clikt.command.Current
 import net.lab0.skyscrapers.client.clikt.command.Join
 import net.lab0.skyscrapers.client.clikt.command.NewGame
 import net.lab0.skyscrapers.client.clikt.command.Place
-import net.lab0.skyscrapers.client.clikt.command.PlaceAt
-import net.lab0.skyscrapers.client.clikt.command.Play
 import net.lab0.skyscrapers.client.clikt.command.Show
 import net.lab0.skyscrapers.client.clikt.configuration.Configurer
 import net.lab0.skyscrapers.client.clikt.configuration.Constants
@@ -47,11 +45,7 @@ class GameCli : CliktCommand() {
         Show(writer, client),
         Join(writer, client),
         Current(writer),
-        Play(writer).subcommands(
-          Place(writer).subcommands(
-            PlaceAt(writer, client)
-          )
-        ),
+        Place(writer, client),
 
 //        Next(series),
 //        PlaceBuilder().subcommands(
