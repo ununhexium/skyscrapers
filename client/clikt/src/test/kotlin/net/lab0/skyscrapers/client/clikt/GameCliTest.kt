@@ -11,13 +11,15 @@ import org.junit.jupiter.api.Test
 import java.io.StringWriter
 
 internal class GameCliTest : FakeServerTest {
+  private val factory = GameCliFactory()
+
   @Test
   fun `connection integration test`() {
 
     fakeServer {
       val writer = StringWriter()
 
-      val cli = GameCli.new(writer, handler = it)
+      val cli = factory.new(writer, handler = it)
       cli.parse("config", "--reset")
       cli.parse("connect")
 
@@ -31,7 +33,7 @@ internal class GameCliTest : FakeServerTest {
     fakeServer {
       val writer = StringWriter()
 
-      val cli = GameCli.new(writer, handler = it)
+      val cli = factory.new(writer, handler = it)
       cli.parse("config", "--reset")
       cli.parse("new-game", "foo")
 
@@ -47,7 +49,7 @@ internal class GameCliTest : FakeServerTest {
     fakeServer(service = service) {
       val writer = StringWriter()
 
-      val cli = GameCli.new(writer, handler = it)
+      val cli = factory.new(writer, handler = it)
       cli.parse("config", "--reset")
       cli.parse("show", "foo")
 
@@ -63,7 +65,7 @@ internal class GameCliTest : FakeServerTest {
     fakeServer(service = service) {
       val writer = StringWriter()
 
-      val cli = GameCli.new(writer, handler = it)
+      val cli = factory.new(writer, handler = it)
       cli.parse("config", "--reset")
       cli.parse("join", "foo")
       cli.parse("current", "foo")
@@ -88,7 +90,7 @@ internal class GameCliTest : FakeServerTest {
     fakeServer(service = service) {
       val writer = StringWriter()
 
-      val cli = GameCli.new(writer, handler = it)
+      val cli = factory.new(writer, handler = it)
       cli.parse("config", "--reset")
       cli.parse("join", "foo")
 
@@ -109,7 +111,7 @@ internal class GameCliTest : FakeServerTest {
     fakeServer(service = service) {
       val writer = StringWriter()
 
-      val cli = GameCli.new(writer, handler = it)
+      val cli = factory.new(writer, handler = it)
       cli.parse("config", "--reset")
       cli.parse("join", "foo")
 

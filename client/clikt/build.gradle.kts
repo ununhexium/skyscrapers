@@ -28,6 +28,8 @@ dependencies {
 
     implementation(http4k.clientOkhttp)
 
+    implementation(koin.core)
+
     // TEST
     testImplementation(project(":engine"))
     testImplementation(project(":server"))
@@ -35,7 +37,6 @@ dependencies {
 
     testImplementation(http4k.serverUndertow)
 
-    testImplementation(koin.core)
     testImplementation(koin.junit4)
     testImplementation(koin.junit5)
     testImplementation(koin.test)

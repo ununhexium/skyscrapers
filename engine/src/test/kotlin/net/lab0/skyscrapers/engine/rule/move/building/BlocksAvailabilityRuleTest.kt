@@ -1,13 +1,13 @@
 package net.lab0.skyscrapers.engine.rule.move.building
 
 import net.lab0.skyscrapers.api.structure.BlocksData
+import net.lab0.skyscrapers.api.structure.GameRuleViolationImpl
 import net.lab0.skyscrapers.api.structure.Height
 import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.api.structure.TurnType
 import net.lab0.skyscrapers.editor
 import net.lab0.skyscrapers.engine.DefaultGames
 import net.lab0.skyscrapers.engine.GameImpl
-import net.lab0.skyscrapers.api.structure.GameRuleViolationImpl
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

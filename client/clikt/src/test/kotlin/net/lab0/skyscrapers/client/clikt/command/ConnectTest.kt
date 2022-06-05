@@ -2,7 +2,7 @@ package net.lab0.skyscrapers.client.clikt.command
 
 import io.kotest.matchers.string.shouldContain
 import net.lab0.skyscrapers.client.FakeServerTest
-import net.lab0.skyscrapers.client.clikt.GameCli
+import net.lab0.skyscrapers.client.clikt.GameCliFactory
 import net.lab0.skyscrapers.client.clikt.parse
 import org.junit.jupiter.api.Test
 import java.io.StringWriter
@@ -13,7 +13,7 @@ internal class ConnectTest : FakeServerTest {
     fakeServer {  handler ->
       val output = StringWriter()
 
-      val cli = GameCli.new(output, handler = handler)
+      val cli = GameCliFactory().new(output, handler = handler)
       cli.parse("connect")
 
       output.toString() shouldContain "Connected."

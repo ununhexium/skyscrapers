@@ -1,6 +1,5 @@
 package net.lab0.skyscrapers.client.clikt.command
 
-import com.github.ajalt.clikt.core.findOrSetObject
 import com.github.ajalt.clikt.parameters.options.convert
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.required

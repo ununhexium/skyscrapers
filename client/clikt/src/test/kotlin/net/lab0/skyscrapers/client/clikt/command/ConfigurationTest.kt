@@ -4,7 +4,7 @@ import io.kotest.matchers.string.shouldContain
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import net.lab0.skyscrapers.client.clikt.GameCli
+import net.lab0.skyscrapers.client.clikt.GameCliFactory
 import net.lab0.skyscrapers.client.clikt.configuration.Configurer
 import net.lab0.skyscrapers.client.clikt.configuration.DefaultConfig
 import net.lab0.skyscrapers.client.clikt.parse
@@ -17,6 +17,7 @@ import org.koin.test.KoinTest
 import java.io.StringWriter
 
 internal class ConfigurationTest : KoinTest {
+  private val factory = GameCliFactory()
 
   @BeforeEach
   fun beforeEach() {
@@ -34,7 +35,7 @@ internal class ConfigurationTest : KoinTest {
     every { configurer.loadConfiguration() } returns DefaultConfig
     val output = StringWriter()
 
-    val cli = GameCli.new(output, configurer = configurer)
+    val cli = factory.new(output, configurer = configurer)
     cli.parse("config")
     output.toString() shouldContain "apiUrl"
 
@@ -49,7 +50,7 @@ internal class ConfigurationTest : KoinTest {
     every { configurer.resetConfiguration() } returns Unit
     val output = StringWriter()
 
-    val cli = GameCli.new(output, configurer)
+    val cli = factory.new(output, configurer)
     cli.parse("config", "--reset")
     output.toString() shouldContain "Configuration reset."
 
