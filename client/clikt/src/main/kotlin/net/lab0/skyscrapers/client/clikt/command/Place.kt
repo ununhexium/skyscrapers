@@ -13,17 +13,19 @@ import net.lab0.skyscrapers.client.clikt.configuration.Constants
 import net.lab0.skyscrapers.client.clikt.struct.LastGame
 import net.lab0.skyscrapers.client.http.ClientError
 import net.lab0.skyscrapers.client.http.SkyscraperClient
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.io.Writer
 import kotlin.io.path.inputStream
 
-class Place(writer: Writer?, val client: () -> SkyscraperClient) :
-  MyCliktCommand(
-    writer,
-    name = "place"
-  ) {
+class Place(writer: Writer?) :
+  MyCliktCommand(    writer,    name = "place"  ),
+KoinComponent {
   private val game by option("-g", "--game", help = "The game to play on")
     .convert { GameName(it) }
     .required()
+
+  private val sky by inject<SkyscraperClient>()
 
   private val position by option(
     "-a",
@@ -44,7 +46,7 @@ class Place(writer: Writer?, val client: () -> SkyscraperClient) :
       Constants.lastJoin(game).inputStream()
     )
 
-    client().place(
+    sky.place(
       GameName(lastGame.gameName),
       AccessToken(lastGame.token),
       position

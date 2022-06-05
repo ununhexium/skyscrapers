@@ -9,20 +9,21 @@ import net.lab0.skyscrapers.client.clikt.MyCliktCommand
 import net.lab0.skyscrapers.client.clikt.configuration.Constants
 import net.lab0.skyscrapers.client.clikt.struct.LastGame
 import net.lab0.skyscrapers.client.http.SkyscraperClient
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.io.Writer
 import kotlin.io.path.bufferedWriter
 
-class Join(
-  writer: Writer?,
-  val sky: () -> SkyscraperClient,
-) : MyCliktCommand(
-  writer,
-  name = "join"
-) {
-  val game by argument(help = "The game to join").convert { GameName(it) }
+class Join(  writer: Writer?) :
+  MyCliktCommand(  writer,  name = "join"),
+KoinComponent {
+  private val game by argument(help = "The game to join").convert { GameName(it) }
+
+  private val sky by inject<SkyscraperClient>()
 
   override fun run() {
-    val result = sky().join(game)
+    val result = sky.join(game)
+
     result.bimap(
       leftOperation = {
         myEcho(
