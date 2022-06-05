@@ -2,8 +2,6 @@ package net.lab0.skyscrapers.client.clikt
 
 import org.junit.jupiter.api.Test
 import org.koin.test.KoinTest
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.core.qualifier.named
@@ -38,8 +36,8 @@ class KoinFailTest : KoinTest {
     startKoin {
       modules(
         module {
-          single(qualifier) { Paths.get("") }
-          single { B(get(qualifier)) }
+          single(QUALIFIER) { Paths.get("") }
+          single { B(get(QUALIFIER)) }
         }
       )
       checkModules()
@@ -47,6 +45,6 @@ class KoinFailTest : KoinTest {
 
     stopKoin()
   }
-}
 
-val qualifier = named("a")
+  val QUALIFIER = named("x")
+}
