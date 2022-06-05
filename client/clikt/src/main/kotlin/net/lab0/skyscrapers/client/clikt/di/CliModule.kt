@@ -5,14 +5,12 @@ import net.lab0.skyscrapers.client.http.SkyscraperClient
 import net.lab0.skyscrapers.client.http.SkyscraperClientImpl
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import java.nio.file.Path
 
 
+val CONFIG_PATH = named("configPath")
 
 val cliModule = module {
   single<SkyscraperClient> { SkyscraperClientImpl(get()) }
 
   single(qualifier = CONFIG_PATH) { Constants.configLocation }
 }
-
-val CONFIG_PATH = named("configPath")

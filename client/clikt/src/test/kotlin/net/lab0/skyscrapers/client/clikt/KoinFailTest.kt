@@ -34,7 +34,6 @@ class KoinFailTest : KoinTest {
 
   @Test
   fun fails() {
-    val qualifier = named("a")
 
     startKoin {
       modules(
@@ -49,3 +48,5 @@ class KoinFailTest : KoinTest {
     stopKoin()
   }
 }
+
+val qualifier = named("a")
