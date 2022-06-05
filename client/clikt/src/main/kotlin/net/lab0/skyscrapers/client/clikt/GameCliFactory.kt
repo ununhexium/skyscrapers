@@ -18,27 +18,25 @@ import org.http4k.core.Uri
 import org.http4k.core.then
 import org.http4k.filter.ClientFilters
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.io.Writer
 
-class GameCliFactory: KoinComponent {
+class GameCliFactory : KoinComponent {
+  private val httpHandler by inject<HttpHandler>()
+
   fun new(
     writer: Writer?,
     configurer: Configurer = Configurer(Constants.configLocation),
     handler: HttpHandler? = null,
   ): CliktCommand {
     val client = {
-      SkyscraperClientImpl(
-        handler ?: ClientFilters
-          .SetBaseUriFrom(
-            Uri.of(configurer.loadConfiguration().server.apiUrl)
-          ).then(OkHttp())
-      )
+      SkyscraperClientImpl(httpHandler)
     }
 
     return GameCli().subcommands(
       // TODO: list available games
-      Connect(writer, client),
-      Configuration(writer, configurer),
+      Connect(writer),
+      Configuration(writer),
       NewGame(writer, client),
       Show(writer, client),
       Join(writer, client),

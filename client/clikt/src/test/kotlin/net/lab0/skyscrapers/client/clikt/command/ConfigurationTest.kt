@@ -3,39 +3,39 @@ package net.lab0.skyscrapers.client.clikt.command
 import io.kotest.matchers.string.shouldContain
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkClass
 import io.mockk.verify
 import net.lab0.skyscrapers.client.clikt.GameCliFactory
+import net.lab0.skyscrapers.client.clikt.KoinBase
 import net.lab0.skyscrapers.client.clikt.configuration.Configurer
 import net.lab0.skyscrapers.client.clikt.configuration.DefaultConfig
 import net.lab0.skyscrapers.client.clikt.parse
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
-import org.koin.core.context.startKoin
-import org.koin.core.context.stopKoin
-import org.koin.test.KoinTest
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
+import org.koin.test.mock.MockProvider
+import org.koin.test.mock.declareMock
 import java.io.StringWriter
 
-internal class ConfigurationTest : KoinTest {
+@TestInstance(PER_CLASS)
+internal class ConfigurationTest : KoinBase() {
   private val factory = GameCliFactory()
 
-  @BeforeEach
-  fun beforeEach() {
-    startKoin {}
-  }
-
-  @AfterEach
-  fun afterEach() {
-    stopKoin()
+  @BeforeAll
+  fun beforeClass() {
+    MockProvider.register { mockkClass(it) }
   }
 
   @Test
   fun `can read the configuration`() {
-    val configurer = mockk<Configurer>()
-    every { configurer.loadConfiguration() } returns DefaultConfig
-    val output = StringWriter()
+    val configurer = declareMock<Configurer>() {
+      every { loadConfiguration() } returns DefaultConfig
+    }
 
-    val cli = factory.new(output, configurer = configurer)
+    val output = StringWriter()
+    val cli = factory.new(output)
+
     cli.parse("config")
     output.toString() shouldContain "apiUrl"
 
@@ -46,11 +46,13 @@ internal class ConfigurationTest : KoinTest {
 
   @Test
   fun `can reset the configuration`() {
-    val configurer = mockk<Configurer>()
-    every { configurer.resetConfiguration() } returns Unit
-    val output = StringWriter()
+    val configurer = declareMock<Configurer>() {
+      every { resetConfiguration() } returns Unit
+    }
 
-    val cli = factory.new(output, configurer)
+    val output = StringWriter()
+    val cli = factory.new(output)
+
     cli.parse("config", "--reset")
     output.toString() shouldContain "Configuration reset."
 
