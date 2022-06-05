@@ -1,6 +1,7 @@
 import dependencies.Dependencies.clikt
 import dependencies.Dependencies.hoplite
 import dependencies.Dependencies.http4k
+import dependencies.Dependencies.koin
 import dependencies.Dependencies.kotlinxSerializationJson
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -28,10 +29,16 @@ dependencies {
     implementation(http4k.clientOkhttp)
 
     // TEST
-    testImplementation(http4k.serverUndertow)
     testImplementation(project(":engine"))
     testImplementation(project(":server"))
     testImplementation(project(":testing"))
+
+    testImplementation(http4k.serverUndertow)
+
+    testImplementation(koin.core)
+    testImplementation(koin.junit4)
+    testImplementation(koin.junit5)
+    testImplementation(koin.test)
 }
 
 tasks.getByName<Test>("test") {

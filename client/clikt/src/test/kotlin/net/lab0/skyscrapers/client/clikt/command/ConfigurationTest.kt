@@ -8,10 +8,25 @@ import net.lab0.skyscrapers.client.clikt.GameCli
 import net.lab0.skyscrapers.client.clikt.configuration.Configurer
 import net.lab0.skyscrapers.client.clikt.configuration.DefaultConfig
 import net.lab0.skyscrapers.client.clikt.parse
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.koin.core.context.startKoin
+import org.koin.core.context.stopKoin
+import org.koin.test.KoinTest
 import java.io.StringWriter
 
-internal class ConfigurationTest {
+internal class ConfigurationTest : KoinTest {
+
+  @BeforeEach
+  fun beforeEach() {
+    startKoin {}
+  }
+
+  @AfterEach
+  fun afterEach() {
+    stopKoin()
+  }
 
   @Test
   fun `can read the configuration`() {

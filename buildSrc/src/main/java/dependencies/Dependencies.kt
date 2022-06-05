@@ -30,17 +30,26 @@ object Dependencies {
 
 
   val junit5Api = "org.junit.jupiter:junit-jupiter-api:${Versions.jupiter}"
-  val junit5Params = "org.junit.jupiter:junit-jupiter-params:${Versions.jupiter}"
-  val junit5Engine = "org.junit.jupiter:junit-jupiter-engine:${Versions.jupiter}"
+  val junit5Params =
+    "org.junit.jupiter:junit-jupiter-params:${Versions.jupiter}"
+  val junit5Engine =
+    "org.junit.jupiter:junit-jupiter-engine:${Versions.jupiter}"
 
   val kaml = "com.charleskorn.kaml:kaml:${Versions.kaml}"
 
   val kodein = "org.kodein.di:kodein-di-jvm:${Versions.kodein}"
 
+  object koin {
+    val core = "io.insert-koin:koin-core:${Versions.koin}"
+    val junit4 = "io.insert-koin:koin-test-junit4:${Versions.koin}"
+    val junit5 = "io.insert-koin:koin-test-junit5:${Versions.koin}"
+    val test = "io.insert-koin:koin-test:${Versions.koin}"
+  }
 
   object kotest {
     val core = "io.kotest:kotest-assertions-core:${Versions.kotest}"
-    val arrowJvm = "io.kotest.extensions:kotest-assertions-arrow-jvm:${Versions.kotestArrowJvm}"
+    val arrowJvm =
+      "io.kotest.extensions:kotest-assertions-arrow-jvm:${Versions.kotestArrowJvm}"
   }
 
   val kotlinxHtml = "org.jetbrains.kotlinx:kotlinx-html:${Versions.kotlinxHtml}"

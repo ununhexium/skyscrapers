@@ -13,6 +13,7 @@ object Versions {
   val jline = "3.21.0"
   val kaml = "0.44"
   val kodein = "7.11.0"
+  val koin = "3.2.0"
   val kotlinxHtml = "0.7.5"
   val kotlinxSerializationJson = "1.3.3"
   val http4k = "4.25.14.0"
