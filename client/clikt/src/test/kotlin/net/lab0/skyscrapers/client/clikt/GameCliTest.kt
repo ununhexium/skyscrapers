@@ -8,10 +8,14 @@ import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.client.FakeServerTest
 import net.lab0.skyscrapers.server.ServiceImpl
 import org.junit.jupiter.api.Test
+import org.koin.test.mock.declare
 import java.io.StringWriter
 
-internal class GameCliTest : FakeServerTest {
-  private val factory = GameCliFactory()
+internal class GameCliTest :
+  KoinBase(addDefaultConfigurer = true),
+  FakeServerTest {
+
+  private val cliFactory = GameCliFactory()
 
   @Test
   fun `connection integration test`() {
@@ -19,7 +23,9 @@ internal class GameCliTest : FakeServerTest {
     fakeServer {
       val writer = StringWriter()
 
-      val cli = factory.new(writer, handler = it)
+      declare { it }
+
+      val cli = cliFactory.new(writer)
       cli.parse("config", "--reset")
       cli.parse("connect")
 
@@ -33,7 +39,7 @@ internal class GameCliTest : FakeServerTest {
     fakeServer {
       val writer = StringWriter()
 
-      val cli = factory.new(writer, handler = it)
+      val cli = cliFactory.new(writer, handler = it)
       cli.parse("config", "--reset")
       cli.parse("new-game", "foo")
 
@@ -49,7 +55,7 @@ internal class GameCliTest : FakeServerTest {
     fakeServer(service = service) {
       val writer = StringWriter()
 
-      val cli = factory.new(writer, handler = it)
+      val cli = cliFactory.new(writer, handler = it)
       cli.parse("config", "--reset")
       cli.parse("show", "foo")
 
@@ -65,7 +71,7 @@ internal class GameCliTest : FakeServerTest {
     fakeServer(service = service) {
       val writer = StringWriter()
 
-      val cli = factory.new(writer, handler = it)
+      val cli = cliFactory.new(writer, handler = it)
       cli.parse("config", "--reset")
       cli.parse("join", "foo")
       cli.parse("current", "foo")
@@ -90,7 +96,7 @@ internal class GameCliTest : FakeServerTest {
     fakeServer(service = service) {
       val writer = StringWriter()
 
-      val cli = factory.new(writer, handler = it)
+      val cli = cliFactory.new(writer, handler = it)
       cli.parse("config", "--reset")
       cli.parse("join", "foo")
 
@@ -111,7 +117,7 @@ internal class GameCliTest : FakeServerTest {
     fakeServer(service = service) {
       val writer = StringWriter()
 
-      val cli = factory.new(writer, handler = it)
+      val cli = cliFactory.new(writer, handler = it)
       cli.parse("config", "--reset")
       cli.parse("join", "foo")
 
