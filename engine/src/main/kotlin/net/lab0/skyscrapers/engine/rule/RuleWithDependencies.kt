@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.engine.rule
 
 import net.lab0.skyscrapers.api.structure.GameState
-import net.lab0.skyscrapers.engine.api.Rule
+import net.lab0.skyscrapers.api.structure.Rule
 
 class RuleWithDependencies<T>(
   val mainRule: Rule<T>,

@@ -96,7 +96,32 @@ internal class GameCliTest : FakeServerTest {
 
       cli.parse("play", "place", "at", "0,0")
 
-      writer.toString() shouldNotBe ""
+      writer.toString() shouldContain "Placed a builder at 0,0"
+    }
+  }
+
+  @Test
+  fun `place a builder again shows the violated rule`() {
+    val service = ServiceImpl.new()
+    val game = GameName("foo")
+    service.createGame(game)
+
+    fakeServer(service = service) {
+      val writer = StringWriter()
+
+      val cli = GameCli.new(writer, handler = it)
+      cli.parse("config", "--reset")
+      cli.parse("join", "foo")
+
+      val p0 = service.join(game)
+
+      cli.parse("play", "place", "at", "0,0")
+      cli.parse("play", "place", "at", "0,1")
+
+      writer.toString() shouldContain "Game rule violated."
+      writer.toString() shouldContain "Name:"
+      writer.toString() shouldContain "Description:"
+      writer.toString() shouldContain "Detail:"
     }
   }
 }

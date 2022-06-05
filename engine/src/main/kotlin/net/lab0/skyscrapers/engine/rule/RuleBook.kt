@@ -6,7 +6,7 @@ import net.lab0.skyscrapers.api.structure.Move
 import net.lab0.skyscrapers.api.structure.MoveOnly
 import net.lab0.skyscrapers.api.structure.TurnType
 import net.lab0.skyscrapers.editor
-import net.lab0.skyscrapers.engine.api.Rule
+import net.lab0.skyscrapers.api.structure.Rule
 import net.lab0.skyscrapers.engine.exception.GameRuleViolationException
 
 class RuleBook(

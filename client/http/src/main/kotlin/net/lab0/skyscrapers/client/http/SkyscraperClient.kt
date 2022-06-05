@@ -41,5 +41,5 @@ interface SkyscraperClient {
     name: GameName,
     token: AccessToken,
     position: Position,
-  ): Either<Errors, GameState>
+  ): Either<ClientError, GameState>
 }

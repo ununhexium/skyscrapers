@@ -1,8 +1,9 @@
 package net.lab0.skyscrapers.engine.rule
 
 import net.lab0.skyscrapers.api.structure.GameRuleViolation
+import net.lab0.skyscrapers.api.structure.GameRuleViolationImpl
 import net.lab0.skyscrapers.api.structure.GameState
-import net.lab0.skyscrapers.engine.api.Rule
+import net.lab0.skyscrapers.api.structure.Rule
 
 abstract class AbstractRule<T>(
   override val name: String,

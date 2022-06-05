@@ -1,7 +1,4 @@
-package net.lab0.skyscrapers.engine.rule
-
-import net.lab0.skyscrapers.api.structure.GameRuleViolation
-import net.lab0.skyscrapers.engine.api.Rule
+package net.lab0.skyscrapers.api.structure
 
 data class GameRuleViolationImpl(
   override val name: String,

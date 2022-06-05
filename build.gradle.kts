@@ -40,6 +40,7 @@ subprojects {
   tasks {
     withType<KotlinCompile> {
       kotlinOptions.jvmTarget = Versions.java
+      kotlinOptions.freeCompilerArgs = listOf("-progressive")
     }
   }
 }

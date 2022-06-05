@@ -5,7 +5,7 @@ import net.lab0.skyscrapers.api.structure.Bounds
 import net.lab0.skyscrapers.api.structure.Height
 import net.lab0.skyscrapers.api.structure.Move
 import net.lab0.skyscrapers.api.structure.MoveOnly
-import net.lab0.skyscrapers.engine.api.Rule
+import net.lab0.skyscrapers.api.structure.Rule
 import net.lab0.skyscrapers.engine.rule.CheckCurrentPlayer
 import net.lab0.skyscrapers.engine.rule.PhaseRule
 import net.lab0.skyscrapers.engine.rule.RuleBook

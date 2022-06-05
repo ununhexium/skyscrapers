@@ -1,11 +1,14 @@
 package net.lab0.skyscrapers.client.http
 
 import arrow.core.Either
+import arrow.core.Either.Left
+import arrow.core.Either.Right
 import net.lab0.skyscrapers.api.dto.AccessToken
 import net.lab0.skyscrapers.api.dto.ConnectionResponse
 import net.lab0.skyscrapers.api.dto.ErrorResponse
 import net.lab0.skyscrapers.api.dto.GameResponse
 import net.lab0.skyscrapers.api.dto.GameStateDTO
+import net.lab0.skyscrapers.api.dto.GameViolationsDTO
 import net.lab0.skyscrapers.api.dto.ListGamesResponse
 import net.lab0.skyscrapers.api.dto.PlaceTurnDTO
 import net.lab0.skyscrapers.api.dto.PositionDTO
@@ -15,6 +18,8 @@ import net.lab0.skyscrapers.api.http4k.AUTHORIZATION
 import net.lab0.skyscrapers.api.http4k.Authorization
 import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.api.structure.Position
+import net.lab0.skyscrapers.client.http.ClientError.GameRuleErrors
+import net.lab0.skyscrapers.client.http.ClientError.SimpleErrors
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method
@@ -34,9 +39,9 @@ class SkyscraperClientImpl(
     val req = Request(Method.GET, "/api/v1/status")
     val res = handler(req)
     return if (res.status == Status.OK) {
-      Either.Right(res.extract())
+      Right(res.extract())
     } else {
-      Either.Left(res.status)
+      Left(res.status)
     }
   }
 
@@ -45,9 +50,9 @@ class SkyscraperClientImpl(
     val res = handler(req)
 
     if (res.status == Status.OK) {
-      return Either.Right(res.extract<GameResponse>().state.toModel())
+      return Right(res.extract<GameResponse>().state.toModel())
     } else {
-      return Either.Left(res.extract<ErrorResponse>().errors)
+      return Left(res.extract<ErrorResponse>().errors)
     }
   }
 
@@ -64,9 +69,9 @@ class SkyscraperClientImpl(
     val res = handler(req)
 
     return if (res.status == Status.CREATED) {
-      Either.Right(res.extract())
+      Right(res.extract())
     } else {
-      Either.Left(res.extract<ErrorResponse>().errors)
+      Left(res.extract<ErrorResponse>().errors)
     }
   }
 
@@ -76,9 +81,9 @@ class SkyscraperClientImpl(
     val res = handler(req)
 
     return if (res.status == Status.CREATED) {
-      Either.Right(res.extract())
+      Right(res.extract())
     } else {
-      Either.Left(res.extract<ErrorResponse>().errors)
+      Left(res.extract<ErrorResponse>().errors)
     }
   }
 
@@ -86,7 +91,7 @@ class SkyscraperClientImpl(
     name: GameName,
     token: AccessToken,
     position: Position
-  ): Either<Errors, GameState> {
+  ): Either<ClientError, GameState> {
     val req = Request(Method.POST, "/api/v1/games" / name / "place").with(
       // TODO: rm token from place turn DTO
       Body.auto<PlaceTurnDTO>().toLens() of
@@ -95,10 +100,10 @@ class SkyscraperClientImpl(
     )
     val res = handler(req)
 
-    return if (res.status == Status.CREATED) {
-      Either.Right(res.extract<GameStateDTO>().toModel())
-    } else {
-      Either.Left(res.extract<ErrorResponse>().errors)
+    return when (res.status) {
+      Status.CREATED -> Right(res.extract<GameStateDTO>().toModel())
+      Status.CONFLICT -> Left(GameRuleErrors(res.extract<GameViolationsDTO>().violations.map { it.toModel() }))
+      else -> Left(SimpleErrors(res.extract<ErrorResponse>().errors))
     }
   }
 }

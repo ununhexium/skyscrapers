@@ -5,7 +5,7 @@ import net.lab0.skyscrapers.api.structure.TurnType
 import net.lab0.skyscrapers.editor
 import net.lab0.skyscrapers.engine.DefaultGames
 import net.lab0.skyscrapers.engine.GameImpl
-import net.lab0.skyscrapers.engine.rule.GameRuleViolationImpl
+import net.lab0.skyscrapers.api.structure.GameRuleViolationImpl
 import net.lab0.skyscrapers.engine.rule.move.seal.SealsPreventSealingRule
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
