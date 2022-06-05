@@ -16,7 +16,7 @@ class ServiceImpl(
   }
 
   private val playersInGame =
-    mutableMapOf<String, MutableList<PlayerAndToken>>()
+    mutableMapOf<GameName, MutableList<PlayerAndToken>>()
 
   override fun getGame(name: GameName): Game? =
     games[name]
@@ -30,7 +30,7 @@ class ServiceImpl(
       ?: throw GameNotFound(gameName)
 
     val existingPlayers =
-      playersInGame.computeIfAbsent(gameName.value) { mutableListOf() }
+      playersInGame.computeIfAbsent(gameName) { mutableListOf() }
 
     if (game.state.players.size == existingPlayers.size) {
       throw GameFullException(gameName)
@@ -50,13 +50,13 @@ class ServiceImpl(
     games.keys.toSet()
 
   override fun canParticipate(game: GameName, token: AccessToken): Boolean {
-    val players = playersInGame[game.value]
+    val players = playersInGame[game]
     return players?.map { it.token.value }
       ?.contains(token.value) == true
   }
 
   override fun getPlayerId(game: GameName, token: AccessToken) =
-    playersInGame[game.value]
+    playersInGame[game]
       ?.first { it.token == token }
       ?.id
 }
