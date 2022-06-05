@@ -9,7 +9,6 @@ import net.lab0.skyscrapers.api.dto.PlaceTurnDTO
 import net.lab0.skyscrapers.api.dto.PositionDTO
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.http4k.AUTHORIZATION
-import net.lab0.skyscrapers.api.http4k.Authorization
 import net.lab0.skyscrapers.api.http4k.Authorization.Bearer
 import net.lab0.skyscrapers.engine.GameFactoryImpl
 import net.lab0.skyscrapers.server.ServiceImpl

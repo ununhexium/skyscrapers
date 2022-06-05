@@ -1,8 +1,8 @@
 package net.lab0.skyscrapers.server
 
 import io.kotest.matchers.shouldBe
-import net.lab0.skyscrapers.server.exception.GameFullException
 import net.lab0.skyscrapers.api.dto.value.GameName
+import net.lab0.skyscrapers.server.exception.GameFullException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

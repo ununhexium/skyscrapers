@@ -1,9 +1,9 @@
 package net.lab0.skyscrapers.engine.rule.move.building
 
-import net.lab0.skyscrapers.engine.DefaultGames
-import net.lab0.skyscrapers.api.structure.TurnType
-import net.lab0.skyscrapers.engine.rule.GameRuleViolationImpl
 import net.lab0.skyscrapers.api.structure.Position
+import net.lab0.skyscrapers.api.structure.TurnType
+import net.lab0.skyscrapers.engine.DefaultGames
+import net.lab0.skyscrapers.engine.rule.GameRuleViolationImpl
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

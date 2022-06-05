@@ -1,12 +1,11 @@
 package net.lab0.skyscrapers.server
 
 import net.lab0.skyscrapers.api.dto.AccessToken
+import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.engine.GameFactoryImpl
 import net.lab0.skyscrapers.engine.api.Game
 import net.lab0.skyscrapers.server.exception.GameFullException
 import net.lab0.skyscrapers.server.exception.GameNotFound
-import net.lab0.skyscrapers.api.dto.value.GameName
-import java.util.*
 
 class ServiceImpl(
   val games: MutableMap<GameName, Game>,

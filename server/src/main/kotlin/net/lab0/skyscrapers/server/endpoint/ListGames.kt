@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.server.endpoint
 
-import net.lab0.skyscrapers.server.Service
 import net.lab0.skyscrapers.api.dto.ListGamesResponse
+import net.lab0.skyscrapers.server.Service
 import org.http4k.core.Body
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.OK

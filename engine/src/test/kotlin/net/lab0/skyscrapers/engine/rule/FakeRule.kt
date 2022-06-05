@@ -1,8 +1,8 @@
 package net.lab0.skyscrapers.engine.rule
 
 import net.lab0.skyscrapers.api.structure.GameState
-import net.lab0.skyscrapers.engine.api.Rule
 import net.lab0.skyscrapers.api.structure.TurnType
+import net.lab0.skyscrapers.engine.api.Rule
 
 data class FakeRule(
   val fails: Boolean,

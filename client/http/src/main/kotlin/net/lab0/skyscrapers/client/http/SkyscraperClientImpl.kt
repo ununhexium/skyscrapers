@@ -2,7 +2,6 @@ package net.lab0.skyscrapers.client.http
 
 import arrow.core.Either
 import net.lab0.skyscrapers.api.dto.AccessToken
-import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.api.dto.ConnectionResponse
 import net.lab0.skyscrapers.api.dto.ErrorResponse
 import net.lab0.skyscrapers.api.dto.GameResponse
@@ -14,6 +13,7 @@ import net.lab0.skyscrapers.api.dto.StatusResponse
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.http4k.AUTHORIZATION
 import net.lab0.skyscrapers.api.http4k.Authorization
+import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.api.structure.Position
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler

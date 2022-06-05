@@ -1,13 +1,11 @@
 package net.lab0.skyscrapers.server.endpoint
 
-import net.lab0.skyscrapers.server.Service
 import net.lab0.skyscrapers.api.dto.GameStateDTO
 import net.lab0.skyscrapers.api.dto.GameViolationDTO
 import net.lab0.skyscrapers.api.dto.GameViolationsDTO
 import net.lab0.skyscrapers.api.dto.PlaceTurnDTO
-import net.lab0.skyscrapers.api.dto.value.GameName
-import net.lab0.skyscrapers.api.structure.TurnType
 import net.lab0.skyscrapers.engine.exception.GameRuleViolationException
+import net.lab0.skyscrapers.server.Service
 import net.lab0.skyscrapers.server.badRequest
 import net.lab0.skyscrapers.server.notFound
 import net.lab0.skyscrapers.server.pathGameName

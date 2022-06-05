@@ -1,8 +1,8 @@
 package net.lab0.skyscrapers.engine
 
-import net.lab0.skyscrapers.engine.action.DSL
 import net.lab0.skyscrapers.api.structure.BlocksData
 import net.lab0.skyscrapers.api.structure.Position
+import net.lab0.skyscrapers.engine.action.DSL
 
 object DefaultGames {
 

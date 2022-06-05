@@ -1,8 +1,8 @@
 package net.lab0.skyscrapers.server.endpoint
 
-import net.lab0.skyscrapers.server.Service
 import net.lab0.skyscrapers.api.dto.ConnectionResponse
 import net.lab0.skyscrapers.api.dto.ErrorResponse
+import net.lab0.skyscrapers.server.Service
 import net.lab0.skyscrapers.server.exception.GameFullException
 import net.lab0.skyscrapers.server.pathGameName
 import org.http4k.core.Body

@@ -1,12 +1,12 @@
 package net.lab0.skyscrapers.engine.rule
 
-import net.lab0.skyscrapers.editor
 import net.lab0.skyscrapers.api.structure.GameRuleViolation
 import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.api.structure.Move
 import net.lab0.skyscrapers.api.structure.MoveOnly
-import net.lab0.skyscrapers.engine.api.Rule
 import net.lab0.skyscrapers.api.structure.TurnType
+import net.lab0.skyscrapers.editor
+import net.lab0.skyscrapers.engine.api.Rule
 import net.lab0.skyscrapers.engine.exception.GameRuleViolationException
 
 class RuleBook(

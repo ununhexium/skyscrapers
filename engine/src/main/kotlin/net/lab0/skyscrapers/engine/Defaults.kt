@@ -1,6 +1,8 @@
 package net.lab0.skyscrapers.engine
 
 import net.lab0.skyscrapers.api.structure.BlocksData
+import net.lab0.skyscrapers.api.structure.Bounds
+import net.lab0.skyscrapers.api.structure.Height
 import net.lab0.skyscrapers.api.structure.Move
 import net.lab0.skyscrapers.api.structure.MoveOnly
 import net.lab0.skyscrapers.engine.api.Rule
@@ -25,8 +27,6 @@ import net.lab0.skyscrapers.engine.rule.move.seal.SealsPreventSealingRule
 import net.lab0.skyscrapers.engine.rule.move.win.WinConditionRule
 import net.lab0.skyscrapers.engine.rule.placement.BoardPlacementContainmentRule
 import net.lab0.skyscrapers.engine.rule.placement.PlaceBuilderOnEmptyCell
-import net.lab0.skyscrapers.api.structure.Bounds
-import net.lab0.skyscrapers.api.structure.Height
 
 object Defaults {
   const val WIDTH = 5

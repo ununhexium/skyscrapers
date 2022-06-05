@@ -1,8 +1,8 @@
 package net.lab0.skyscrapers.engine
 
 import net.lab0.skyscrapers.api.structure.BlocksData
-import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.api.structure.Bounds
+import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.api.structure.Height
 import net.lab0.skyscrapers.api.structure.Matrix
 import net.lab0.skyscrapers.api.structure.Player

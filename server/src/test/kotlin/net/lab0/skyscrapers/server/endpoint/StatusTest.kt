@@ -1,11 +1,11 @@
 package net.lab0.skyscrapers.server.endpoint
 
 import io.kotest.matchers.should
-import net.lab0.skyscrapers.server.ServiceImpl
 import net.lab0.skyscrapers.api.dto.StatusResponse
+import net.lab0.skyscrapers.api.dto.value.GameName
+import net.lab0.skyscrapers.server.ServiceImpl
 import net.lab0.skyscrapers.server.haveResponseBe
 import net.lab0.skyscrapers.server.routed
-import net.lab0.skyscrapers.api.dto.value.GameName
 import org.http4k.core.Method.GET
 import org.http4k.core.Request
 import org.junit.jupiter.api.Test

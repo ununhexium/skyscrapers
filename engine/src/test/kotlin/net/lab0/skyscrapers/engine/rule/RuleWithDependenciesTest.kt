@@ -2,8 +2,8 @@ package net.lab0.skyscrapers.engine.rule
 
 import io.mockk.spyk
 import io.mockk.verify
-import net.lab0.skyscrapers.engine.GameFactoryImpl
 import net.lab0.skyscrapers.api.structure.TurnType
+import net.lab0.skyscrapers.engine.GameFactoryImpl
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

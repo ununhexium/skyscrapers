@@ -1,9 +1,9 @@
 package net.lab0.skyscrapers.ai
 
-import net.lab0.skyscrapers.engine.api.Game
-import net.lab0.skyscrapers.api.structure.TurnType
 import net.lab0.skyscrapers.api.structure.Phase
 import net.lab0.skyscrapers.api.structure.Position
+import net.lab0.skyscrapers.api.structure.TurnType
+import net.lab0.skyscrapers.engine.api.Game
 
 class RandomAi(
   val player: Int,

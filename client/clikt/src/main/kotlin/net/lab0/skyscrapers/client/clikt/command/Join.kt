@@ -2,7 +2,6 @@ package net.lab0.skyscrapers.client.clikt.command
 
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.convert
-import com.github.ajalt.clikt.parameters.options.option
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import net.lab0.skyscrapers.api.dto.value.GameName
@@ -12,7 +11,6 @@ import net.lab0.skyscrapers.client.clikt.struct.LastGame
 import net.lab0.skyscrapers.client.http.SkyscraperClient
 import java.io.Writer
 import kotlin.io.path.bufferedWriter
-import kotlin.io.path.writer
 
 class Join(
   writer: Writer?,

@@ -1,7 +1,5 @@
 package net.lab0.skyscrapers.api.structure
 
-import net.lab0.skyscrapers.api.structure.Height
-
 /**
  * Immutable list of blocks
  */

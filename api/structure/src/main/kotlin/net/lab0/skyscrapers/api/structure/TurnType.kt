@@ -1,7 +1,5 @@
 package net.lab0.skyscrapers.api.structure
 
-import net.lab0.skyscrapers.api.structure.Position
-
 sealed class TurnType(override val player: Int) : Turn {
   data class PlacementTurn(
     override val player: Int,

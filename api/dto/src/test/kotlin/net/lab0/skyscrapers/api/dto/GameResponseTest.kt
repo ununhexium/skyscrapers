@@ -1,12 +1,12 @@
 package net.lab0.skyscrapers.api.dto
 
 import net.lab0.skyscrapers.api.dto.value.GameName
-import net.lab0.skyscrapers.api.structure.Player
 import net.lab0.skyscrapers.api.structure.BlocksData
-import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.api.structure.Bounds
+import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.api.structure.Height
 import net.lab0.skyscrapers.api.structure.Matrix
+import net.lab0.skyscrapers.api.structure.Player
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 

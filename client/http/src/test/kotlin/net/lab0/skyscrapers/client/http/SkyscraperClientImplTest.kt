@@ -5,11 +5,11 @@ import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import net.lab0.skyscrapers.api.dto.value.GameName
+import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.client.FakeServerTest
 import net.lab0.skyscrapers.client.ServerIntegrationTest
 import net.lab0.skyscrapers.server.ServiceImpl
-import net.lab0.skyscrapers.api.dto.value.GameName
-import net.lab0.skyscrapers.api.structure.Position
 import org.http4k.client.OkHttp
 import org.http4k.core.Uri
 import org.http4k.core.then

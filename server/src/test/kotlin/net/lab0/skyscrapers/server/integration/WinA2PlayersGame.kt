@@ -1,6 +1,5 @@
 package net.lab0.skyscrapers.server.integration
 
-import net.lab0.skyscrapers.server.ServiceImpl
 import net.lab0.skyscrapers.api.dto.BuildTurnDTO
 import net.lab0.skyscrapers.api.dto.ConnectionResponse
 import net.lab0.skyscrapers.api.dto.GameResponse
@@ -9,6 +8,7 @@ import net.lab0.skyscrapers.api.dto.PlaceTurnDTO
 import net.lab0.skyscrapers.api.dto.PositionDTO
 import net.lab0.skyscrapers.api.dto.TurnTypeDTO
 import net.lab0.skyscrapers.api.dto.WinTurnDTO
+import net.lab0.skyscrapers.server.ServiceImpl
 import net.lab0.skyscrapers.server.routed
 import org.assertj.core.api.Assertions.assertThat
 import org.http4k.client.ApacheClient
