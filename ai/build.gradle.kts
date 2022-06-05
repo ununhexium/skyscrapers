@@ -1,6 +1,6 @@
-import dependencies.TestDependencies.assertJ
-import dependencies.TestDependencies.junit5Api
-import dependencies.TestDependencies.junit5Engine
+import dependencies.Dependencies.assertJ
+import dependencies.Dependencies.junit5Api
+import dependencies.Dependencies.junit5Engine
 
 
 plugins {

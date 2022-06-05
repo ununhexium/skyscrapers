@@ -1,9 +1,9 @@
-import dependencies.TestDependencies.assertJ
-import dependencies.TestDependencies.http4k
-import dependencies.TestDependencies.junit5Api
-import dependencies.TestDependencies.junit5Engine
-import dependencies.TestDependencies.kotest
-import dependencies.TestDependencies.mockK
+import dependencies.Dependencies.assertJ
+import dependencies.Dependencies.http4k
+import dependencies.Dependencies.junit5Api
+import dependencies.Dependencies.junit5Engine
+import dependencies.Dependencies.kotest
+import dependencies.Dependencies.mockK
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
