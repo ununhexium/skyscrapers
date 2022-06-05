@@ -9,7 +9,6 @@ import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 import org.koin.test.KoinTest
-import java.nio.file.Path
 
 open class KoinBase(val addDefaultConfigurer: Boolean = false) : KoinTest {
 
@@ -20,7 +19,7 @@ open class KoinBase(val addDefaultConfigurer: Boolean = false) : KoinTest {
         cliModule,
         module {
           if (addDefaultConfigurer) {
-            single { Configurer(get(qualifier = CONFIG_PATH)) }
+            single { Configurer(get(CONFIG_PATH)) }
           }
         }
       )

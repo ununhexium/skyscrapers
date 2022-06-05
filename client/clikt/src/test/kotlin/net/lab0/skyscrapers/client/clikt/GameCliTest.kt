@@ -37,9 +37,11 @@ internal class GameCliTest :
   @Test
   fun `create a new game`() {
     fakeServer {
-      val writer = StringWriter()
+      declare { it }
 
-      val cli = cliFactory.new(writer, handler = it)
+      val writer = StringWriter()
+      val cli = cliFactory.new(writer)
+
       cli.parse("config", "--reset")
       cli.parse("new-game", "foo")
 
@@ -53,9 +55,10 @@ internal class GameCliTest :
     service.createGame(GameName("foo"))
 
     fakeServer(service = service) {
+      declare { it }
       val writer = StringWriter()
 
-      val cli = cliFactory.new(writer, handler = it)
+      val cli = cliFactory.new(writer)
       cli.parse("config", "--reset")
       cli.parse("show", "foo")
 
@@ -69,9 +72,10 @@ internal class GameCliTest :
     service.createGame(GameName("foo"))
 
     fakeServer(service = service) {
+      declare { it }
       val writer = StringWriter()
 
-      val cli = cliFactory.new(writer, handler = it)
+      val cli = cliFactory.new(writer)
       cli.parse("config", "--reset")
       cli.parse("join", "foo")
       cli.parse("current", "foo")
@@ -94,9 +98,10 @@ internal class GameCliTest :
     service.createGame(game)
 
     fakeServer(service = service) {
+      declare { it }
       val writer = StringWriter()
 
-      val cli = cliFactory.new(writer, handler = it)
+      val cli = cliFactory.new(writer)
       cli.parse("config", "--reset")
       cli.parse("join", "foo")
 
@@ -115,9 +120,10 @@ internal class GameCliTest :
     service.createGame(game)
 
     fakeServer(service = service) {
+      declare { it }
       val writer = StringWriter()
 
-      val cli = cliFactory.new(writer, handler = it)
+      val cli = cliFactory.new(writer)
       cli.parse("config", "--reset")
       cli.parse("join", "foo")
 

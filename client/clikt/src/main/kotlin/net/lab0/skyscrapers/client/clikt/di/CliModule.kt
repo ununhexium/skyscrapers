@@ -12,5 +12,5 @@ val CONFIG_PATH = named("configPath")
 val cliModule = module {
   single<SkyscraperClient> { SkyscraperClientImpl(get()) }
 
-  single(qualifier = CONFIG_PATH) { Constants.configLocation }
+  single(CONFIG_PATH) { Constants.configLocation }
 }
