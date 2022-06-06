@@ -19,7 +19,6 @@ class GameCli : CliktCommand() {
   companion object : KoinComponent {
     fun new(writer: Writer?): CliktCommand {
       return GameCli().subcommands(
-        // TODO: list available games
         Connect(writer),
         Configuration(writer),
         NewGame(writer),

@@ -82,7 +82,6 @@ internal class PlaceTest {
     val pos = PositionDTO(0, 0)
     val response = routed(service)(
       Request(POST, "/api/v1/games/foo/place").with(
-        // TODO: no need to auth twice (header + body)
         Body.auto<PlaceTurnDTO>().toLens() of PlaceTurnDTO(pos),
         Header.AUTHORIZATION of Bearer(p1.token)
       )

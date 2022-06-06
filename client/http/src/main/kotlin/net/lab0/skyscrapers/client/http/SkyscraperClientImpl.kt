@@ -78,7 +78,6 @@ class SkyscraperClientImpl(
     }
   }
 
-  // TODO: maybe it will need a lobby later, to wait until the game is full..?
   override fun join(name: GameName): Either<Errors, ConnectionResponse> {
     val req = Request(Method.POST, "/api/v1/games" / name / "join")
     val res = handler(req)

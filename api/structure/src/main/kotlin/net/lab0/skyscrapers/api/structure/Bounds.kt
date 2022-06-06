@@ -1,10 +1,5 @@
 package net.lab0.skyscrapers.api.structure
 
-/**
- * @param abscissaRange exclusive
- * @param ordinateRange exclusive
- */
-// TODO: bounds should be defined by ranges, not width / height
 data class Bounds(val abscissaRange: IntRange, val ordinateRange: IntRange) {
 
   /**

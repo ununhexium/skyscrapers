@@ -149,7 +149,6 @@ data class Matrix<T>(
     )
   }
 
-  // TODO: add contract to assert that the reult type T is not null?
   fun filter(predicate: (T) -> Boolean) =
     mutableMapOf<Position, T>().also { m ->
       this@Matrix.forEachIndexed { pos, it -> if (predicate(it)) m[pos] = it }
