@@ -13,8 +13,7 @@ class Connect(writer: Writer?) :
   private val sky by inject<SkyscraperClient>()
 
   override fun run() {
-    val result = sky.status()
-    result.bimap(
+    sky.status().bimap(
       leftOperation = {
         myEcho(
           "Failed to connect to the server: $it",

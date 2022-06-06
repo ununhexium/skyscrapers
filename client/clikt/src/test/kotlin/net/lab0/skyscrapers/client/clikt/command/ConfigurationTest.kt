@@ -5,7 +5,6 @@ import io.mockk.every
 import io.mockk.mockkClass
 import io.mockk.verify
 import net.lab0.skyscrapers.client.clikt.GameCli
-import net.lab0.skyscrapers.client.clikt.GameCliFactory
 import net.lab0.skyscrapers.client.clikt.KoinBase
 import net.lab0.skyscrapers.client.clikt.configuration.Configurer
 import net.lab0.skyscrapers.client.clikt.configuration.DefaultConfig
@@ -20,7 +19,6 @@ import java.io.StringWriter
 
 @TestInstance(PER_CLASS)
 internal class ConfigurationTest : KoinBase() {
-  private val factory = GameCliFactory()
 
   @BeforeAll
   fun beforeClass() {

@@ -12,10 +12,8 @@ import org.koin.test.mock.declare
 import java.io.StringWriter
 
 internal class GameCliTest :
-  KoinBase(addDefaultConfigurer = true),
+  KoinBase(),
   FakeServerTest {
-
-  private val cliFactory = GameCliFactory()
 
   @Test
   fun `connection integration test`() {
