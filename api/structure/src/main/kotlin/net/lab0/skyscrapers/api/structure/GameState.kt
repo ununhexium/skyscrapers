@@ -32,7 +32,7 @@ data class GameState(
       }
 
       return GameState(
-        Bounds(buildingsData.columns, buildingsData.rows),
+        Bounds(0 until buildingsData.columns, 0 until buildingsData.rows),
         players,
         buildersPerPlayer,
         blocks,

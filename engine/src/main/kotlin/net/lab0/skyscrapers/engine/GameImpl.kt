@@ -84,7 +84,7 @@ class GameImpl(
 
     internalHistory.add(
       GameState(
-        Bounds(width, height),
+        Bounds(0 until width, 0 until height),
         (0 until playerCount).map { Player(it) },
         maxBuildersPerPlayer,
         initialBlocks,

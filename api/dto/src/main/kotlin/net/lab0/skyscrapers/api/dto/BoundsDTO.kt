@@ -5,11 +5,12 @@ import net.lab0.skyscrapers.api.structure.Bounds
 
 @Serializable
 data class BoundsDTO(
-  val width: Int,
-  val height: Int
+  val abscissaRange: IntRangeDTO,
+  val ordinateRange: IntRangeDTO,
 ) {
   fun toModel(): Bounds =
-    Bounds(width, height)
+    Bounds(abscissaRange.toModel(), ordinateRange.toModel())
 
-  constructor(b: Bounds) : this(b.width, b.height)
+  constructor(b: Bounds) :
+      this(IntRangeDTO(b.abscissaRange), IntRangeDTO(b.ordinateRange))
 }

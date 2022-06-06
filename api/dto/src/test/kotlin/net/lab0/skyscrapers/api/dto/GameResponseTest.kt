@@ -16,6 +16,8 @@ internal class GameResponseTest {
   fun `quick check conversion to DTO`() {
     val width = 5
     val height = 4
+    val bounds = Bounds(0 until width, 0 until height)
+
     val buildersPerPlayer = 3
     val blocks = mapOf(
       Height(0) to 31,
@@ -45,7 +47,7 @@ internal class GameResponseTest {
     )
 
     val state = GameState(
-      Bounds(width, height),
+      bounds,
       listOf(Player(0, false), Player(1, true)),
       buildersPerPlayer,
       BlocksData(blocks),
@@ -56,7 +58,7 @@ internal class GameResponseTest {
 
     val dto = GameResponse(GameName("name"), state)
 
-    val serializedBounds = BoundsDTO(width, height)
+    val serializedBounds = BoundsDTO(bounds)
     val serializedPlayers = listOf(
       PlayerDTO(0, false),
       PlayerDTO(1, true),

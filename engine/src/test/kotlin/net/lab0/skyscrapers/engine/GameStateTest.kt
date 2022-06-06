@@ -13,7 +13,7 @@ import org.junit.jupiter.api.assertThrows
 internal class GameStateTest {
   companion object {
     val state = GameState(
-      Bounds(4, 3),
+      Bounds(0 until 4, 0 until 3),
       listOf(),
       0,
       BlocksData.EMPTY,
@@ -97,7 +97,7 @@ internal class GameStateTest {
     // seals matrix has a different size
     assertThrows<IllegalStateException> {
       GameState(
-        Bounds(0, 0),
+        Bounds(0..0, 0..0),
         listOf(),
         0,
         BlocksData.EMPTY,
@@ -110,7 +110,7 @@ internal class GameStateTest {
     // builders matrix has a different size
     assertThrows<IllegalStateException> {
       GameState(
-        Bounds(0, 0),
+        Bounds(0..0, 0..0),
         listOf(),
         0,
         BlocksData.EMPTY,
@@ -124,7 +124,7 @@ internal class GameStateTest {
   @Test
   fun `can show a composite board`() {
     val state = GameState(
-      bounds = Bounds(5, 5),
+      bounds = Bounds(0 until 5, 0 until 5),
       players = listOf(Player(0, true), Player(1, false)),
       maxBuildersPerPlayer = 2,
       blocks = BlocksData(
@@ -181,7 +181,7 @@ internal class GameStateTest {
   @Test
   fun `can parse a composite board`() {
     val state = GameState(
-      bounds = Bounds(5, 5),
+      bounds = Bounds(0 until 5, 0 until 5),
       players = listOf(Player(0, true), Player(1, false)),
       maxBuildersPerPlayer = 2,
       blocks = BlocksData(

@@ -10,7 +10,7 @@ data class Matrix<T>(
   val rows: Int = data.size,
   val columns: Int = data.first().size,
 ) {
-  val dimensions = Bounds(columns, rows)
+  val dimensions = Bounds(0 until columns, 0 until rows)
 
   val lastColumn = columns - 1
   val lastRow = rows - 1

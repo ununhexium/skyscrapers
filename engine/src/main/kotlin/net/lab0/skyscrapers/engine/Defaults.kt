@@ -31,7 +31,6 @@ import net.lab0.skyscrapers.engine.rule.placement.PlaceBuilderOnEmptyCell
 object Defaults {
   const val WIDTH = 5
   const val HEIGHT = 5
-  val BOUNDS = Bounds(WIDTH, HEIGHT)
   const val PLAYER_COUNT = 2
 
   const val BUILDERS_PER_PLAYER = 2
