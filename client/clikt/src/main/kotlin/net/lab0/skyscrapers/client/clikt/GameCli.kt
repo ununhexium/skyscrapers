@@ -11,6 +11,7 @@ import net.lab0.skyscrapers.client.clikt.command.NewGame
 import net.lab0.skyscrapers.client.clikt.command.Place
 import net.lab0.skyscrapers.client.clikt.command.Seal
 import net.lab0.skyscrapers.client.clikt.command.Show
+import net.lab0.skyscrapers.client.clikt.command.Version
 import org.koin.core.component.KoinComponent
 import java.io.Writer
 
@@ -28,6 +29,7 @@ class GameCli : CliktCommand() {
         Place(writer),
         Build(writer),
         Seal(writer),
+        Version(writer)
       )
     }
   }

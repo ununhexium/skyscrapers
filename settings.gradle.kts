@@ -1,7 +1,7 @@
 
 rootProject.name = "skyscrapers"
 
-include("ai")
+//include("ai")
 
 include("api")
 include("api:dto")
