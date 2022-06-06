@@ -19,16 +19,16 @@ class GameCli : CliktCommand() {
   companion object : KoinComponent {
     fun new(writer: Writer?): CliktCommand {
       return GameCli().subcommands(
-        Connect(writer),
-        Configuration(writer),
-        NewGame(writer),
-        Show(writer),
-        Join(writer),
-        Current(writer),
-        Place(writer),
         Build(writer),
+        Configuration(writer),
+        Connect(writer),
+        Current(writer),
+        Join(writer),
+        NewGame(writer),
+        Place(writer),
         Seal(writer),
-        Version(writer)
+        Show(writer),
+        Version(writer),
       )
     }
   }
