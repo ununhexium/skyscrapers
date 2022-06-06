@@ -8,7 +8,7 @@ import io.kotest.matchers.shouldNotBe
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.client.FakeServerTest
-import net.lab0.skyscrapers.client.ServerIntegrationTest
+import net.lab0.skyscrapers.client.IntegrationServerTest
 import net.lab0.skyscrapers.server.ServiceImpl
 import org.http4k.client.OkHttp
 import org.http4k.core.Uri
@@ -17,7 +17,7 @@ import org.http4k.filter.ClientFilters
 import org.junit.jupiter.api.Test
 
 internal class SkyscraperClientImplTest : FakeServerTest,
-  ServerIntegrationTest {
+  IntegrationServerTest {
 
   @Test
   fun `can connect to a real server`() {

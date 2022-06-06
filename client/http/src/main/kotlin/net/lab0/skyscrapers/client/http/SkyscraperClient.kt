@@ -57,4 +57,11 @@ interface SkyscraperClient {
     target: Position,
     seal: Position,
   ): Either<ClientError, GameState>
+
+  fun win(
+    name: GameName,
+    token: AccessToken,
+    start: Position,
+    target: Position,
+  ): Either<ClientError, GameState>
 }

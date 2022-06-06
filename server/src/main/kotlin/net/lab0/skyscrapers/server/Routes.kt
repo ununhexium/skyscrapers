@@ -10,6 +10,7 @@ import net.lab0.skyscrapers.server.endpoint.place
 import net.lab0.skyscrapers.server.endpoint.seal
 import net.lab0.skyscrapers.server.endpoint.showGame
 import net.lab0.skyscrapers.server.endpoint.status
+import net.lab0.skyscrapers.server.endpoint.win
 import net.lab0.skyscrapers.server.filter.GameAccessFilter
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
@@ -48,10 +49,10 @@ fun routed(service: Service) = ServerFilters.CatchAll { ex ->
     "/api/v1/games/{gameName}/join" bind POST to { joinGame(service, it) },
     "/api/v1/games/{gameName}" bind GameAccessFilter(service).then(
       routes(
-        //    "/api/v1/games/{gameName}/play" bind POST to { playGame(service, it) },
         "/place" bind POST to { place(service, it) },
         "/build" bind POST to { build(service, it) },
         "/seal" bind POST to { seal(service, it) },
+        "/win" bind POST to { win(service, it) },
       ),
     ),
 

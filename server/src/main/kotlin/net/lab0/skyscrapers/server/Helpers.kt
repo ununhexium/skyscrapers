@@ -12,6 +12,7 @@ import net.lab0.skyscrapers.api.dto.GameViolationDTO
 import net.lab0.skyscrapers.api.dto.GameViolationsDTO
 import net.lab0.skyscrapers.api.dto.PlaceTurnDTO
 import net.lab0.skyscrapers.api.dto.SealTurnDTO
+import net.lab0.skyscrapers.api.dto.WinTurnDTO
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.http4k.AUTHORIZATION
 import net.lab0.skyscrapers.api.structure.ErrorMessage
@@ -106,6 +107,15 @@ fun SealTurnDTO.toModel(game: GameName, accessToken: AccessToken, service: Servi
   }
 }
 
+fun WinTurnDTO.toModel(game: GameName, accessToken: AccessToken, service: Service): TurnType? {
+  return service.getPlayerId(game, accessToken)?.let { playerId ->
+    TurnType.MoveTurn.WinTurn(
+      playerId,
+      start.toModel(),
+      target.toModel(),
+    )
+  }
+}
 
 fun withGameName(
   req: Request,
@@ -140,7 +150,7 @@ fun withGame(
 
 fun playTurn(
   turn: TurnType,
-  game: Game
+  game: Game,
 ) = try {
   game.play(turn)
 

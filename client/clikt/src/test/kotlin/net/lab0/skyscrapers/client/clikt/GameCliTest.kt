@@ -11,6 +11,7 @@ import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.api.structure.TurnType
 import net.lab0.skyscrapers.client.FakeServerTest
 import net.lab0.skyscrapers.server.ServiceImpl
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.koin.test.mock.declare
 import java.io.StringWriter
@@ -144,16 +145,16 @@ internal class GameCliTest :
   private fun doDefaultPlacement(
     cli: CliktCommand,
     service: ServiceImpl,
-    game: GameName
+    nameName: GameName
   ) {
     cli.parse("config", "--reset")
     cli.parse("join", "foo")
 
-    val p1 = service.join(game).shouldBeRight()
+    val p1 = service.join(nameName).shouldBeRight()
 
     cli.parse("place", "--game", "foo", "--at", "0,0")
 
-    val game = service.getGame(game).shouldBeRight()
+    val game = service.getGame(nameName).shouldBeRight()
     game.play(TurnType.PlacementTurn(p1.id, Position(0, 1)))
 
     cli.parse("place", "--game", "foo", "--at", "0,2")
@@ -162,7 +163,7 @@ internal class GameCliTest :
   }
 
   @Test
-  fun `build`() {
+  fun `build on a cell`() {
     val service = ServiceImpl.new()
     val game = GameName("foo")
     service.createGame(game)
@@ -192,7 +193,7 @@ internal class GameCliTest :
   }
 
   @Test
-  fun `seal`() {
+  fun `seal a cell`() {
     val service = ServiceImpl.new()
     val game = GameName("foo")
     service.createGame(game)
@@ -215,6 +216,35 @@ internal class GameCliTest :
         "1,3",
         "--seal",
         "2,4"
+      )
+
+      writer.toString() shouldContain "Moved builder from 0,2 to 1,3 and sealed at 2,4"
+    }
+  }
+
+  @Disabled("Needs a backdoor to test it in reasonable time.")
+  @Test
+  fun `win a turn`() {
+    val service = ServiceImpl.new()
+    val game = GameName("foo")
+    service.createGame(game)
+
+    fakeServer(service = service) {
+      declare { it }
+      val writer = StringWriter()
+
+      val cli = GameCli.new(writer)
+
+      doDefaultPlacement(cli, service, game)
+
+      cli.parse(
+        "win",
+        "--game",
+        "foo",
+        "--from",
+        "0,2",
+        "--to",
+        "1,3"
       )
 
       writer.toString() shouldContain "Moved builder from 0,2 to 1,3 and sealed at 2,4"

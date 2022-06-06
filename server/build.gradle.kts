@@ -27,6 +27,8 @@ dependencies {
   implementation(http4k("format-kotlinx-serialization"))
 
   // TEST
+  testImplementation(project(":testing"))
+
   testImplementation(http4k("client-okhttp"))
 }
 

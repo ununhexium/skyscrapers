@@ -33,35 +33,6 @@ class TurnTypeDTO private constructor(
     if (giveUp != null)
       return TurnType.GiveUpTurn(giveUp.player)
 
-//    if (place != null)
-//      return TurnType.PlacementTurn(
-//        place.player,
-//        place.position.toModel()
-//      )
-
-//    if (build != null)
-//      return TurnType.MoveTurn.BuildTurn(
-//        build.player,
-//        build.start.toModel(),
-//        build.target.toModel(),
-//        build.build.toModel(),
-//      )
-
-//    if (seal != null)
-//      return TurnType.MoveTurn.SealTurn(
-//        seal.player,
-//        seal.start.toModel(),
-//        seal.target.toModel(),
-//        seal.seal.toModel(),
-//      )
-
-    if (win != null)
-      return TurnType.MoveTurn.WinTurn(
-        win.player,
-        win.start.toModel(),
-        win.target.toModel(),
-      )
-
     throw IllegalStateException("There must be at least 1 type of turn that is not null.")
   }
 }
