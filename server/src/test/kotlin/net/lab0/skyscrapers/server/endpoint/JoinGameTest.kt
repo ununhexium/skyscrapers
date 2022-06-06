@@ -51,7 +51,7 @@ internal class JoinGameTest {
     assertThat(
       Body.auto<ErrorResponse>().toLens().extract(response3)
     ).isEqualTo(
-      ErrorResponse("The game foo is full.")
+      ErrorResponse("The game foo is full. Can't add any extra player.")
     )
 
     val connection = Body.auto<ConnectionResponse>().toLens().extract(response1)

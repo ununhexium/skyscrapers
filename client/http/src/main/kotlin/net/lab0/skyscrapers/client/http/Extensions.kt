@@ -26,4 +26,3 @@ operator fun String.div(s: GameName): String =
 inline fun <reified T : Any> Response.extract(): T =
   Body.auto<T>().toLens().extract(this)
 
-typealias Errors = List<String>

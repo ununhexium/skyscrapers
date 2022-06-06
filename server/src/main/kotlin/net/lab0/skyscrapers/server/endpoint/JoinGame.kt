@@ -1,44 +1,37 @@
 package net.lab0.skyscrapers.server.endpoint
 
+import arrow.core.merge
 import net.lab0.skyscrapers.api.dto.ConnectionResponse
-import net.lab0.skyscrapers.api.dto.ErrorResponse
+import net.lab0.skyscrapers.server.JoiningError
 import net.lab0.skyscrapers.server.Service
-import net.lab0.skyscrapers.server.exception.GameFullException
-import net.lab0.skyscrapers.server.pathGameName
+import net.lab0.skyscrapers.server.forbidden
+import net.lab0.skyscrapers.server.notFound
+import net.lab0.skyscrapers.server.withGame
 import org.http4k.core.Body
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.CREATED
-import org.http4k.core.Status.Companion.FORBIDDEN
-import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.with
 import org.http4k.format.KotlinxSerialization.auto
 
 /**
  * Gives a random token to that connection, to identify it as a user
  */
-fun joinGame(service: Service, req: Request): Response {
-  val gameName = req.pathGameName()
-
-  return if (gameName == null) {
-    Response(NOT_FOUND)
-  } else {
-    val game = service.getGame(gameName)
-    if (game == null) {
-      Response(NOT_FOUND)
-    } else {
-      try {
-        val cnx = service.join(gameName)
+fun joinGame(service: Service, req: Request): Response =
+  withGame(req, service) { (gameName, _) ->
+    service.join(gameName)
+      .mapLeft {
+        when (it) {
+          is JoiningError.GameIsFull ->
+            // TODO: Forbidden is missleading, find another status
+            forbidden("The game ${gameName.value} is full. Can't add any extra player.")
+          is JoiningError.GameNotFound -> notFound(it.errors)
+        }
+      }
+      .map { playerAndToken ->
         Response(CREATED).with(
           Body.auto<ConnectionResponse>().toLens() of
-              ConnectionResponse(cnx.id, cnx.token)
+              ConnectionResponse(playerAndToken.id, playerAndToken.token)
         )
-      } catch (e: GameFullException) {
-        Response(FORBIDDEN).with(
-          Body.auto<ErrorResponse>().toLens() of
-              ErrorResponse(e.message ?: "No error message")
-        )
-      }
-    }
+      }.merge()
   }
-}

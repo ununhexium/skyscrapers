@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.server.filter
 
+import arrow.core.merge
 import net.lab0.skyscrapers.api.dto.ErrorResponse
 import net.lab0.skyscrapers.api.http4k.AUTHORIZATION
 import net.lab0.skyscrapers.server.Service
@@ -30,18 +31,18 @@ class GameAccessFilter(val service: Service) : Filter {
   ): Response {
     val auth = Header.AUTHORIZATION.extract(req)
 
-    val game = req.pathGameName()
-      ?: return badRequest("The game name wasn't specified: ${req.uri}")
-
-    return if (service.canParticipate(game, auth.token)) {
-      next(req)
-    } else {
-      Response(Status.UNAUTHORIZED).with(
-        Body.auto<ErrorResponse>().toLens() of
-            ErrorResponse(
-              "Failed to authenticate: the player can't play on the game ${game.value}"
-            )
-      )
-    }
+    return req.pathGameName()
+      .map { gameName ->
+        if (service.canParticipate(gameName, auth.token)) {
+          next(req)
+        } else {
+          Response(Status.UNAUTHORIZED).with(
+            Body.auto<ErrorResponse>().toLens() of
+                ErrorResponse(
+                  "Failed to authenticate: the player can't play on the game ${gameName.value}"
+                )
+          )
+        }
+      }.merge()
   }
 }

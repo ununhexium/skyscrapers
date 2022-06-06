@@ -103,8 +103,8 @@ internal class SkyscraperClientImplTest : FakeServerTest,
     val gameName = "go"
     val cnc = GameName(gameName)
     service.createGame(cnc)
-    val p0 = service.join(cnc)
-    val p1 = service.join(cnc)
+    val p0 = service.join(cnc).shouldBeRight()
+    val p1 = service.join(cnc).shouldBeRight()
 
     fakeServer(service = service) { handler ->
       val client = SkyscraperClientImpl(handler)
@@ -114,6 +114,27 @@ internal class SkyscraperClientImplTest : FakeServerTest,
 
       val state = client.state(cnc).shouldBeRight()
       state.getBuilders(p0.id) shouldBe listOf(firstBuilder)
+    }
+  }
+
+  @Test
+  fun `can't place a builder where there is another one`() {
+    val service = ServiceImpl.new()
+    val gameName = "go"
+    val cnc = GameName(gameName)
+    service.createGame(cnc)
+    val p0 = service.join(cnc).shouldBeRight()
+    val p1 = service.join(cnc).shouldBeRight()
+
+    fakeServer(service = service) { handler ->
+      val client = SkyscraperClientImpl(handler)
+
+      val firstBuilder = Position(0, 0)
+      client.place(cnc, p0.token, firstBuilder).shouldBeRight()
+      client.place(cnc, p1.token, firstBuilder).shouldBeLeft()
+
+      val state = client.state(cnc).shouldBeRight()
+      state.getBuilders(p1.id) shouldBe emptyList()
     }
   }
 }

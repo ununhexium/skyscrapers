@@ -36,6 +36,6 @@ internal class ShowGameTest {
     assertThat(readGame.status).isEqualTo(NOT_FOUND)
     assertThat(
       Body.auto<ErrorResponse>().toLens().extract(readGame)
-    ).isEqualTo(ErrorResponse("No game named 'missing'"))
+    ).isEqualTo(ErrorResponse("No game named 'missing'. There is 0 available game."))
   }
 }

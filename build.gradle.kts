@@ -41,7 +41,7 @@ subprojects {
     withType<KotlinCompile> {
       kotlinOptions.jvmTarget = Versions.java
       kotlinOptions.freeCompilerArgs = listOf(
-//        "-progressive",
+        "-progressive",
       )
     }
   }
@@ -73,12 +73,14 @@ tasks {
   kover {
     // https://github.com/Kotlin/kotlinx-kover/issues/179#issuecomment-1137464869
     intellijEngineVersion.set("1.0.669")
+    runAllTestsForProjectTask = true
   }
 
   koverMergedVerify {
     rule {
+      name = "Minimal line coverage rate in percent"
       bound {
-        minValue = 50
+        minValue = 70
       }
     }
   }

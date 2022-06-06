@@ -1,4 +1,5 @@
 import dependencies.Dependencies.http4k
+import dependencies.Dependencies.arrow
 
 plugins {
   application
@@ -19,6 +20,7 @@ dependencies {
   implementation(project(":api:structure"))
   implementation(project(":api:http4k"))
 
+  implementation(arrow)
   implementation(http4k("core"))
   implementation(http4k("server-undertow"))
   implementation(http4k("client-apache"))

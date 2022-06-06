@@ -18,6 +18,7 @@ import net.lab0.skyscrapers.api.dto.StatusResponse
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.http4k.AUTHORIZATION
 import net.lab0.skyscrapers.api.http4k.Authorization
+import net.lab0.skyscrapers.api.structure.Errors
 import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.client.http.ClientError.GameRuleErrors

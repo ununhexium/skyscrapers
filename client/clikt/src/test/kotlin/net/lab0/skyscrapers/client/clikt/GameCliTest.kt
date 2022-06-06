@@ -1,6 +1,7 @@
 package net.lab0.skyscrapers.client.clikt
 
 import com.github.ajalt.clikt.core.CliktCommand
+import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldMatch
@@ -139,6 +140,7 @@ internal class GameCliTest :
       writer.toString() shouldContain "Detail:"
     }
   }
+
   private fun doDefaultPlacement(
     cli: CliktCommand,
     service: ServiceImpl,
@@ -147,19 +149,16 @@ internal class GameCliTest :
     cli.parse("config", "--reset")
     cli.parse("join", "foo")
 
-    val p1 = service.join(game)
+    val p1 = service.join(game).shouldBeRight()
 
     cli.parse("place", "--game", "foo", "--at", "0,0")
 
-    service
-      .getGame(game)!!
-      .play(TurnType.PlacementTurn(p1.id, Position(0, 1)))
+    val game = service.getGame(game).shouldBeRight()
+    game.play(TurnType.PlacementTurn(p1.id, Position(0, 1)))
 
     cli.parse("place", "--game", "foo", "--at", "0,2")
 
-    service
-      .getGame(game)!!
-      .play(TurnType.PlacementTurn(p1.id, Position(0, 3)))
+    game.play(TurnType.PlacementTurn(p1.id, Position(0, 3)))
   }
 
   @Test

@@ -1,11 +1,14 @@
 package net.lab0.skyscrapers.server
 
+import arrow.core.Either
+import arrow.core.Either.Left
+import arrow.core.Either.Right
 import net.lab0.skyscrapers.api.dto.AccessToken
 import net.lab0.skyscrapers.api.dto.value.GameName
+import net.lab0.skyscrapers.api.structure.ErrorMessage
 import net.lab0.skyscrapers.engine.GameFactoryImpl
 import net.lab0.skyscrapers.engine.api.Game
-import net.lab0.skyscrapers.server.exception.GameFullException
-import net.lab0.skyscrapers.server.exception.GameNotFound
+import net.lab0.skyscrapers.server.JoiningError.GameNotFound
 
 class ServiceImpl(
   val games: MutableMap<GameName, Game>,
@@ -18,33 +21,43 @@ class ServiceImpl(
   private val playersInGame =
     mutableMapOf<GameName, MutableList<PlayerAndToken>>()
 
-  override fun getGame(name: GameName): Game? =
-    games[name]
+  override fun getGame(name: GameName): Either<ErrorMessage, Game> =
+    games[name]?.let { Right(it) }
+      ?: Left(
+        ErrorMessage(
+          "No game named 'missing'. " +
+              "There ${if(games.size <= 1) "is" else "are"} ${games.size} available game" +
+              when (games.size) {
+                0 -> "."
+                1 -> ". " + games.keys.first().value
+                else -> "s. " + games.keys.joinToString { it.value }
+              }
+        )
+      )
 
   override fun createGame(name: GameName): Game =
     GameFactoryImpl().new().also { games[name] = it }
 
-  // TODO: connecting to a game is joining a game. Rename to "join"
-  override fun join(gameName: GameName): PlayerAndToken {
-    val game = getGame(gameName)
-      ?: throw GameNotFound(gameName)
+  override fun join(gameName: GameName): Either<JoiningError, PlayerAndToken> =
+    getGame(gameName)
+      .mapLeft(::GameNotFound)
+      .map { game ->
+        val existingPlayers =
+          playersInGame.computeIfAbsent(gameName) { mutableListOf() }
 
-    val existingPlayers =
-      playersInGame.computeIfAbsent(gameName) { mutableListOf() }
+        if (game.state.players.size == existingPlayers.size) {
+          return Left(JoiningError.GameIsFull)
+        }
 
-    if (game.state.players.size == existingPlayers.size) {
-      throw GameFullException(gameName)
-    }
+        val playerAndToken = PlayerAndToken(
+          existingPlayers.size,
+          AccessToken.random()
+        )
 
-    val p = PlayerAndToken(
-      existingPlayers.size,
-      AccessToken.random()
-    )
+        existingPlayers.add(playerAndToken)
 
-    existingPlayers.add(p)
-
-    return p
-  }
+        playerAndToken
+      }
 
   override fun getGameNames(): Set<GameName> =
     games.keys.toSet()
