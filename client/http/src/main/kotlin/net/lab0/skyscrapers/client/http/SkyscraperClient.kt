@@ -17,6 +17,7 @@ interface SkyscraperClient {
    *
    * @return a menu client if successful is successful, `null` otherwise.
    */
+  // TODO: return an error message instead of the server's status.
   fun status(): Either<Status, StatusResponse>
 
   fun state(name: GameName): Either<Errors, GameState>

@@ -1,4 +1,5 @@
 import dependencies.Dependencies.spring
+import dependencies.Dependencies.http4k
 
 plugins {
     kotlin("jvm")
@@ -15,12 +16,23 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":client:http"))
+    implementation(project(":testing"))
+    implementation(http4k.clientOkhttp)
+
     implementation("org.springframework.boot:spring-boot-starter")
     implementation(spring.shell)
 
     // TEST
 
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation(project(":engine"))
+    testImplementation(project(":server"))
+
+    testImplementation("com.ninja-squad:springmockk:3.1.1")
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude(module = "mockito-core")
+    }
 }
 
 tasks.getByName<Test>("test") {
