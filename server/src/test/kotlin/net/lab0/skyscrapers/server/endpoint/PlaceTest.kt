@@ -36,8 +36,7 @@ internal class PlaceTest {
 
     val pos = PositionDTO(0, 0)
     val req = Request(POST, "/api/v1/games/foo/place").with(
-      Body.auto<PlaceTurnDTO>().toLens() of
-          PlaceTurnDTO(p0.token, pos),
+      Body.auto<PlaceTurnDTO>().toLens() of PlaceTurnDTO(pos),
       Header.AUTHORIZATION of Bearer(p0.token),
     )
     val response = routed(service)(req)
@@ -59,8 +58,7 @@ internal class PlaceTest {
     val pos = PositionDTO(0, 0)
     val response = routed(service)(
       Request(POST, "/api/v1/games/foo/place").with(
-        Body.auto<PlaceTurnDTO>().toLens() of
-            PlaceTurnDTO(p0.token, pos)
+        Body.auto<PlaceTurnDTO>().toLens() of PlaceTurnDTO(pos)
       )
     )
 
@@ -85,7 +83,7 @@ internal class PlaceTest {
     val response = routed(service)(
       Request(POST, "/api/v1/games/foo/place").with(
         // TODO: no need to auth twice (header + body)
-        Body.auto<PlaceTurnDTO>().toLens() of PlaceTurnDTO(p1.token, pos),
+        Body.auto<PlaceTurnDTO>().toLens() of PlaceTurnDTO(pos),
         Header.AUTHORIZATION of Bearer(p1.token)
       )
     )

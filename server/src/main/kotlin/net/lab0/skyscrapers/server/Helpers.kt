@@ -3,8 +3,8 @@ package net.lab0.skyscrapers.server
 import arrow.core.Either
 import arrow.core.Either.Left
 import arrow.core.Either.Right
-import arrow.core.flatMap
 import arrow.core.merge
+import net.lab0.skyscrapers.api.dto.AccessToken
 import net.lab0.skyscrapers.api.dto.BuildTurnDTO
 import net.lab0.skyscrapers.api.dto.ErrorResponse
 import net.lab0.skyscrapers.api.dto.GameStateDTO
@@ -13,6 +13,7 @@ import net.lab0.skyscrapers.api.dto.GameViolationsDTO
 import net.lab0.skyscrapers.api.dto.PlaceTurnDTO
 import net.lab0.skyscrapers.api.dto.SealTurnDTO
 import net.lab0.skyscrapers.api.dto.value.GameName
+import net.lab0.skyscrapers.api.http4k.AUTHORIZATION
 import net.lab0.skyscrapers.api.structure.ErrorMessage
 import net.lab0.skyscrapers.api.structure.TurnType
 import net.lab0.skyscrapers.engine.api.Game
@@ -27,6 +28,8 @@ import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.UNAUTHORIZED
 import org.http4k.core.with
 import org.http4k.format.KotlinxSerialization.auto
+import org.http4k.lens.Header
+import org.http4k.lens.LensFailure
 import org.http4k.routing.path
 
 
@@ -67,16 +70,24 @@ fun internalServerError(vararg messages: String?) =
         ErrorResponse(messages.filterNotNull())
   )
 
-fun PlaceTurnDTO.toModel(game: GameName, service: Service): TurnType? {
-  return service.getPlayerId(game, this.player)?.let {
-    TurnType.PlacementTurn(it, position.toModel())
+fun PlaceTurnDTO.toModel(
+  game: GameName,
+  token: AccessToken,
+  service: Service
+): TurnType? {
+  return service.getPlayerId(game, token)?.let { playerId ->
+    TurnType.PlacementTurn(playerId, position.toModel())
   }
 }
 
-fun BuildTurnDTO.toModel(game: GameName, service: Service): TurnType? {
-  return service.getPlayerId(game, this.player)?.let {
+fun BuildTurnDTO.toModel(
+  game: GameName,
+  token: AccessToken,
+  service: Service
+): TurnType? {
+  return service.getPlayerId(game, token)?.let { playerId ->
     TurnType.MoveTurn.BuildTurn(
-      it,
+      playerId,
       start.toModel(),
       target.toModel(),
       build.toModel()
@@ -84,10 +95,10 @@ fun BuildTurnDTO.toModel(game: GameName, service: Service): TurnType? {
   }
 }
 
-fun SealTurnDTO.toModel(game: GameName, service: Service): TurnType? {
-  return service.getPlayerId(game, this.player)?.let {
+fun SealTurnDTO.toModel(game: GameName, accessToken: AccessToken, service: Service): TurnType? {
+  return service.getPlayerId(game, accessToken)?.let { playerId ->
     TurnType.MoveTurn.BuildTurn(
-      it,
+      playerId,
       start.toModel(),
       target.toModel(),
       seal.toModel()
@@ -101,6 +112,20 @@ fun withGameName(
   f: (GameName) -> Response
 ): Response =
   req.pathGameName().map(f).merge()
+
+fun withToken(
+  req: Request,
+  f: (AccessToken) -> Response
+): Response =
+  try {
+    val bearer = Header.AUTHORIZATION.extract(req)
+    f(bearer.token)
+  } catch (e: LensFailure) {
+    unauthorized(
+      "Can't access this game: give a Authorization: Bearer ... " +
+          "header that you got when connecting to access the game."
+    )
+  }
 
 fun withGame(
   req: Request,

@@ -96,9 +96,7 @@ class SkyscraperClientImpl(
     position: Position
   ): Either<ClientError, GameState> {
     val req = Request(Method.POST, "/api/v1/games" / name / "place").with(
-      // TODO: rm token from place turn DTO
-      Body.auto<PlaceTurnDTO>().toLens() of
-          PlaceTurnDTO(token, PositionDTO(position)),
+      Body.auto<PlaceTurnDTO>().toLens() of PlaceTurnDTO(PositionDTO(position)),
       Header.AUTHORIZATION of Authorization.Bearer(token)
     )
     val res = handler(req)
@@ -118,9 +116,7 @@ class SkyscraperClientImpl(
     build: Position
   ): Either<ClientError, GameState> {
     val req = Request(Method.POST, "/api/v1/games" / name / "build").with(
-      // TODO: rm token from place turn DTO
-      Body.auto<BuildTurnDTO>().toLens() of
-          BuildTurnDTO(token, start, target, build),
+      Body.auto<BuildTurnDTO>().toLens() of BuildTurnDTO(start, target, build),
       Header.AUTHORIZATION of Authorization.Bearer(token)
     )
 
@@ -141,9 +137,7 @@ class SkyscraperClientImpl(
     seal: Position
   ): Either<ClientError, GameState> {
     val req = Request(Method.POST, "/api/v1/games" / name / "seal").with(
-      // TODO: rm token from place turn DTO
-      Body.auto<SealTurnDTO>().toLens() of
-          SealTurnDTO(token, start, target, seal),
+      Body.auto<SealTurnDTO>().toLens() of SealTurnDTO(start, target, seal),
       Header.AUTHORIZATION of Authorization.Bearer(token)
     )
 

@@ -81,7 +81,7 @@ class WinA2PlayersGame {
       authAs(player)(
         Request(POST, "/games/foo/place").with(
           Body.auto<PlaceTurnDTO>().toLens() of
-              PlaceTurnDTO(player.token, PositionDTO(pos))
+              PlaceTurnDTO(PositionDTO(pos))
         )
       ).parse<GameResponse>()
     }
@@ -92,7 +92,6 @@ class WinA2PlayersGame {
           Body.auto<TurnTypeDTO>().toLens() of
               TurnTypeDTO.build(
                 BuildTurnDTO(
-                  player.token,
                   PositionDTO(start),
                   PositionDTO(target),
                   PositionDTO(build),
