@@ -47,13 +47,13 @@ class TurnTypeDTO private constructor(
 //        build.build.toModel(),
 //      )
 
-    if (seal != null)
-      return TurnType.MoveTurn.SealTurn(
-        seal.player,
-        seal.start.toModel(),
-        seal.target.toModel(),
-        seal.seal.toModel(),
-      )
+//    if (seal != null)
+//      return TurnType.MoveTurn.SealTurn(
+//        seal.player,
+//        seal.start.toModel(),
+//        seal.target.toModel(),
+//        seal.seal.toModel(),
+//      )
 
     if (win != null)
       return TurnType.MoveTurn.WinTurn(

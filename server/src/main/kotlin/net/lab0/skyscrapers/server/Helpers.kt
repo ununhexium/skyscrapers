@@ -3,6 +3,7 @@ package net.lab0.skyscrapers.server
 import net.lab0.skyscrapers.api.dto.BuildTurnDTO
 import net.lab0.skyscrapers.api.dto.ErrorResponse
 import net.lab0.skyscrapers.api.dto.PlaceTurnDTO
+import net.lab0.skyscrapers.api.dto.SealTurnDTO
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.structure.TurnType
 import org.http4k.core.Body
@@ -60,6 +61,17 @@ fun BuildTurnDTO.toModel(game: GameName, service: Service): TurnType? {
       start.toModel(),
       target.toModel(),
       build.toModel()
+    )
+  }
+}
+
+fun SealTurnDTO.toModel(game: GameName, service: Service): TurnType? {
+  return service.getPlayerId(game, this.player)?.let {
+    TurnType.MoveTurn.BuildTurn(
+      it,
+      start.toModel(),
+      target.toModel(),
+      seal.toModel()
     )
   }
 }

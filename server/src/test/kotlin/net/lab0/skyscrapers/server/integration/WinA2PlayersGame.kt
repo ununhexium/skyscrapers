@@ -92,7 +92,7 @@ class WinA2PlayersGame {
           Body.auto<TurnTypeDTO>().toLens() of
               TurnTypeDTO.build(
                 BuildTurnDTO(
-                  player.player,
+                  player.token,
                   PositionDTO(start),
                   PositionDTO(target),
                   PositionDTO(build),

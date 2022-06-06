@@ -35,8 +35,6 @@ interface SkyscraperClient {
    */
   fun join(name: GameName): Either<Errors, ConnectionResponse>
 
-//  fun play(name: GameName, turn: TurnType): Either<Errors, GameState>
-
   fun place(
     name: GameName,
     token: AccessToken,
@@ -49,5 +47,13 @@ interface SkyscraperClient {
     start: Position,
     target: Position,
     build: Position,
+  ): Either<ClientError, GameState>
+
+  fun seal(
+    name: GameName,
+    token: AccessToken,
+    start: Position,
+    target: Position,
+    seal: Position,
   ): Either<ClientError, GameState>
 }

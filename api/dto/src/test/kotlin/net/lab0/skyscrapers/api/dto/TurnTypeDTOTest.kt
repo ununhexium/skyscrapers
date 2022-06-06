@@ -16,63 +16,6 @@ internal class TurnTypeDTOTest {
     )
   }
 
-//  @Test
-//  fun `can deserialize a place turn`() {
-//    Assertions.assertThat(
-//      TurnTypeDTO.place(
-//        place = PlaceTurnDTO(
-//          1,
-//          PositionDTO(2, 3)
-//        )
-//      )
-//        .toTurnType()
-//    ).isEqualTo(
-//      TurnType.PlacementTurn(1, Position(2, 3))
-//    )
-//  }
-
-  @Test
-  fun `can deserialize a build turn`() {
-    Assertions.assertThat(
-      TurnTypeDTO.build(
-        build = BuildTurnDTO(
-          1,
-          PositionDTO(2, 3),
-          PositionDTO(4, 5),
-          PositionDTO(6, 7),
-        )
-      ).toTurnType()
-    ).isEqualTo(
-      TurnType.MoveTurn.BuildTurn(
-        1,
-        Position(2, 3),
-        Position(4, 5),
-        Position(6, 7)
-      )
-    )
-  }
-
-  @Test
-  fun `can deserialize a seal turn`() {
-    Assertions.assertThat(
-      TurnTypeDTO.seal(
-        seal = SealTurnDTO(
-          1,
-          PositionDTO(2, 3),
-          PositionDTO(4, 5),
-          PositionDTO(6, 7),
-        )
-      ).toTurnType()
-    ).isEqualTo(
-      TurnType.MoveTurn.SealTurn(
-        1,
-        Position(2, 3),
-        Position(4, 5),
-        Position(6, 7)
-      )
-    )
-  }
-
   @Test
   fun `can deserialize a win turn`() {
     Assertions.assertThat(

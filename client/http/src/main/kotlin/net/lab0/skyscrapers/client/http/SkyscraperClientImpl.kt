@@ -13,6 +13,7 @@ import net.lab0.skyscrapers.api.dto.GameViolationsDTO
 import net.lab0.skyscrapers.api.dto.ListGamesResponse
 import net.lab0.skyscrapers.api.dto.PlaceTurnDTO
 import net.lab0.skyscrapers.api.dto.PositionDTO
+import net.lab0.skyscrapers.api.dto.SealTurnDTO
 import net.lab0.skyscrapers.api.dto.StatusResponse
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.http4k.AUTHORIZATION
@@ -119,6 +120,29 @@ class SkyscraperClientImpl(
       // TODO: rm token from place turn DTO
       Body.auto<BuildTurnDTO>().toLens() of
           BuildTurnDTO(token, start, target, build),
+      Header.AUTHORIZATION of Authorization.Bearer(token)
+    )
+
+    val res = handler(req)
+
+    return when (res.status) {
+      Status.CREATED -> Right(res.extract<GameStateDTO>().toModel())
+      Status.CONFLICT -> Left(GameRuleErrors(res.extract<GameViolationsDTO>().violations.map { it.toModel() }))
+      else -> Left(SimpleErrors(res.extract<ErrorResponse>().errors))
+    }
+  }
+
+  override fun seal(
+    name: GameName,
+    token: AccessToken,
+    start: Position,
+    target: Position,
+    seal: Position
+  ): Either<ClientError, GameState> {
+    val req = Request(Method.POST, "/api/v1/games" / name / "seal").with(
+      // TODO: rm token from place turn DTO
+      Body.auto<SealTurnDTO>().toLens() of
+          SealTurnDTO(token, start, target, seal),
       Header.AUTHORIZATION of Authorization.Bearer(token)
     )
 
