@@ -2,9 +2,7 @@ package net.lab0.skyscrapers.client.clikt
 
 import net.lab0.skyscrapers.client.clikt.configuration.Configurer
 import net.lab0.skyscrapers.client.clikt.di.cliModule
-import net.lab0.skyscrapers.client.http.SkyscraperClientImpl
 import org.http4k.client.OkHttp
-import org.http4k.core.HttpHandler
 import org.http4k.core.Uri
 import org.http4k.core.then
 import org.http4k.filter.ClientFilters
@@ -28,6 +26,6 @@ fun main(argv: Array<String>) {
   }
 
   GameCli.new(null).main(argv)
-  
+
   stopKoin()
 }

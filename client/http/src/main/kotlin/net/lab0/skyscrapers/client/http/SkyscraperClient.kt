@@ -42,4 +42,12 @@ interface SkyscraperClient {
     token: AccessToken,
     position: Position,
   ): Either<ClientError, GameState>
+
+  fun build(
+    name: GameName,
+    token: AccessToken,
+    start: Position,
+    target: Position,
+    build: Position,
+  ): Either<ClientError, GameState>
 }

@@ -2,6 +2,7 @@ package net.lab0.skyscrapers.server
 
 import net.lab0.skyscrapers.api.http4k.AUTH_MISSING_MESSAGE
 import net.lab0.skyscrapers.api.http4k.InvalidAuthentication
+import net.lab0.skyscrapers.server.endpoint.build
 import net.lab0.skyscrapers.server.endpoint.createGame
 import net.lab0.skyscrapers.server.endpoint.joinGame
 import net.lab0.skyscrapers.server.endpoint.listGames
@@ -48,6 +49,7 @@ fun routed(service: Service) = ServerFilters.CatchAll { ex ->
       routes(
         //    "/api/v1/games/{gameName}/play" bind POST to { playGame(service, it) },
         "/place" bind POST to { place(service, it) },
+        "/build" bind POST to { build(service, it) },
       ),
     ),
 

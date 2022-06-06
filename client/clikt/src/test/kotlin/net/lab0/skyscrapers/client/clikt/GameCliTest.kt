@@ -5,6 +5,8 @@ import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldMatch
 import io.kotest.matchers.string.shouldNotContain
 import net.lab0.skyscrapers.api.dto.value.GameName
+import net.lab0.skyscrapers.api.structure.Position
+import net.lab0.skyscrapers.api.structure.TurnType
 import net.lab0.skyscrapers.client.FakeServerTest
 import net.lab0.skyscrapers.server.ServiceImpl
 import org.junit.jupiter.api.Test
@@ -134,6 +136,40 @@ internal class GameCliTest :
       writer.toString() shouldContain "Name:"
       writer.toString() shouldContain "Description:"
       writer.toString() shouldContain "Detail:"
+    }
+  }
+
+  @Test
+  fun `move a builder`() {
+    val service = ServiceImpl.new()
+    val game = GameName("foo")
+    service.createGame(game)
+
+    fakeServer(service = service) {
+      declare { it }
+      val writer = StringWriter()
+
+      val cli = GameCli.new(writer)
+      cli.parse("config", "--reset")
+      cli.parse("join", "foo")
+
+      val p1 = service.join(game)
+
+      cli.parse("place", "--game", "foo", "--at", "0,1")
+
+      service
+        .getGame(game)!!
+        .play(TurnType.PlacementTurn(p1.id, Position(1, 0)))
+
+      cli.parse("place", "--game", "foo", "--at", "0,2")
+
+      service
+        .getGame(game)!!
+        .play(TurnType.PlacementTurn(p1.id, Position(2, 0)))
+
+      cli.parse("build", "--game", "foo", "--from", "0,2", "--to", "1,3", "--build", "2,4")
+
+      writer.toString() shouldContain "Moved builder from 0,2 to 1,3 and built at 2,4"
     }
   }
 }

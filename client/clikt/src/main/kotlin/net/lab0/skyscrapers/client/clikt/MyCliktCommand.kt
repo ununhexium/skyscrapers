@@ -1,6 +1,7 @@
 package net.lab0.skyscrapers.client.clikt
 
 import com.github.ajalt.clikt.core.CliktCommand
+import net.lab0.skyscrapers.client.http.ClientError
 import java.io.Writer
 
 abstract class MyCliktCommand(
@@ -43,6 +44,21 @@ abstract class MyCliktCommand(
       )
     } else {
       writer.write(message + "\n")
+    }
+  }
+
+  fun showError(err: ClientError) {
+    when (err) {
+      is ClientError.GameRuleErrors -> {
+        myEcho("Game rule violated.")
+        myEcho("")
+        err.violations.forEach { v ->
+          myEcho("Name: ${v.name}")
+          myEcho("Description: ${v.description}")
+          myEcho("Detail: ${v.detail}")
+        }
+      }
+      is ClientError.SimpleErrors -> err.errors.forEach { it -> myEcho(it) }
     }
   }
 }

@@ -6,6 +6,7 @@ import net.lab0.skyscrapers.client.clikt.command.Configuration
 import net.lab0.skyscrapers.client.clikt.command.Connect
 import net.lab0.skyscrapers.client.clikt.command.Current
 import net.lab0.skyscrapers.client.clikt.command.Join
+import net.lab0.skyscrapers.client.clikt.command.Build
 import net.lab0.skyscrapers.client.clikt.command.NewGame
 import net.lab0.skyscrapers.client.clikt.command.Place
 import net.lab0.skyscrapers.client.clikt.command.Show
@@ -24,6 +25,7 @@ class GameCli : CliktCommand() {
         Join(writer),
         Current(writer),
         Place(writer),
+        Build(writer),
       )
     }
   }

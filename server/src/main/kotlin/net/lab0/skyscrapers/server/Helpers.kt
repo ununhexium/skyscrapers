@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.server
 
+import net.lab0.skyscrapers.api.dto.BuildTurnDTO
 import net.lab0.skyscrapers.api.dto.ErrorResponse
 import net.lab0.skyscrapers.api.dto.PlaceTurnDTO
 import net.lab0.skyscrapers.api.dto.value.GameName
@@ -46,8 +47,19 @@ fun internalServerError(vararg messages: String?) =
         ErrorResponse(messages.filterNotNull())
   )
 
-fun PlaceTurnDTO.toModel(game:GameName, service: Service): TurnType? {
+fun PlaceTurnDTO.toModel(game: GameName, service: Service): TurnType? {
   return service.getPlayerId(game, this.player)?.let {
     TurnType.PlacementTurn(it, position.toModel())
+  }
+}
+
+fun BuildTurnDTO.toModel(game: GameName, service: Service): TurnType? {
+  return service.getPlayerId(game, this.player)?.let {
+    TurnType.MoveTurn.BuildTurn(
+      it,
+      start.toModel(),
+      target.toModel(),
+      build.toModel()
+    )
   }
 }

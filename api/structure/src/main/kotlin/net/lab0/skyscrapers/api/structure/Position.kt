@@ -1,11 +1,19 @@
 package net.lab0.skyscrapers.api.structure
 
+import net.lab0.skyscrapers.api.structure.Position.Style.COMA
+import net.lab0.skyscrapers.api.structure.Position.Style.X
 import kotlin.math.abs
 
 data class Position(
   val x: Int,
   val y: Int,
 ) {
+
+  enum class Style {
+    COMA,
+    X
+  }
+
   companion object {
     val NONE = Position(-1, -1)
   }
@@ -20,6 +28,13 @@ data class Position(
 
   override fun toString() =
     "[$x, $y]"
+
+  fun toString(style: Style) =
+    when (style) {
+      COMA -> "$x,$y"
+      X -> "${x}x$y"
+      else -> toString()
+    }
 
   /**
    * Get the list of all surrounding positions, including diagonals

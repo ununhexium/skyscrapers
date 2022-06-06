@@ -4,6 +4,7 @@ import arrow.core.Either
 import arrow.core.Either.Left
 import arrow.core.Either.Right
 import net.lab0.skyscrapers.api.dto.AccessToken
+import net.lab0.skyscrapers.api.dto.BuildTurnDTO
 import net.lab0.skyscrapers.api.dto.ConnectionResponse
 import net.lab0.skyscrapers.api.dto.ErrorResponse
 import net.lab0.skyscrapers.api.dto.GameResponse
@@ -98,6 +99,29 @@ class SkyscraperClientImpl(
           PlaceTurnDTO(token, PositionDTO(position)),
       Header.AUTHORIZATION of Authorization.Bearer(token)
     )
+    val res = handler(req)
+
+    return when (res.status) {
+      Status.CREATED -> Right(res.extract<GameStateDTO>().toModel())
+      Status.CONFLICT -> Left(GameRuleErrors(res.extract<GameViolationsDTO>().violations.map { it.toModel() }))
+      else -> Left(SimpleErrors(res.extract<ErrorResponse>().errors))
+    }
+  }
+
+  override fun build(
+    name: GameName,
+    token: AccessToken,
+    start: Position,
+    target: Position,
+    build: Position
+  ): Either<ClientError, GameState> {
+    val req = Request(Method.POST, "/api/v1/games" / name / "build").with(
+      // TODO: rm token from place turn DTO
+      Body.auto<BuildTurnDTO>().toLens() of
+          BuildTurnDTO(token, start, target, build),
+      Header.AUTHORIZATION of Authorization.Bearer(token)
+    )
+
     val res = handler(req)
 
     return when (res.status) {
