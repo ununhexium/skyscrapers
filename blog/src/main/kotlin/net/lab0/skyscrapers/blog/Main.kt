@@ -17,15 +17,15 @@ val ARTICLES_PATH_SEGMENT = "/blog/article"
 val RESOURCES_PATH_SEGMENT = "/resources"
 val IMAGES_PATH_SEGMENT = "$RESOURCES_PATH_SEGMENT/images"
 
+val articles = listOf(
+  Introduction,
+  TheNeverEndingTodoList,
+  GameDesign,
+  Foundation,
+)
+
 fun main(args: Array<String>) {
   val http = ignite()
-
-  val articles = listOf(
-    Introduction,
-    TheNeverEndingTodoList,
-    GameDesign,
-    Foundation,
-  )
 
   val digest = MessageDigest.getInstance("SHA256")
 
