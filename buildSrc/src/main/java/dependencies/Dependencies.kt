@@ -61,6 +61,9 @@ object Dependencies {
 
   val mockK = "io.mockk:mockk:${Versions.mockk}"
 
-  val sparkJava = "com.sparkjava:spark-core:${Versions.sparkJava}"
+  object spring {
+    val shell = "org.springframework.shell:spring-shell-starter:${Versions.springShell}"
+  }
 
+  val sparkJava = "com.sparkjava:spark-core:${Versions.sparkJava}"
 }

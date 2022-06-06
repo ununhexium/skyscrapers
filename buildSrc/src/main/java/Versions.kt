@@ -18,6 +18,7 @@ object Versions {
   val kotlinxSerializationJson = "1.3.3"
   val http4k = "4.25.14.0"
   val sparkJava = "2.9.3"
+  val springShell = "2.0.1.RELEASE"
 
   // test
   val assertJ = "3.22.0"
