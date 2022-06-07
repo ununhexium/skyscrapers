@@ -1,6 +1,7 @@
 package net.lab0.skyscrapers.client.shell.spring
 
 import arrow.core.merge
+import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.client.http.SkyscraperClient
 import org.springframework.shell.Availability
 import org.springframework.shell.standard.ShellComponent
@@ -14,7 +15,10 @@ class Menu(val factory: SkyscraperClientFactoryComponent) {
 
   lateinit var client: SkyscraperClient
 
-  @ShellMethod("Choose the server and rest the connectivity.")
+  @ShellMethod(
+    "Choose the server and rest the connectivity.",
+    key = ["connect"]
+  )
   fun connect(
     @ShellOption("--url", help = "The server URL") baseUrl: String,
   ): String {
@@ -28,17 +32,24 @@ class Menu(val factory: SkyscraperClientFactoryComponent) {
     }.merge()
   }
 
-  @ShellMethod("Add two integers together.")
-  fun add(a: Int, b: Int): Int {
-    return a + b
+  @ShellMethod("Create a new game on the server", key = ["create"])
+  fun create(
+    @ShellOption(
+      "--game",
+      help = "The name of the game.",
+    ) name: GameName,
+  ): String {
+    return client
+      .create(name)
+      .map {
+        "Created game ${it.name}."
+      }
+      .mapLeft {
+        "Error when creating the game:\n" + it.joinToString(separator = "\n")
+      }.merge()
   }
 
-
-  @ShellMethod(value = "Display stuff.", prefix = "-")
-  fun echo(a: Int, b: Int, @ShellOption("--third") c: Int): String? {
-    return String.format("You said a=%d, b=%d, c=%d", a, b, c)
-  }
-
+  
 
   @ShellMethod("Add Numbers.", key = ["adds"])
   fun addNumbers(@ShellOption(arity = 3) numbers: FloatArray): Float {

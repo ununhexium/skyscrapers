@@ -28,9 +28,9 @@ class GameCli : CliktCommand() {
         NewGame(writer),
         Place(writer),
         Seal(writer),
-        Win(writer),
         Show(writer),
         Version(writer),
+        Win(writer),
       )
     }
   }

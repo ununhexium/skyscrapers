@@ -5,8 +5,11 @@ import com.ninjasquad.springmockk.MockkBean
 import io.kotest.matchers.string.shouldContain
 import io.mockk.every
 import io.mockk.mockk
+import net.lab0.skyscrapers.api.dto.GameResponse
 import net.lab0.skyscrapers.api.dto.StatusResponse
+import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.client.http.SkyscraperClient
+import net.lab0.skyscrapers.engine.GameFactoryImpl
 import org.http4k.core.Status
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -38,7 +41,7 @@ internal class MenuTest {
   private lateinit var resultHandler: DefaultResultHandler
 
   @Test
-  fun connectSucceeds() {
+  fun `connect succeeds`() {
     val baseUrl = "http://localhost:45678/"
 
     val client = mockk<SkyscraperClient>() {
@@ -60,8 +63,9 @@ internal class MenuTest {
     connect shouldContain "bar"
   }
 
+  // TODO: generic error display class
   @Test
-  fun connectionFails() {
+  fun `connection fails`() {
     val baseUrl = "http://localhost:45678/"
     val status = Status.INTERNAL_SERVER_ERROR
 
@@ -76,4 +80,28 @@ internal class MenuTest {
     connect shouldContain "Failed to connect to $baseUrl with status $status."
   }
 
+  @Test
+  fun `create a game`() {
+    val baseUrl = "http://localhost:45678/"
+    val yggdrasil = "Yggdrasil"
+    val game = GameName(yggdrasil)
+
+    val client = mockk<SkyscraperClient>() {
+      every { status() } returns Either.Left(Status.OK)
+
+      every { create(game) } returns Either.Right(
+        GameResponse(
+          game,
+          GameFactoryImpl().new().state
+        )
+      )
+    }
+
+    every { factory.newClient(BaseUrl(baseUrl)) } returns client
+
+    shell.evaluate { "connect --url $baseUrl" }
+    val create = shell.evaluate { "create --game $yggdrasil" } as String
+    resultHandler.handleResult(create)
+    create shouldContain "Created game $yggdrasil."
+  }
 }
