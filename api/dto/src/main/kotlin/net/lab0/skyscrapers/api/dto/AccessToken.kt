@@ -7,6 +7,8 @@ import java.util.*
 @JvmInline
 value class AccessToken(val value: String) {
   companion object {
+    val EMPTY = AccessToken("")
+
     fun random() = AccessToken(UUID.randomUUID().toString())
   }
 }

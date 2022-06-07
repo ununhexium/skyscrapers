@@ -1,8 +1,8 @@
 package net.lab0.skyscrapers.client.shell.spring
 
-import arrow.core.merge
 import net.lab0.skyscrapers.api.dto.value.GameName
-import net.lab0.skyscrapers.client.http.SkyscraperClient
+import net.lab0.skyscrapers.api.structure.Position
+import net.lab0.skyscrapers.client.shell.spring.component.GameMaster
 import org.springframework.shell.Availability
 import org.springframework.shell.standard.ShellComponent
 import org.springframework.shell.standard.ShellMethod
@@ -11,9 +11,7 @@ import javax.validation.constraints.Size
 
 
 @ShellComponent
-class Menu(val factory: SkyscraperClientFactoryComponent) {
-
-  lateinit var client: SkyscraperClient
+class Menu(val gameMaster: GameMaster) {
 
   @ShellMethod(
     "Choose the server and rest the connectivity.",
@@ -21,15 +19,10 @@ class Menu(val factory: SkyscraperClientFactoryComponent) {
   )
   fun connect(
     @ShellOption("--url", help = "The server URL") baseUrl: String,
-  ): String {
-    client = factory.newClient(BaseUrl(baseUrl))
+  ): String? {
+    gameMaster.reconnect(baseUrl)
 
-    return client.status().map {
-      "Connected to $baseUrl.\nAvailable games: " +
-          it.games.joinToString(separator = "\n")
-    }.mapLeft { status ->
-      "Failed to connect to $baseUrl with status $status."
-    }.merge()
+    return gameMaster.status(baseUrl)
   }
 
   @ShellMethod("Create a new game on the server", key = ["create"])
@@ -38,15 +31,8 @@ class Menu(val factory: SkyscraperClientFactoryComponent) {
       "--game",
       help = "The name of the game.",
     ) name: GameName,
-  ): String {
-    return client
-      .create(name)
-      .map {
-        "Created game ${it.name}."
-      }
-      .mapLeft {
-        "Error when creating the game:\n" + it.joinToString(separator = "\n")
-      }.merge()
+  ): String? {
+    return gameMaster.create(name)
   }
 
   @ShellMethod("Join an existing game.", key = ["join"])
@@ -55,16 +41,38 @@ class Menu(val factory: SkyscraperClientFactoryComponent) {
       "--game",
       help = "The name of the game to join.",
     ) name: GameName,
-  ): String {
-    return client
-      .join(name)
-      .map {
-        "Joined game ${name.value} as player ${it.player} with access token ${it.token.value}."
-      }
-      .mapLeft {
-        "Error when joining the game:\n" + it.joinToString(separator = "\n")
-      }.merge()
+  ): String? {
+    return gameMaster.join(name)
   }
+
+  @ShellMethod("Place a builder at the given position.", key = ["place"])
+  fun place(
+    @ShellOption(
+      "--at",
+      help = "Where to place a builder.",
+    ) position: Position,
+  ): String? {
+    return gameMaster.place(position)
+  }
+
+  @ShellMethod("Move a builder and build.", key = ["build"])
+  fun build(
+    @ShellOption(
+      "--from",
+      help = "Which builder to move",
+    ) start: Position,
+    @ShellOption(
+      "--to",
+      help = "Where to move the builder.",
+    ) target: Position,
+    @ShellOption(
+      "--build",
+      help = "Where to build.",
+    ) build: Position,
+  ): String? {
+    return gameMaster.build(start, target, build)
+  }
+
 
   @ShellMethod("Add Numbers.", key = ["adds"])
   fun addNumbers(@ShellOption(arity = 3) numbers: FloatArray): Float {
