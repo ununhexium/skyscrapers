@@ -49,7 +49,22 @@ class Menu(val factory: SkyscraperClientFactoryComponent) {
       }.merge()
   }
 
-  
+  @ShellMethod("Join an existing game.", key = ["join"])
+  fun join(
+    @ShellOption(
+      "--game",
+      help = "The name of the game to join.",
+    ) name: GameName,
+  ): String {
+    return client
+      .join(name)
+      .map {
+        "Joined game ${name.value} as player ${it.player} with access token ${it.token.value}."
+      }
+      .mapLeft {
+        "Error when joining the game:\n" + it.joinToString(separator = "\n")
+      }.merge()
+  }
 
   @ShellMethod("Add Numbers.", key = ["adds"])
   fun addNumbers(@ShellOption(arity = 3) numbers: FloatArray): Float {

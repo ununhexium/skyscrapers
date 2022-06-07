@@ -5,6 +5,8 @@ import com.ninjasquad.springmockk.MockkBean
 import io.kotest.matchers.string.shouldContain
 import io.mockk.every
 import io.mockk.mockk
+import net.lab0.skyscrapers.api.dto.AccessToken
+import net.lab0.skyscrapers.api.dto.ConnectionResponse
 import net.lab0.skyscrapers.api.dto.GameResponse
 import net.lab0.skyscrapers.api.dto.StatusResponse
 import net.lab0.skyscrapers.api.dto.value.GameName
@@ -104,4 +106,27 @@ internal class MenuTest {
     resultHandler.handleResult(create)
     create shouldContain "Created game $yggdrasil."
   }
+
+  @Test
+  fun `join a game`() {
+    val baseUrl = "http://localhost:45678/"
+    val yggdrasil = "Yggdrasil"
+    val game = GameName(yggdrasil)
+
+    val client = mockk<SkyscraperClient>() {
+      every { status() } returns Either.Left(Status.OK)
+
+      every { join(game) } returns Either.Right(
+        ConnectionResponse(0, AccessToken("TOKEN"))
+      )
+    }
+
+    every { factory.newClient(BaseUrl(baseUrl)) } returns client
+
+    shell.evaluate { "connect --url $baseUrl" }
+    val create = shell.evaluate { "join --game $yggdrasil" } as String
+    resultHandler.handleResult(create)
+    create shouldContain "Joined game $yggdrasil as player 0 with access token TOKEN."
+  }
+
 }
