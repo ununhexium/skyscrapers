@@ -187,4 +187,25 @@ internal class MenuTest {
     resultHandler.handleResult(create)
     create shouldContain "Moved builder from 0,0 to 1,1 and sealed at 2,2."
   }
+
+  @Test
+  fun win() {
+    val start = Position(0, 0)
+    val target = Position(1, 1)
+
+    val client = mockk<SkyscraperClient>() {
+      every { win(game, token, start, target) } returns
+          Right(GameState.DUMMY)
+    }
+
+    gameMaster.forceState(
+      ShellState(client, game, token)
+    )
+
+    val create =
+      shell.evaluate { "win --from 0,0 --to 1,1" } as String
+    resultHandler.handleResult(create)
+    create shouldContain "Moved builder from 0,0 to 1,1 and won."
+  }
+
 }

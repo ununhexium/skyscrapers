@@ -138,4 +138,24 @@ class GameMaster(val factory: SkyscraperClientFactoryComponent) {
       ?.merge()
   }
 
+  fun win(start: Position, target: Position): String? {
+    checkInGame()
+
+    return state
+      .client
+      ?.win(state.currentGame!!, state.accessToken!!, start, target)
+      ?.map {
+        "Moved builder from ${start.toString(Position.Style.COMA)} " +
+            "to ${target.toString(Position.Style.COMA)} and won."
+      }
+      ?.mapLeft {
+        "Error when playing the game:\n" + when (it) {
+          // TODO: the output should be a sealed class that separates the normal string and the error responses
+          is ClientError.GameRuleErrors -> it.violations.joinToString(separator = "\n")
+          is ClientError.SimpleErrors -> it.errors.joinToString(separator = "\n")
+        }
+      }
+      ?.merge()
+  }
+
 }

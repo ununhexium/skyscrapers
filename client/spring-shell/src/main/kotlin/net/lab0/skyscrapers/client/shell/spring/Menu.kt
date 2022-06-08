@@ -91,10 +91,22 @@ class Menu(val gameMaster: GameMaster) {
     return gameMaster.seal(start, target, build)
   }
 
-  @ShellMethod("Download the nuclear codes.")
-  fun download() {
+  @ShellMethod("Move a builder and win.", key = ["win"])
+  fun win(
+    @ShellOption(
+      "--from",
+      help = "Which builder to move",
+    ) start: Position,
+    @ShellOption(
+      "--to",
+      help = "Where to move the builder.",
+    ) target: Position,
+  ): String? {
+    return gameMaster.win(start, target)
   }
 
+
+  // TODO: commands availabilities
   fun downloadAvailability(): Availability {
     return if (true) Availability.available() else Availability.unavailable(
       "you are not connected"
