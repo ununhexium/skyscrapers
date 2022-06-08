@@ -83,7 +83,7 @@ class GameMaster(val factory: SkyscraperClientFactoryComponent) {
         "Placed a builder at ${position.toString(Position.Style.COMA)}."
       }
       ?.mapLeft {
-        "Error when joining the game:\n" + when (it) {
+        "Error when playing the game:\n" + when (it) {
           // TODO: the output should be a sealed class that separates the normal string and the error responses
           is ClientError.GameRuleErrors -> it.violations.joinToString(separator = "\n")
           is ClientError.SimpleErrors -> it.errors.joinToString(separator = "\n")
@@ -108,7 +108,7 @@ class GameMaster(val factory: SkyscraperClientFactoryComponent) {
             "and built at ${build.toString(Position.Style.COMA)}."
       }
       ?.mapLeft {
-        "Error when joining the game:\n" + when (it) {
+        "Error when playing the game:\n" + when (it) {
           // TODO: the output should be a sealed class that separates the normal string and the error responses
           is ClientError.GameRuleErrors -> it.violations.joinToString(separator = "\n")
           is ClientError.SimpleErrors -> it.errors.joinToString(separator = "\n")
@@ -116,4 +116,26 @@ class GameMaster(val factory: SkyscraperClientFactoryComponent) {
       }
       ?.merge()
   }
+
+  fun seal(start: Position, target: Position, seal: Position): String? {
+    checkInGame()
+
+    return state
+      .client
+      ?.seal(state.currentGame!!, state.accessToken!!, start, target, seal)
+      ?.map {
+        "Moved builder from ${start.toString(Position.Style.COMA)} " +
+            "to ${target.toString(Position.Style.COMA)} " +
+            "and sealed at ${seal.toString(Position.Style.COMA)}."
+      }
+      ?.mapLeft {
+        "Error when playing the game:\n" + when (it) {
+          // TODO: the output should be a sealed class that separates the normal string and the error responses
+          is ClientError.GameRuleErrors -> it.violations.joinToString(separator = "\n")
+          is ClientError.SimpleErrors -> it.errors.joinToString(separator = "\n")
+        }
+      }
+      ?.merge()
+  }
+
 }

@@ -1,5 +1,7 @@
 package net.lab0.skyscrapers.engine.structure
 
+import io.kotest.matchers.shouldBe
+import net.lab0.skyscrapers.api.structure.Bounds
 import net.lab0.skyscrapers.api.structure.Matrix
 import net.lab0.skyscrapers.api.structure.Position
 import org.assertj.core.api.Assertions.assertThat
@@ -126,7 +128,7 @@ internal class MatrixTest {
       )
     )
 
-    assertThat(one.merge(a){ it.first.toString() + it.second.toString() }).isEqualTo(
+    assertThat(one.merge(a) { it.first.toString() + it.second.toString() }).isEqualTo(
       Matrix(
         listOf(
           listOf("1a", "2b", "3c"),
@@ -134,5 +136,11 @@ internal class MatrixTest {
         )
       )
     )
+  }
+
+  @Test
+  fun `the null matrix has a size of 0`() {
+    val zero = Matrix.SINGLE<Unit> { 0 }
+    zero.dimensions shouldBe Bounds.ZERO
   }
 }

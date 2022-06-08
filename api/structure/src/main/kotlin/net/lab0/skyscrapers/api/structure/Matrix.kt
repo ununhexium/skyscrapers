@@ -34,6 +34,9 @@ data class Matrix<T>(
   }
 
   companion object {
+    fun <T> SINGLE(f: (Position) -> T) =
+      Matrix(listOf(listOf(f(Position(0, 0)))))
+
     fun <T> from(
       input: String,
       rowSeparator: String = "\n",

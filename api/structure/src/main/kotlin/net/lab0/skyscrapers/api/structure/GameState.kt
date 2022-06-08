@@ -15,6 +15,16 @@ data class GameState(
   }
 
   companion object {
+    val DUMMY = GameState(
+      Bounds.ZERO,
+      listOf(Player(0, true)),
+      0,
+      BlocksData.EMPTY,
+      Matrix.SINGLE { Height(0) },
+      Matrix.SINGLE { false },
+      Matrix.SINGLE { 0 },
+    )
+
     fun from(
       players: List<Player>,
       buildersPerPlayer: Int,

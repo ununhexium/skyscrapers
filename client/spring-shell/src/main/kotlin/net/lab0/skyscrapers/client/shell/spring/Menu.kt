@@ -73,17 +73,22 @@ class Menu(val gameMaster: GameMaster) {
     return gameMaster.build(start, target, build)
   }
 
-
-  @ShellMethod("Add Numbers.", key = ["adds"])
-  fun addNumbers(@ShellOption(arity = 3) numbers: FloatArray): Float {
-    return numbers[0] + numbers[1] + numbers[2]
-  }
-
-  private var connected = false
-
-  @ShellMethod("Change password.")
-  fun changePassword(@Size(min = 8, max = 40) password: String): String? {
-    return "Password successfully set to $password"
+  @ShellMethod("Move a builder and seal.", key = ["seal"])
+  fun seal(
+    @ShellOption(
+      "--from",
+      help = "Which builder to move",
+    ) start: Position,
+    @ShellOption(
+      "--to",
+      help = "Where to move the builder.",
+    ) target: Position,
+    @ShellOption(
+      "--seal",
+      help = "Where to seal.",
+    ) build: Position,
+  ): String? {
+    return gameMaster.seal(start, target, build)
   }
 
   @ShellMethod("Download the nuclear codes.")
@@ -91,7 +96,7 @@ class Menu(val gameMaster: GameMaster) {
   }
 
   fun downloadAvailability(): Availability {
-    return if (connected) Availability.available() else Availability.unavailable(
+    return if (true) Availability.available() else Availability.unavailable(
       "you are not connected"
     )
   }
