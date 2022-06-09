@@ -37,7 +37,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
   ]
 )
 @ExtendWith(SpringExtension::class)
-internal class MenuTest {
+internal class MenuShellTest {
 
   companion object {
     val baseUrl = "http://localhost:45678/"
@@ -207,5 +207,4 @@ internal class MenuTest {
     resultHandler.handleResult(create)
     create shouldContain "Moved builder from 0,0 to 1,1 and won."
   }
-
 }

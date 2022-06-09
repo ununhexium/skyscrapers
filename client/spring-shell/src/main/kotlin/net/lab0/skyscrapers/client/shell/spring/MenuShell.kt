@@ -7,11 +7,10 @@ import org.springframework.shell.Availability
 import org.springframework.shell.standard.ShellComponent
 import org.springframework.shell.standard.ShellMethod
 import org.springframework.shell.standard.ShellOption
-import javax.validation.constraints.Size
 
 
 @ShellComponent
-class Menu(val gameMaster: GameMaster) {
+class MenuShell(val gameMaster: GameMaster) {
 
   @ShellMethod(
     "Choose the server and rest the connectivity.",
@@ -104,7 +103,6 @@ class Menu(val gameMaster: GameMaster) {
   ): String? {
     return gameMaster.win(start, target)
   }
-
 
   // TODO: commands availabilities
   fun downloadAvailability(): Availability {
