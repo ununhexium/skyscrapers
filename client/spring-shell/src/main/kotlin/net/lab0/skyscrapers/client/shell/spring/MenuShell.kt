@@ -104,6 +104,13 @@ class MenuShell(val gameMaster: GameMaster) {
     return gameMaster.win(start, target)
   }
 
+  @ShellMethod("Shows the state of a game", key = ["state"])
+  fun state(): String? {
+    return gameMaster.state()
+  }
+
+
+
   // TODO: commands availabilities
   fun downloadAvailability(): Availability {
     return if (true) Availability.available() else Availability.unavailable(

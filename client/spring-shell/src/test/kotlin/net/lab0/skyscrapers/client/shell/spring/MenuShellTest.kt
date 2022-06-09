@@ -13,7 +13,12 @@ import net.lab0.skyscrapers.api.dto.ConnectionResponse
 import net.lab0.skyscrapers.api.dto.GameResponse
 import net.lab0.skyscrapers.api.dto.StatusResponse
 import net.lab0.skyscrapers.api.dto.value.GameName
+import net.lab0.skyscrapers.api.structure.BlocksData
+import net.lab0.skyscrapers.api.structure.Bounds
 import net.lab0.skyscrapers.api.structure.GameState
+import net.lab0.skyscrapers.api.structure.Height
+import net.lab0.skyscrapers.api.structure.Matrix
+import net.lab0.skyscrapers.api.structure.Player
 import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.client.http.SkyscraperClient
 import net.lab0.skyscrapers.client.shell.spring.component.GameMaster
@@ -128,6 +133,46 @@ internal class MenuShellTest {
     val create = shell.evaluate { "join --game $yggdrasil" } as String
     resultHandler.handleResult(create)
     create shouldContain "Joined game $yggdrasil as player 0 with access token TOKEN."
+  }
+
+  @Test
+  fun `show the state`() {
+    val client = mockk<SkyscraperClient>() {
+      every { state(game) } returns
+          Right(
+            GameState(
+              Bounds(0..2, 0..1),
+              listOf(Player(0, true), Player(1, false)),
+              2,
+              BlocksData(Height(0) to 4, Height(1) to 3),
+              Matrix.from(
+                """
+                |0 1 0
+                |2 0 0
+              """.trimMargin()
+              ) { Height(it.toInt()) },
+              Matrix.from(
+                """
+                |. X .
+                |. . X
+              """.trimMargin()
+              ) { it != "." },
+              Matrix.from(
+                """
+                |. 1 .
+                |. . 0
+              """.trimMargin()
+              ) { it.toIntOrNull() },
+            )
+          )
+    }
+
+    gameMaster.forceState(ShellState(client, game, token))
+
+    val create = shell.evaluate { "state" } as String
+    resultHandler.handleResult(create)
+    create shouldContain "Board"
+    // TODO: show the board with color using spring shell's annotated string
   }
 
   @Test

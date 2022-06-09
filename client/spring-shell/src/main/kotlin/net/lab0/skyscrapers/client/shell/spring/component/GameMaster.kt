@@ -159,4 +159,16 @@ class GameMaster(val factory: SkyscraperClientFactoryComponent) {
       ?.merge()
   }
 
+  fun state(): String? {
+    return state
+      .client
+      ?.state(state.currentGame!!)
+      ?.map {
+        it.toCompositeString()
+      }
+      ?.mapLeft {
+        "Error when joining the game:\n" + it.joinToString(separator = "\n")
+      }
+      ?.merge()
+  }
 }
