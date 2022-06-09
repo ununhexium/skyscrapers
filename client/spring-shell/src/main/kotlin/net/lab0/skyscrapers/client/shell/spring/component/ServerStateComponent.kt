@@ -15,7 +15,7 @@ class ServerStateComponent(val factory: Http4kServerFactoryComponent) {
 
   fun startServer(port: Int) {
     config = factory.new(port)
-    server = routed(service).asServer(config!!)
+    server = routed(service).asServer(config!!).start()
   }
 
   val isRunning

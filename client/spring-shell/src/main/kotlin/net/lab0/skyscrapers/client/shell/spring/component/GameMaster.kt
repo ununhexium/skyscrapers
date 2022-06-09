@@ -58,6 +58,7 @@ class GameMaster(val factory: SkyscraperClientFactoryComponent) {
       ?.merge()
   }
 
+  // TODO: show error message when the shell is not connected (or use availability to mark this command?)
   fun join(name: GameName): String? {
     return state.client?.join(name)
       ?.map {

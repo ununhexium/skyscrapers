@@ -1,3 +1,18 @@
 1654543366586:add 1 1
 1654544954170:help
 1654544964829:connect http://localhost:45678/
+1654802004002:help
+1654802014119:start-server 45678
+1654802025388:connect --url http://localhost:45678/
+1654802112939:start-server
+1654802117260:start-server --port 45678
+1654802130570:connect --url http://localhost:45678/
+1654802138680:create --game foo
+1654802143329:connect --url http://localhost:45678/
+1654802156101:join --game foo
+1654802163931:join --game foo
+1654802206932:connect --url http://localhost:45678/
+1654802208601:join --game foo
+1654802252211:place --at 1,1
+1654802257161:place --at 1,1
+1654802263901:place --at 1,2
