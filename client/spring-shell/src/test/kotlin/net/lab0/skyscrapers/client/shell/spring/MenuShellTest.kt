@@ -3,6 +3,7 @@ package net.lab0.skyscrapers.client.shell.spring
 import arrow.core.Either
 import arrow.core.Either.Right
 import com.ninjasquad.springmockk.SpykBean
+import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import io.mockk.clearAllMocks
@@ -88,7 +89,7 @@ internal class MenuShellTest {
     connect shouldContain "foo"
     connect shouldContain "bar"
 
-    gameMaster.state.client shouldNotBe null
+    gameMaster.isConnected() shouldBe true
   }
 
   // TODO: generic error display class

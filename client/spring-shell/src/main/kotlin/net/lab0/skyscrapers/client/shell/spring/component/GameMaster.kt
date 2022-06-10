@@ -4,7 +4,6 @@ import arrow.core.merge
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.client.http.ClientError
-import net.lab0.skyscrapers.client.http.SkyscraperClient
 import net.lab0.skyscrapers.client.shell.spring.BaseUrl
 import net.lab0.skyscrapers.client.shell.spring.ShellState
 import net.lab0.skyscrapers.client.shell.spring.SkyscraperClientFactoryComponent
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Component
  */
 @Component
 class GameMaster(val factory: SkyscraperClientFactoryComponent) {
-  var state = ShellState()
+  private var state = ShellState()
 
   val inGame
     get() = state.currentGame != null
@@ -171,4 +170,7 @@ class GameMaster(val factory: SkyscraperClientFactoryComponent) {
       }
       ?.merge()
   }
+
+  fun isConnected(): Boolean =
+    state.client != null
 }

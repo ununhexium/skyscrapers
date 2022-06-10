@@ -34,6 +34,10 @@ class MenuShell(val gameMaster: GameMaster) {
     return gameMaster.create(name)
   }
 
+  fun joinAvailability() =
+    if (gameMaster.isConnected()) Availability.available()
+    else Availability.unavailable("you must connect to a server first.")
+
   @ShellMethod("Join an existing game.", key = ["join"])
   fun join(
     @ShellOption(
@@ -44,6 +48,10 @@ class MenuShell(val gameMaster: GameMaster) {
     return gameMaster.join(name)
   }
 
+  fun placeAvailability() =
+    if (gameMaster.inGame) Availability.available()
+    else Availability.unavailable("you must join a game first.")
+
   @ShellMethod("Place a builder at the given position.", key = ["place"])
   fun place(
     @ShellOption(
@@ -53,6 +61,11 @@ class MenuShell(val gameMaster: GameMaster) {
   ): String? {
     return gameMaster.place(position)
   }
+
+
+  fun buildAvailability() =
+    if (gameMaster.inGame) Availability.available()
+    else Availability.unavailable("you must join a game first.")
 
   @ShellMethod("Move a builder and build.", key = ["build"])
   fun build(
@@ -72,6 +85,10 @@ class MenuShell(val gameMaster: GameMaster) {
     return gameMaster.build(start, target, build)
   }
 
+  fun sealAvailability() =
+    if (gameMaster.inGame) Availability.available()
+    else Availability.unavailable("you must join a game first.")
+
   @ShellMethod("Move a builder and seal.", key = ["seal"])
   fun seal(
     @ShellOption(
@@ -90,6 +107,10 @@ class MenuShell(val gameMaster: GameMaster) {
     return gameMaster.seal(start, target, build)
   }
 
+  fun winAvailability() =
+    if (gameMaster.inGame) Availability.available()
+    else Availability.unavailable("you must join a game first.")
+
   @ShellMethod("Move a builder and win.", key = ["win"])
   fun win(
     @ShellOption(
@@ -104,17 +125,8 @@ class MenuShell(val gameMaster: GameMaster) {
     return gameMaster.win(start, target)
   }
 
-  @ShellMethod("Shows the state of a game", key = ["state"])
+  @ShellMethod("Shows the state of the current game.", key = ["state"])
   fun state(): String? {
     return gameMaster.state()
-  }
-
-
-
-  // TODO: commands availabilities
-  fun downloadAvailability(): Availability {
-    return if (true) Availability.available() else Availability.unavailable(
-      "you are not connected"
-    )
   }
 }
