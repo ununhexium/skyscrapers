@@ -99,3 +99,7 @@
 1654879964679:quit
 1654880861581:start-server --port 45678
 1654883704341:connect http://localhost:45678/
+1654884043656:start-server --port 45678
+1654884056374:connect http://localhost:45678/
+1654884072284:create --game foo
+1654884075475:join --game foo
