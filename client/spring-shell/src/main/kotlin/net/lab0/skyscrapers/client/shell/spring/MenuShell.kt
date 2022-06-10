@@ -13,7 +13,7 @@ import org.springframework.shell.standard.ShellOption
 class MenuShell(val gameMaster: GameMaster) {
 
   @ShellMethod(
-    "Choose the server and rest the connectivity.",
+    "Choose the server and test the connectivity.",
     key = ["connect"]
   )
   fun connect(
