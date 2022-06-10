@@ -12,7 +12,8 @@ plugins {
 }
 
 group = "net.lab0.skyscrapers"
-version = "1.0-SNAPSHOT"
+val VERSION = "0.1-SNAPSHOT"
+version = VERSION
 
 repositories {
   mavenCentral()
@@ -21,6 +22,8 @@ repositories {
 subprojects {
 
   apply(plugin = "org.jetbrains.kotlin.jvm")
+
+  version = VERSION
 
   dependencies {
 
