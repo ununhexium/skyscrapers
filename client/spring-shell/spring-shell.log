@@ -111,3 +111,66 @@
 1654933748942:script --file preset_p1.play
 1654933751460:state
 1654933753220:state
+1654938704590:script --file preset_p1.play
+1654938707750:script --file preset_p0.play
+1654938717617:state
+1654938722807:place 1,1
+1654938726167:place 1,1
+1654939044080:script --file preset_p0.play
+1654939069242:script --file preset_p1.play
+1654939074251:place 1,1
+1654939423327:script --file preset_p0.play
+1654939427327:script --file preset_p1.play
+1654939431466:place 1,1
+1654939888129:script --file preset_p0.play
+1654939890978:place 1,1
+1654940666369:script --file preset_p0.play
+1654940668877:place 1,1
+1654941068445:script --file preset_p0.play
+1654941070754:place 1,1
+1654941139736:script --file preset_p0.play
+1654941142105:place 1,1
+1654941431002:script --file preset_p0.play
+1654941432940:place 1,1
+1654941523714:script --file preset_p0.play
+1654941526343:place 1,1
+1654941564653:place 1,3
+1654941582564:script --file preset_p0.play
+1654941586023:place 1,1
+1654942266193:script --file preset_p0.play
+1654942268472:place 1,1
+1654943694620:script --file preset_p0.play
+1654943696659:place 1,1
+1654943982374:script --file preset_p0.play
+1654943984653:place 1,1
+1654944057225:script --file preset_p0.play
+1654944059833:place 1,1
+1654945223684:script --file preset_p0.play
+1654945226126:place 1,1
+1654945245437:script --file preset_p0.play
+1654945256256:place 1,3
+1654945261146:place 3,1
+1654945263727:place 3,3
+1654945325879:script --file preset_p0.play
+1654945328933:script --file preset_p0.play
+1654945337818:place 1,1
+1654945339788:place 1,3
+1654945345978:place 3,3
+1654945349208:place 3,1
+1654945375088:state
+1654945844595:script --file preset_p0.play
+1654945851924:script --file preset_p1.play
+1654945857213:place 3,1
+1654945862154:place 1,1
+1654946105137:script --file preset_p0.play
+1654946115326:place 1,1
+1654946184978:script --file preset_p0.play
+1654946187487:place 1,1
+1654946210719:script --file preset_p0.play
+1654946212857:place 1,1
+1654946251879:script --file preset_p1.play
+1654946260817:place 1,1
+1654946263748:state
+1654946412570:script --file preset_p1.play
+1654946415139:script --file preset_p0.play
+1654946418909:place 1,1

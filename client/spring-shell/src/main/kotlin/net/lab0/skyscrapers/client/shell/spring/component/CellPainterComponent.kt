@@ -12,7 +12,7 @@ import org.jline.utils.AttributedStyle
 import org.springframework.stereotype.Component
 
 @Component
-class CellPainter(private val palette: Palette) {
+class CellPainterComponent(private val palette: Palette) {
   fun colorize(cell: Cell, meta: CellMetadata): AttributedString {
     return if (cell.sealed) {
       getSealedString(meta)

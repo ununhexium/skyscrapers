@@ -2,6 +2,7 @@ package net.lab0.skyscrapers.client.shell.spring
 
 import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.client.shell.spring.component.GameMaster
+import net.lab0.skyscrapers.client.shell.spring.data.HierarchyResult
 import org.springframework.shell.Availability
 import org.springframework.shell.standard.ShellComponent
 import org.springframework.shell.standard.ShellMethod
@@ -20,9 +21,8 @@ class GameShell(val gameMaster: GameMaster) {
       "--at",
       help = "Where to place a builder.",
     ) position: Position,
-  ): String? {
-    return gameMaster.place(position)
-  }
+  ): HierarchyResult =
+    gameMaster.place(position)
 
 
   fun buildAvailability() =

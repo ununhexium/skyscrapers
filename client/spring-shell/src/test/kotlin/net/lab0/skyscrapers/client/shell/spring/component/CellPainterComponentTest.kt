@@ -13,9 +13,9 @@ import org.jline.utils.AttributedString
 import org.jline.utils.AttributedStyle
 import org.junit.jupiter.api.Test
 
-internal class CellPainterTest {
+internal class CellPainterComponentTest {
   private val palette = DarkPalette
-  private val painter = CellPainter(palette)
+  private val painter = CellPainterComponent(palette)
 
   private val maxHeight = Height(3)
   private val playersCount = 3

@@ -1,17 +1,14 @@
 package net.lab0.skyscrapers.client.shell.spring
 
-import arrow.core.Either
 import arrow.core.Either.Right
 import com.ninjasquad.springmockk.SpykBean
-import io.kotest.matchers.shouldBe
+import io.kotest.matchers.should
 import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.types.beInstanceOf
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import net.lab0.skyscrapers.api.dto.AccessToken
-import net.lab0.skyscrapers.api.dto.ConnectionResponse
-import net.lab0.skyscrapers.api.dto.GameResponse
-import net.lab0.skyscrapers.api.dto.StatusResponse
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.structure.BlocksData
 import net.lab0.skyscrapers.api.structure.Bounds
@@ -22,7 +19,9 @@ import net.lab0.skyscrapers.api.structure.Player
 import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.client.http.SkyscraperClient
 import net.lab0.skyscrapers.client.shell.spring.component.GameMaster
-import org.http4k.core.Status
+import net.lab0.skyscrapers.client.shell.spring.data.HierarchyResult.StateUpdate
+import net.lab0.skyscrapers.engine.Defaults
+import org.jline.terminal.Terminal
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -32,6 +31,7 @@ import org.springframework.shell.Shell
 import org.springframework.shell.jline.InteractiveShellApplicationRunner
 import org.springframework.shell.jline.ScriptShellApplicationRunner
 import org.springframework.shell.result.DefaultResultHandler
+import org.springframework.shell.table.Table
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 
@@ -42,7 +42,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
   ]
 )
 @ExtendWith(SpringExtension::class)
-internal class GameShellTest {
+internal class GameShellTest /* TODO extract ShellTest() */ {
 
   companion object {
     val baseUrl = "http://localhost:45678/"
@@ -57,31 +57,60 @@ internal class GameShellTest {
   @SpykBean
   lateinit var gameMaster: GameMaster
 
+  @SpykBean
+  lateinit var terminal: Terminal
+
   @Autowired
   private lateinit var shell: Shell
 
   @Autowired
   private lateinit var resultHandler: DefaultResultHandler
 
+  private val emptyState = GameState(
+    Bounds(0 until Defaults.WIDTH, 0 until Defaults.HEIGHT),
+    listOf(Player(0, true), Player(1, true)),
+    2,
+    BlocksData(
+      Height(0) to 17,
+      Height(1) to 15,
+      Height(2) to 10,
+      Height(3) to 5,
+    ),
+    Matrix(Defaults.HEIGHT, Defaults.WIDTH) { Height(0) },
+    Matrix(Defaults.HEIGHT, Defaults.WIDTH) { false },
+    Matrix(Defaults.HEIGHT, Defaults.WIDTH) { null },
+  )
+
   @BeforeEach
   fun beforeEach() {
     clearAllMocks()
+    every { terminal.writer() } returns mockk {
+      every { flush() } returns Unit
+      every { println(any<Table>()) } returns Unit
+      every { println(any<String>()) } returns Unit
+    }
+  }
+
+  // TODO: extract to shell test
+  final inline fun <reified T : Any> eval(input: String): T {
+    val evaluation = shell.evaluate { input }
+    resultHandler.handleResult(evaluation)
+    evaluation should beInstanceOf<T>()
+    return evaluation as T
   }
 
   @Test
   fun `place a builder`() {
-
     val client = mockk<SkyscraperClient>() {
       every { place(game, token, Position(0, 0)) } returns
-          Right(GameState.DUMMY)
+          Right(emptyState)
     }
 
     gameMaster.forceState(ShellState(client, game, token))
 
-    val evaluation = shell.evaluate { "place --at 0,0" }
-    val create = evaluation as String
-    resultHandler.handleResult(create)
-    create shouldContain "Placed a builder at 0,0."
+    val create = eval<StateUpdate>("place --at 0,0")
+
+    create.comment shouldContain "Placed a builder at 0,0."
   }
 
   @Test

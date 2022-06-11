@@ -16,8 +16,9 @@ repositories {
 
 dependencies {
     implementation(project(":api:structure"))
-    implementation(project(":server"))
     implementation(project(":client:http"))
+    implementation(project(":server"))
+    implementation(project(":engine"))
     implementation(project(":testing"))
     implementation(http4k.clientOkhttp)
     implementation(http4k.serverUndertow)

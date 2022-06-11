@@ -7,4 +7,3 @@ interface Palette {
   fun playerPalette(playerCount: Int): List<PaletteColor>
   fun heightPalette(maxHeight: Height): List<PaletteColor>
 }
-

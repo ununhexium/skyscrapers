@@ -4,9 +4,11 @@ import arrow.core.merge
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.client.http.ClientError
+import net.lab0.skyscrapers.client.http.SkyscraperClient
 import net.lab0.skyscrapers.client.shell.spring.BaseUrl
 import net.lab0.skyscrapers.client.shell.spring.ShellState
 import net.lab0.skyscrapers.client.shell.spring.SkyscraperClientFactoryComponent
+import net.lab0.skyscrapers.client.shell.spring.data.HierarchyResult
 import org.springframework.stereotype.Component
 
 /**
@@ -20,7 +22,7 @@ class GameMaster(val factory: SkyscraperClientFactoryComponent) {
     get() = internalState
 
   val inGame
-    get() = internalState.currentGame != null
+    get() = isConnected() && internalState.currentGame != null
 
   /**
    * For test and debugging
@@ -78,110 +80,109 @@ class GameMaster(val factory: SkyscraperClientFactoryComponent) {
       ?.merge()
   }
 
-  fun place(position: Position): String? {
-    checkInGame()
-
-    return internalState.client
-      ?.place(
-        internalState.currentGame!!,
-        internalState.accessToken!!,
-        position
-      )
-      ?.map {
-        "Placed a builder at ${position.toString(Position.Style.COMA)}."
-      }
-      ?.mapLeft {
-        "Error when playing the game:\n" + when (it) {
-          // TODO: the output should be a sealed class that separates the normal string and the error responses
-          is ClientError.GameRuleErrors -> it.violations.joinToString(separator = "\n")
-          is ClientError.SimpleErrors -> it.errors.joinToString(separator = "\n")
+  fun place(position: Position): HierarchyResult =
+    checkInGame { client ->
+      client
+        .place(
+          internalState.currentGame!!,
+          internalState.accessToken!!,
+          position
+        )
+        .map {
+          HierarchyResult.StateUpdate(
+            it,
+            "Placed a builder at ${position.toString(Position.Style.COMA)}."
+          )
         }
-      }
-      ?.merge()
-  }
+        .mapLeft {
+          HierarchyResult.Error(it)
+        }
+        .merge()
+    }
 
-  private fun checkInGame() {
+  private fun <T> checkInGame(f: (SkyscraperClient) -> T): T {
     check(inGame) { "Can't play before joining a game." }
+    return f(state.client!!)
   }
 
-  fun build(start: Position, target: Position, build: Position): String? {
-    checkInGame()
-
-    return internalState
-      .client
-      ?.build(
-        internalState.currentGame!!,
-        internalState.accessToken!!,
-        start,
-        target,
-        build
-      )
-      ?.map {
-        "Moved builder from ${start.toString(Position.Style.COMA)} " +
-            "to ${target.toString(Position.Style.COMA)} " +
-            "and built at ${build.toString(Position.Style.COMA)}."
-      }
-      ?.mapLeft {
-        "Error when playing the game:\n" + when (it) {
-          // TODO: the output should be a sealed class that separates the normal string and the error responses
-          is ClientError.GameRuleErrors -> it.violations.joinToString(separator = "\n")
-          is ClientError.SimpleErrors -> it.errors.joinToString(separator = "\n")
+  fun build(start: Position, target: Position, build: Position): String =
+    checkInGame { client ->
+      client
+        .build(
+          internalState.currentGame!!,
+          internalState.accessToken!!,
+          start,
+          target,
+          build
+        )
+        .map {
+          "Moved builder from ${start.toString(Position.Style.COMA)} " +
+              "to ${target.toString(Position.Style.COMA)} " +
+              "and built at ${build.toString(Position.Style.COMA)}."
         }
-      }
-      ?.merge()
-  }
-
-  fun seal(start: Position, target: Position, seal: Position): String? {
-    checkInGame()
-
-    return internalState
-      .client
-      ?.seal(
-        internalState.currentGame!!,
-        internalState.accessToken!!,
-        start,
-        target,
-        seal
-      )
-      ?.map {
-        "Moved builder from ${start.toString(Position.Style.COMA)} " +
-            "to ${target.toString(Position.Style.COMA)} " +
-            "and sealed at ${seal.toString(Position.Style.COMA)}."
-      }
-      ?.mapLeft {
-        "Error when playing the game:\n" + when (it) {
-          // TODO: the output should be a sealed class that separates the normal string and the error responses
-          is ClientError.GameRuleErrors -> it.violations.joinToString(separator = "\n")
-          is ClientError.SimpleErrors -> it.errors.joinToString(separator = "\n")
+        .mapLeft {
+          "Error when playing the game:\n" + when (it) {
+            // TODO: the output should be a sealed class that separates the normal string and the error responses
+            is ClientError.GameRuleErrors -> it.violations.joinToString(
+              separator = "\n"
+            )
+            is ClientError.SimpleErrors -> it.errors.joinToString(separator = "\n")
+          }
         }
-      }
-      ?.merge()
-  }
+        .merge()
+    }
 
-  fun win(start: Position, target: Position): String? {
-    checkInGame()
-
-    return internalState
-      .client
-      ?.win(
-        internalState.currentGame!!,
-        internalState.accessToken!!,
-        start,
-        target
-      )
-      ?.map {
-        "Moved builder from ${start.toString(Position.Style.COMA)} " +
-            "to ${target.toString(Position.Style.COMA)} and won."
-      }
-      ?.mapLeft {
-        "Error when playing the game:\n" + when (it) {
-          // TODO: the output should be a sealed class that separates the normal string and the error responses
-          is ClientError.GameRuleErrors -> it.violations.joinToString(separator = "\n")
-          is ClientError.SimpleErrors -> it.errors.joinToString(separator = "\n")
+  fun seal(start: Position, target: Position, seal: Position): String =
+    checkInGame { client ->
+      client
+        .seal(
+          internalState.currentGame!!,
+          internalState.accessToken!!,
+          start,
+          target,
+          seal
+        )
+        .map {
+          "Moved builder from ${start.toString(Position.Style.COMA)} " +
+              "to ${target.toString(Position.Style.COMA)} " +
+              "and sealed at ${seal.toString(Position.Style.COMA)}."
         }
-      }
-      ?.merge()
-  }
+        .mapLeft {
+          "Error when playing the game:\n" + when (it) {
+            // TODO: the output should be a sealed class that separates the normal string and the error responses
+            is ClientError.GameRuleErrors -> it.violations.joinToString(
+              separator = "\n"
+            )
+            is ClientError.SimpleErrors -> it.errors.joinToString(separator = "\n")
+          }
+        }
+        .merge()
+    }
+
+  fun win(start: Position, target: Position): String =
+    checkInGame { client ->
+      client
+        .win(
+          internalState.currentGame!!,
+          internalState.accessToken!!,
+          start,
+          target
+        )
+        .map {
+          "Moved builder from ${start.toString(Position.Style.COMA)} " +
+              "to ${target.toString(Position.Style.COMA)} and won."
+        }
+        .mapLeft {
+          "Error when playing the game:\n" + when (it) {
+            // TODO: the output should be a sealed class that separates the normal string and the error responses
+            is ClientError.GameRuleErrors -> it.violations.joinToString(
+              separator = "\n"
+            )
+            is ClientError.SimpleErrors -> it.errors.joinToString(separator = "\n")
+          }
+        }
+        .merge()
+    }
 
   fun state(): String? {
     return internalState
