@@ -112,7 +112,7 @@ data class GameState(
           .substring(playersPrefix.length)
           .split(", ")
           .map { it.split(":") }
-          .map { it.component1().toInt() to (it.component2() == "a") }
+          .map { it.component1().toCharArray()[0] - 'A' to (it.component2() == "a") }
           .map { Player(it.first, it.second) }
 
       return GameState(
@@ -174,7 +174,7 @@ data class GameState(
       |Blocks: ${blocks.toShortString()}
       |Players: ${
       players.joinToString(separator = ", ") {
-        "${it.id}:${if (it.active) "a" else "d"}"
+        "${'A' + it.id}:${if (it.active) "a" else "d"}"
       }
     }
     """.trimMargin()

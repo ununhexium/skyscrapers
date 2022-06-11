@@ -1,0 +1,2 @@
+connect http://localhost:45678/
+join --game foo

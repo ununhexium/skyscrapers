@@ -8,7 +8,6 @@ import net.lab0.skyscrapers.api.structure.Height
 import net.lab0.skyscrapers.api.structure.Matrix
 import net.lab0.skyscrapers.api.structure.Phase
 import net.lab0.skyscrapers.api.structure.Player
-import net.lab0.skyscrapers.editor
 import net.lab0.skyscrapers.engine.DefaultGames.newGameWithSequentiallyPlacedBuilders
 import net.lab0.skyscrapers.engine.action.DSL
 import net.lab0.skyscrapers.engine.api.Game

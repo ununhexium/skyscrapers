@@ -2,7 +2,6 @@ package net.lab0.skyscrapers.server.filter
 
 import arrow.core.merge
 import net.lab0.skyscrapers.api.dto.ErrorResponse
-import net.lab0.skyscrapers.api.http4k.AUTHORIZATION
 import net.lab0.skyscrapers.server.Service
 import net.lab0.skyscrapers.server.pathGameName
 import net.lab0.skyscrapers.server.withToken
@@ -14,7 +13,6 @@ import org.http4k.core.Response
 import org.http4k.core.Status
 import org.http4k.core.with
 import org.http4k.format.KotlinxSerialization.auto
-import org.http4k.lens.Header
 
 class GameAccessFilter(val service: Service) : Filter {
 

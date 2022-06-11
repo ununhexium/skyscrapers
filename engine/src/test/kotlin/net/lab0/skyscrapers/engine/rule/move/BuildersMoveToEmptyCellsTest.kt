@@ -3,7 +3,7 @@ package net.lab0.skyscrapers.engine.rule.move
 import net.lab0.skyscrapers.api.structure.GameRuleViolationImpl
 import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.api.structure.TurnType
-import net.lab0.skyscrapers.editor
+import net.lab0.skyscrapers.engine.editor
 import net.lab0.skyscrapers.engine.DefaultGames
 import net.lab0.skyscrapers.engine.GameImpl
 import org.assertj.core.api.Assertions.assertThat

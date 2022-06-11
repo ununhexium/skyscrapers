@@ -1,0 +1,4 @@
+start-server --port 45678
+connect http://localhost:45678/
+create --game foo
+join --game foo

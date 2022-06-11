@@ -103,3 +103,11 @@
 1654884056374:connect http://localhost:45678/
 1654884072284:create --game foo
 1654884075475:join --game foo
+1654889094928:start-server --port 45678
+1654894215317:create --game foo
+1654894259389:connect http://localhost:45678/
+1654933733468:help
+1654933741097:script --file preset_p0.play
+1654933748942:script --file preset_p1.play
+1654933751460:state
+1654933753220:state

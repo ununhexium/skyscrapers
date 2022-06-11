@@ -29,7 +29,7 @@ sealed class Authorization {
     const val BEARER_PREFIX = "Bearer: "
   }
 
-  data class Bearer(val token: AccessToken) {
+  data class Bearer(val token: AccessToken): Authorization() {
     fun getHeaderValue() = "${BEARER_PREFIX}${token.value}"
   }
 }

@@ -173,7 +173,7 @@ internal class GameStateTest {
         | A0 (1)   0 (0)  B1
         |(0) (0) (0) (1) (0)
         |Blocks: 0:3, 1:13, 2:18, 3:13
-        |Players: 0:a, 1:d
+        |Players: A:a, B:d
       """.trimMargin()
     )
   }
@@ -232,7 +232,7 @@ internal class GameStateTest {
         | A0 (1)   0 (0)  B1
         |(0) (0) (0) (1) (0)
         |Blocks: 0:3, 1:13, 2:18, 3:13
-        |Players: 0:a, 1:d
+        |Players: A:a, B:d
       """.trimMargin()
       )
     ).isEqualTo(state)
