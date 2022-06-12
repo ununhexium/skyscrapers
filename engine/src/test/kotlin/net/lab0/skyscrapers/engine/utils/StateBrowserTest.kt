@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.engine.utils
 
+import io.kotest.matchers.shouldBe
 import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.engine.Defaults
@@ -10,6 +11,28 @@ import org.junit.jupiter.api.Test
  * This tests assumes the usage of the default rules
  */
 internal class StateBrowserTest {
+  @Test
+  fun `can get builders`() {
+    val state = GameState.from(
+      """
+        |Board
+        | A0   0  B0  0 A0
+        |  0   0   0  0  0
+        |Blocks: 0:0
+        |Players: 0:a, 1:a
+      """.trimMargin()
+    )
+
+    val browser = StateBrowser(state, Defaults.RULE_BOOK)
+
+    browser.getBuilderPositionsForPlayer(0).toSet() shouldBe
+        setOf(Position(0,0), Position(4, 0))
+
+    browser.getBuilderPositionsForPlayer(1).toSet() shouldBe
+        setOf(Position(2,0))
+
+  }
+
   @Test
   fun `can get movable builders`() {
     val state = GameState.from(
@@ -27,8 +50,8 @@ internal class StateBrowserTest {
 
     val browser = StateBrowser(state, Defaults.RULE_BOOK)
 
-    assertThat(browser.getMovableBuilders(0)).isEmpty()
-    assertThat(browser.getMovableBuilders(1)).isEqualTo(
+    assertThat(browser.getMovableBuilders(0).toList()).isEmpty()
+    assertThat(browser.getMovableBuilders(1).toList()).isEqualTo(
       listOf(
         Position(2, 0),
         Position(2, 4)

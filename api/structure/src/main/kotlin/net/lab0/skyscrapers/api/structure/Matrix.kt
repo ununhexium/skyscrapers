@@ -164,4 +164,20 @@ data class Matrix<T>(
       }
     }
 
+  fun filterNotNull(): List<Pair<Position, T>> =
+    data.flatMapIndexed { r, row ->
+      row.mapIndexed { c, cell ->
+        cell?.let { Position(c, r) to cell }
+      }
+    }.filterNotNull()
+
+  fun asSequence(): Sequence<Pair<Position, T>> =
+    sequence {
+      (0 until rows).map { row ->
+        (0 until columns).map { column ->
+          yield(Position(column, row) to data[row][column])
+        }
+      }
+    }
+
 }

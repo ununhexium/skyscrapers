@@ -143,4 +143,39 @@ internal class MatrixTest {
     val zero = Matrix.SINGLE<Unit> { 0 }
     zero.dimensions shouldBe Bounds.ZERO
   }
+
+  @Test
+  fun `get the non null elements`() {
+    val nullable = Matrix.from("""
+      |. 1 . .
+      |. . . 2
+    """.trimMargin()) {
+      if(it == ".") null else it.toInt()
+    }
+    nullable.filterNotNull() shouldBe listOf(
+      Position(1, 0) to 1,
+      Position(3, 1) to 2,
+    )
+  }
+
+  @Test
+  fun `as sequence`() {
+    val nullable = Matrix.from("""
+      |. 1 . .
+      |. . . 2
+    """.trimMargin()) {
+      if(it == ".") null else it.toInt()
+    }
+
+    nullable.asSequence().toList() shouldBe listOf(
+      Position(0,0) to null,
+      Position(1,0) to 1,
+      Position(2,0) to null,
+      Position(3,0) to null,
+      Position(0,1) to null,
+      Position(1,1) to null,
+      Position(2,1) to null,
+      Position(3,1) to 2,
+    )
+  }
 }
