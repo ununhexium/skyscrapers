@@ -49,34 +49,28 @@ class RandomAi(
     val browser = StateBrowser(state, ruleBook)
 
     val choices = browser
-      .getMovableBuilders(player)
-      .flatMap { start ->
-        start
-          .getSurroundingPositions()
-          .filter { it in state.bounds }
-          .filterNot { state.hasBuilder(it) }
-          .flatMap { target ->
-            target
-              .getSurroundingPositions()
-              .filter { it in state.bounds }
-              .filter { state.builders[it] == null }
-              .filterNot { state.seals[it] }
-              .flatMap { buildOrSeal ->
-                listOf(
-                  RandomAction(
-                    start,
-                    target,
-                    buildOrSeal,
-                    RandomAction.Type.BUILD
-                  ),
-                  RandomAction(
-                    start,
-                    target,
-                    buildOrSeal,
-                    RandomAction.Type.SEAL
-                  ),
-                )
-              }
+      .getTargetPositions(player)
+
+      .flatMap { (start, target) ->
+        target
+          .getSurroundingPositionsWithin(state.bounds)
+          .filter { state.builders[it] == null }
+          .filterNot { state.seals[it] }
+          .flatMap { buildOrSeal ->
+            listOf(
+              RandomAction(
+                start,
+                target,
+                buildOrSeal,
+                RandomAction.Type.BUILD
+              ),
+              RandomAction(
+                start,
+                target,
+                buildOrSeal,
+                RandomAction.Type.SEAL
+              ),
+            )
           }
       }
 

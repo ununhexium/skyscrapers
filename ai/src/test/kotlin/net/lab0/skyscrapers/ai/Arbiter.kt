@@ -20,7 +20,7 @@ class Arbiter(val ais: List<Ai>) {
 
     while (game.state.phase != Phase.FINISHED) {
       val ai = ais[game.state.currentPlayer]
-      val turn = ai.think(game.state)
+      val turn = ai.think(game.state, game.ruleBook)
 
       turnObserver?.let { it(turn) }
       game.play(turn)

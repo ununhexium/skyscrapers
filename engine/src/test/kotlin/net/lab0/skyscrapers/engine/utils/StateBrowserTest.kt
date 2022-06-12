@@ -2,6 +2,8 @@ package net.lab0.skyscrapers.engine.utils
 
 import io.kotest.matchers.shouldBe
 import net.lab0.skyscrapers.api.structure.GameState
+import net.lab0.skyscrapers.api.structure.TurnType
+import net.lab0.skyscrapers.api.structure.TurnType.MoveTurn.BuildTurn
 import net.lab0.skyscrapers.engine.Defaults
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -158,5 +160,46 @@ internal class StateBrowserTest {
           Movement(P(2,1), P(3,1)),
         )
   }
+
+  @Test
+  fun `get buildable turns`() {
+    val state = GameState.from(
+      """
+        |Board
+        | A0  B1  2 0
+        | A2   2 B0 0
+        |Blocks: 0:10, 1:10, 2:10, 3:10
+        |Players: 0:a, 1:a
+      """.trimMargin()
+    )
+
+    val browser = StateBrowser(state, Defaults.RULE_BOOK)
+
+    browser.getBuildableTurns(0).toSet() shouldBe
+        setOf(
+          BuildTurn(0, P(0,1), P(1,1), P(0,1)),
+          BuildTurn(0, P(0,1), P(1,1), P(2,0)),
+        )
+
+    browser.getBuildableTurns(1).toSet() shouldBe
+        setOf(
+          BuildTurn(1, P(1,0), P(1,1), P(1,0)),
+          BuildTurn(1, P(1,0), P(1,1), P(2,0)),
+
+          BuildTurn(1, P(1,0), P(2,0), P(1,0)),
+          BuildTurn(1, P(1,0), P(2,0), P(1,1)),
+          BuildTurn(1, P(1,0), P(2,0), P(3,0)),
+          BuildTurn(1, P(1,0), P(2,0), P(3,1)),
+
+          BuildTurn(1, P(2,1), P(3,0), P(2,0)),
+          BuildTurn(1, P(2,1), P(3,0), P(2,1)),
+          BuildTurn(1, P(2,1), P(3,0), P(3,1)),
+
+          BuildTurn(1, P(2,1), P(3,1), P(2,0)),
+          BuildTurn(1, P(2,1), P(3,1), P(2,1)),
+          BuildTurn(1, P(2,1), P(3,1), P(3,0)),
+        )
+  }
+
 
 }

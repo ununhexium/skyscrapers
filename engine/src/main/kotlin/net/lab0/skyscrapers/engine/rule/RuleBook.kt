@@ -4,27 +4,30 @@ import net.lab0.skyscrapers.api.structure.GameRuleViolation
 import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.api.structure.Move
 import net.lab0.skyscrapers.api.structure.MoveOnly
-import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.api.structure.Rule
 import net.lab0.skyscrapers.api.structure.TurnType
+import net.lab0.skyscrapers.api.structure.TurnType.MoveTurn.BuildTurn
+import net.lab0.skyscrapers.api.structure.TurnType.MoveTurn.SealTurn
+import net.lab0.skyscrapers.api.structure.TurnType.MoveTurn.WinTurn
+import net.lab0.skyscrapers.api.structure.TurnType.PlacementTurn
 import net.lab0.skyscrapers.engine.editor
 import net.lab0.skyscrapers.engine.exception.GameRuleViolationException
 
 class RuleBook(
   val turnRules: List<Rule<TurnType>>,
-  val placementRules: List<Rule<TurnType.PlacementTurn>>,
+  val placementRules: List<Rule<PlacementTurn>>,
   val moveOnlyRules: List<Rule<MoveOnly>>,
   val moveRules: List<Rule<Move>>,
-  val buildRules: List<Rule<TurnType.MoveTurn.BuildTurn>>,
-  val sealRules: List<Rule<TurnType.MoveTurn.SealTurn>>,
-  val winRules: List<Rule<TurnType.MoveTurn.WinTurn>>,
+  val buildRules: List<Rule<BuildTurn>>,
+  val sealRules: List<Rule<SealTurn>>,
+  val winRules: List<Rule<WinTurn>>,
 ) {
   fun tryToPlay(turn: TurnType, state: GameState): List<GameRuleViolation> {
     try {
       throwIfViolatedRule(turnRules, turn, state)
 
       when (turn) {
-        is TurnType.PlacementTurn ->
+        is PlacementTurn ->
           throwIfViolatedRule(placementRules, turn, state)
 
         is TurnType.GiveUpTurn -> {} // check nothing
@@ -36,13 +39,13 @@ class RuleBook(
           val nextBuilderState = state.editor().move(turn)
 
           when (turn) {
-            is TurnType.MoveTurn.BuildTurn ->
+            is BuildTurn ->
               throwIfViolatedRule(buildRules, turn, nextBuilderState)
 
-            is TurnType.MoveTurn.SealTurn ->
+            is SealTurn ->
               throwIfViolatedRule(sealRules, turn, nextBuilderState)
 
-            is TurnType.MoveTurn.WinTurn ->
+            is WinTurn ->
               throwIfViolatedRule(winRules, turn, nextBuilderState)
 
           }
@@ -83,9 +86,10 @@ class RuleBook(
     state: GameState
   ) = checkRules(moveOnlyRules, turn, state).isEmpty()
 
-  fun canMove(
-    start: Position,
-    target: Position,
-    state: GameState
-  ) = checkRules(moveOnlyRules, MoveOnly.make(start, target), state).isEmpty()
+  fun canBuild(
+    turn: BuildTurn,
+    state: GameState,
+  ): Boolean =
+    canMove(turn, state) &&
+        checkRules(buildRules, turn, state.editor().move(turn)).isEmpty()
 }
