@@ -4,6 +4,7 @@ import net.lab0.skyscrapers.api.structure.GameRuleViolation
 import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.api.structure.Move
 import net.lab0.skyscrapers.api.structure.MoveOnly
+import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.api.structure.Rule
 import net.lab0.skyscrapers.api.structure.TurnType
 import net.lab0.skyscrapers.engine.editor
@@ -81,4 +82,10 @@ class RuleBook(
     turn: MoveOnly,
     state: GameState
   ) = checkRules(moveOnlyRules, turn, state).isEmpty()
+
+  fun canMove(
+    start: Position,
+    target: Position,
+    state: GameState
+  ) = checkRules(moveOnlyRules, MoveOnly.make(start, target), state).isEmpty()
 }

@@ -2,10 +2,10 @@ package net.lab0.skyscrapers.engine.utils
 
 import io.kotest.matchers.shouldBe
 import net.lab0.skyscrapers.api.structure.GameState
-import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.engine.Defaults
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import net.lab0.skyscrapers.api.structure.Position as P
 
 /**
  * This tests assumes the usage of the default rules
@@ -26,10 +26,10 @@ internal class StateBrowserTest {
     val browser = StateBrowser(state, Defaults.RULE_BOOK)
 
     browser.getBuilderPositionsForPlayer(0).toSet() shouldBe
-        setOf(Position(0, 0), Position(4, 0))
+        setOf(P(0, 0), P(4, 0))
 
     browser.getBuilderPositionsForPlayer(1).toSet() shouldBe
-        setOf(Position(2, 0))
+        setOf(P(2, 0))
 
   }
 
@@ -53,8 +53,8 @@ internal class StateBrowserTest {
     assertThat(browser.getMovableBuilders(0).toList()).isEmpty()
     assertThat(browser.getMovableBuilders(1).toList()).isEqualTo(
       listOf(
-        Position(2, 0),
-        Position(2, 4)
+        P(2, 0),
+        P(2, 4)
       )
     )
   }
@@ -73,31 +73,31 @@ internal class StateBrowserTest {
 
     val browser = StateBrowser(state, Defaults.RULE_BOOK)
 
-    val builder = Position(1, 1)
+    val builder = P(1, 1)
 
 
-    assertThat(browser.builderCanMoveTo(builder, Position(0, 0)))
+    assertThat(browser.builderCanMoveTo(builder, P(0, 0)))
       .describedAs("too high")
       .isFalse()
 
-    assertThat(browser.builderCanMoveTo(builder, Position(0, 1)))
+    assertThat(browser.builderCanMoveTo(builder, P(0, 1)))
       .describedAs("sealed")
       .isFalse()
 
-    assertThat(browser.builderCanMoveTo(builder, Position(1, 0)))
+    assertThat(browser.builderCanMoveTo(builder, P(1, 0)))
       .describedAs("occupied")
       .isFalse()
 
-    assertThat(browser.builderCanMoveTo(builder, Position(3, 0)))
+    assertThat(browser.builderCanMoveTo(builder, P(3, 0)))
       .describedAs("far")
       .isFalse()
 
-    assertThat(browser.builderCanMoveTo(builder, Position(1, 2)))
+    assertThat(browser.builderCanMoveTo(builder, P(1, 2)))
       .describedAs("outside")
       .isFalse()
 
     // ok: empty
-    assertThat(browser.builderCanMoveTo(builder, Position(2, 0))).isTrue()
+    assertThat(browser.builderCanMoveTo(builder, P(2, 0))).isTrue()
 
   }
 
@@ -106,8 +106,38 @@ internal class StateBrowserTest {
     val state = GameState.from(
       """
         |Board
-        | A1  B1  2 0
-        | A0   2 B0 0
+        | A1  B1  2  0
+        | A0   2 B0  0
+        |  0  A1  0 C0
+        |Blocks: 0:0, 1:0, 2:0
+        |Players: A:a, B:a, C:a
+      """.trimMargin()
+    )
+
+    val browser = StateBrowser(state, Defaults.RULE_BOOK)
+
+    browser.getWinnableBuilders(0).toSet() shouldBe
+        setOf(
+          Movement(P(0, 0), P(1, 1)),
+          Movement(P(1, 2), P(1, 1)),
+        )
+
+    browser.getWinnableBuilders(1).toSet() shouldBe
+        setOf(
+          Movement(P(1, 0), P(2, 0)),
+          Movement(P(1, 0), P(1, 1)),
+        )
+
+    browser.getWinnableBuilders(2).toSet() shouldBe emptySet()
+  }
+
+  @Test
+  fun `get target positions`() {
+    val state = GameState.from(
+      """
+        |Board
+        | A0  B1  2 0
+        | A2   2 B0 0
         |Blocks: 0:0, 1:0, 2:0
         |Players: 0:a, 1:a
       """.trimMargin()
@@ -115,13 +145,18 @@ internal class StateBrowserTest {
 
     val browser = StateBrowser(state, Defaults.RULE_BOOK)
 
-    browser.getWinnableBuilders(0).toSet() shouldBe
-        setOf(Movement(Position(0, 0), Position(1, 1)))
-
-    browser.getWinnableBuilders(1).toSet() shouldBe
+    browser.getTargetPositions(0).toSet() shouldBe
         setOf(
-          Movement(Position(1, 0), Position(2, 0)),
-          Movement(Position(1, 0), Position(1, 1)),
+          Movement(P(0,1), P(1,1))
+        )
+
+    browser.getTargetPositions(1).toSet() shouldBe
+        setOf(
+          Movement(P(1,0), P(1,1)),
+          Movement(P(1,0), P(2,0)),
+          Movement(P(2,1), P(3,0)),
+          Movement(P(2,1), P(3,1)),
         )
   }
+
 }

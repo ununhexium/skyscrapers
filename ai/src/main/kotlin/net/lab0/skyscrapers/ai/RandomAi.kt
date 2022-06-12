@@ -4,6 +4,8 @@ import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.api.structure.Phase
 import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.api.structure.TurnType
+import net.lab0.skyscrapers.engine.rule.RuleBook
+import net.lab0.skyscrapers.engine.utils.StateBrowser
 
 class RandomAi(
   val player: Int,
@@ -22,10 +24,10 @@ class RandomAi(
     }
   }
 
-  override fun think(state: GameState): TurnType {
+  override fun think(state: GameState, ruleBook: RuleBook): TurnType {
     return when (state.phase) {
       Phase.PLACEMENT -> findPlacementTurn(state)
-      Phase.MOVEMENT -> findMovementTurn(state)
+      Phase.MOVEMENT -> findMovementTurn(state, ruleBook)
       Phase.FINISHED -> throw IllegalStateException("Should not happen as the game will stop before calling the AI with such a state")
     }
   }
@@ -43,9 +45,11 @@ class RandomAi(
     return TurnType.PlacementTurn(player, randomPosition)
   }
 
-  private fun findMovementTurn(state: GameState): TurnType {
-    val choices = state
-      .getBuilders(player)
+  private fun findMovementTurn(state: GameState, ruleBook: RuleBook): TurnType {
+    val browser = StateBrowser(state, ruleBook)
+
+    val choices = browser
+      .getMovableBuilders(player)
       .flatMap { start ->
         start
           .getSurroundingPositions()
