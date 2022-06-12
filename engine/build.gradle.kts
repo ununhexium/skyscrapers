@@ -8,10 +8,9 @@ repositories {
   mavenCentral()
 }
 
-
 dependencies {
   implementation(project(":api:structure"))
-  implementation(project(":engine:rule"))
+  implementation(project(":rule"))
 
   // TEST
 }

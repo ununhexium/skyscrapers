@@ -1,9 +1,8 @@
 plugins {
-    id("java")
+    kotlin("jvm")
 }
 
 group = "net.lab0.skyscrapers"
-version = "0.1-SNAPSHOT"
 
 repositories {
     mavenCentral()

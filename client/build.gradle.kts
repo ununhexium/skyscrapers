@@ -1,5 +1,4 @@
 plugins {
-  kotlin("jvm")
 }
 
 group = "net.lab0.skyscrapers"

@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.engine
 
+import net.lab0.skyscrapers.api.dto.RuleBook
 import net.lab0.skyscrapers.api.structure.BlocksData
 import net.lab0.skyscrapers.api.structure.Bounds
 import net.lab0.skyscrapers.api.structure.Build
@@ -13,9 +14,8 @@ import net.lab0.skyscrapers.api.structure.Seal
 import net.lab0.skyscrapers.api.structure.TurnType
 import net.lab0.skyscrapers.api.structure.editor
 import net.lab0.skyscrapers.engine.api.Game
-import net.lab0.skyscrapers.engine.rule.exception.GameRuleViolationException
 import net.lab0.skyscrapers.engine.exception.InvalidBlocksConfiguration
-import net.lab0.skyscrapers.engine.rule.RuleBook
+import net.lab0.skyscrapers.engine.rule.exception.GameRuleViolationException
 import java.util.*
 
 class GameImpl(

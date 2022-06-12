@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.engine.api
 
+import net.lab0.skyscrapers.api.dto.RuleBook
 import net.lab0.skyscrapers.api.structure.Build
 import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.api.structure.GiveUp
@@ -7,7 +8,7 @@ import net.lab0.skyscrapers.api.structure.Placement
 import net.lab0.skyscrapers.api.structure.Seal
 import net.lab0.skyscrapers.api.structure.TurnType
 import net.lab0.skyscrapers.engine.rule.exception.GameRuleViolationException
-import net.lab0.skyscrapers.engine.rule.RuleBook
+import net.lab0.skyscrapers.engine.rule.RuleBookImpl
 
 /**
  * Represents a game.

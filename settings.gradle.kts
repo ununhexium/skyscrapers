@@ -5,6 +5,8 @@ include("ai")
 include("api")
 include("api:dto")
 findProject(":api:dto")?.name = "dto"
+include("api:http4k")
+findProject(":api:http4k")?.name = "http4k"
 include("api:structure")
 findProject(":api:structure")?.name = "structure"
 
@@ -17,14 +19,12 @@ include("client:clikt")
 findProject(":client:clikt")?.name = "clikt"
 include("client:http")
 findProject(":client:http")?.name = "http"
+include("client:spring-shell")
+findProject(":client:spring-shell")?.name = "spring-shell"
 
 include("engine")
 
 include("server")
 include("testing")
-include("api:http4k")
-findProject(":api:http4k")?.name = "http4k"
-include("client:spring-shell")
-findProject(":client:spring-shell")?.name = "spring-shell"
-include("engine:rule")
-findProject(":engine:rule")?.name = "rule"
+include(":rule")
+findProject(":rule")?.name = "rule"

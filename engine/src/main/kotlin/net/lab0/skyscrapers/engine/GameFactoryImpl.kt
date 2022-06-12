@@ -1,10 +1,10 @@
 package net.lab0.skyscrapers.engine
 
+import net.lab0.skyscrapers.api.dto.RuleBook
 import net.lab0.skyscrapers.api.structure.BlocksData
 import net.lab0.skyscrapers.engine.api.Game
 import net.lab0.skyscrapers.engine.exception.InvalidBoardSize
 import net.lab0.skyscrapers.engine.exception.InvalidPlayersCount
-import net.lab0.skyscrapers.engine.rule.RuleBook
 
 open class GameFactoryImpl : GameFactory {
   override fun new(

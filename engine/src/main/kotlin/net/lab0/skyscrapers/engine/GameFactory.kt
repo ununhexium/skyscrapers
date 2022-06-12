@@ -1,8 +1,8 @@
 package net.lab0.skyscrapers.engine
 
+import net.lab0.skyscrapers.api.dto.RuleBook
 import net.lab0.skyscrapers.api.structure.BlocksData
 import net.lab0.skyscrapers.engine.api.Game
-import net.lab0.skyscrapers.engine.rule.RuleBook
 
 interface GameFactory {
   fun new(

@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.engine.rule
 
+import net.lab0.skyscrapers.api.dto.RuleBook
 import net.lab0.skyscrapers.api.structure.GameRuleViolation
 import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.api.structure.Move
@@ -9,7 +10,7 @@ import net.lab0.skyscrapers.api.structure.TurnType
 import net.lab0.skyscrapers.api.structure.editor
 import net.lab0.skyscrapers.engine.rule.exception.GameRuleViolationException
 
-class RuleBook(
+class RuleBookImpl(
   val turnRules: List<Rule<TurnType>>,
   val placementRules: List<Rule<TurnType.PlacementTurn>>,
   val moveOnlyRules: List<Rule<MoveOnly>>,
@@ -17,8 +18,11 @@ class RuleBook(
   val buildRules: List<Rule<TurnType.MoveTurn.BuildTurn>>,
   val sealRules: List<Rule<TurnType.MoveTurn.SealTurn>>,
   val winRules: List<Rule<TurnType.MoveTurn.WinTurn>>,
-) {
-  fun tryToPlay(turn: TurnType, state: GameState): List<GameRuleViolation> {
+) : RuleBook {
+  override fun tryToPlay(
+    turn: TurnType,
+    state: GameState
+  ): List<GameRuleViolation> {
     try {
       throwIfViolatedRule(turnRules, turn, state)
 
@@ -77,8 +81,6 @@ class RuleBook(
     }
   }
 
-  fun canMove(
-    turn: MoveOnly,
-    state: GameState
-  ) = checkRules(moveOnlyRules, turn, state).isEmpty()
+  override fun canMove(turn: MoveOnly, state: GameState) =
+    checkRules(moveOnlyRules, turn, state).isEmpty()
 }

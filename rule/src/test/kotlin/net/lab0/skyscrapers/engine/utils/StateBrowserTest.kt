@@ -2,8 +2,6 @@ package net.lab0.skyscrapers.engine.utils
 
 import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.api.structure.Position
-import net.lab0.skyscrapers.engine.Defaults
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 /**
@@ -21,11 +19,15 @@ internal class StateBrowserTest {
         |  0   0   0  0  0
         |  0   0  B3  0  0
         |Blocks: 0:0
-        |Players: 0:a, 1:a
+        |Players: A:a, B:a
       """.trimMargin()
     )
 
-    val browser = StateBrowser(state, Defaults.RULE_BOOK)
+    val browser =
+      net.lab0.skyscrapers.engine.utils.StateBrowser(
+        state,
+        Defaults.RULE_BOOK
+      )
 
     assertThat(browser.getMovableBuilders(0)).isEmpty()
     assertThat(browser.getMovableBuilders(1)).isEqualTo(
@@ -44,37 +46,25 @@ internal class StateBrowserTest {
         |  2  B0  0 0
         | (0) A0  0 0
         |Blocks: 0:0
-        |Players: 0:a, 1:a
+        |Players: A:a, B:a
       """.trimMargin()
     )
 
-    val browser = StateBrowser(state, Defaults.RULE_BOOK)
+    val browser =
+      net.lab0.skyscrapers.engine.utils.StateBrowser(
+        state,
+        Defaults.RULE_BOOK
+      )
 
     val builder = Position(1, 1)
 
-
-    assertThat(browser.builderCanMoveTo(builder, Position(0,0)))
-      .describedAs("too high")
-      .isFalse()
-
-    assertThat(browser.builderCanMoveTo(builder, Position(0,1)))
-      .describedAs("sealed")
-      .isFalse()
-
-    assertThat(browser.builderCanMoveTo(builder, Position(1,0)))
-      .describedAs("occupied")
-      .isFalse()
-
-    assertThat(browser.builderCanMoveTo(builder, Position(3,0)))
-      .describedAs("far")
-      .isFalse()
-
-    assertThat(browser.builderCanMoveTo(builder, Position(1, 2)))
-      .describedAs("outside")
-      .isFalse()
+    browser.builderCanMoveTo(builder, Position(0, 0)) shouldBe false
+    browser.builderCanMoveTo(builder, Position(0, 1)) shouldBe false
+    browser.builderCanMoveTo(builder, Position(1, 0)) shouldBe false
+    browser.builderCanMoveTo(builder, Position(3, 0)) shouldBe false
+    browser.builderCanMoveTo(builder, Position(1, 2)) shouldBe false
 
     // ok: empty
-    assertThat(browser.builderCanMoveTo(builder, Position(2,0))).isTrue()
-
+    browser.builderCanMoveTo(builder, Position(2, 0)) shouldBe true
   }
 }
