@@ -10,9 +10,9 @@ class StateBrowser(val state: GameState, val ruleBook: RuleBook) {
 
   fun getBuilderPositionsForPlayer(player: Int): Sequence<Position> = state
     .builders
-    .filter { it == player }
-    .keys
     .asSequence()
+    .filter { it.second == player }
+    .map { it.first }
 
 
   /**
@@ -23,9 +23,8 @@ class StateBrowser(val state: GameState, val ruleBook: RuleBook) {
    */
   fun getMovableBuilders(player: Int): Sequence<Position> =
     getBuilderPositionsForPlayer(player)
-      .asSequence()
       .filter { pos ->
-        pos.getSurroundingPositionsWithin(state.bounds).any {
+        pos.getValidSurroundingPositions().any {
           ruleBook.canMove(
             TurnType.MoveTurn.WinTurn(player, pos, it),
             state
@@ -35,4 +34,23 @@ class StateBrowser(val state: GameState, val ruleBook: RuleBook) {
 
   fun builderCanMoveTo(builder: Position, target: Position) =
     ruleBook.canMove(MoveOnly.make(builder, target), state)
+
+  /**
+   * @return The builders that can move to a winning position.
+   */
+  fun getWinnableBuilders(player: Int): Sequence<Movement> =
+    getBuilderPositionsForPlayer(player)
+      .flatMap { builder ->
+        val targets = builder
+          .getValidSurroundingPositions()
+          .filter {
+            state.buildings[it] == state.blocks.maxHeight() &&
+                ruleBook.canMove(MoveOnly.make(builder, it), state)
+          }
+        targets.map { Movement(builder, it) }
+      }
+
+  private fun Position.getValidSurroundingPositions(): List<Position> =
+    this.getSurroundingPositionsWithin(state.bounds)
 }
+

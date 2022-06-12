@@ -64,4 +64,5 @@ data class Position(
     Position(this.x - 1, this.y),
     Position(this.x - 1, this.y + 1),
   ).filter { it in bounds }
+
 }
