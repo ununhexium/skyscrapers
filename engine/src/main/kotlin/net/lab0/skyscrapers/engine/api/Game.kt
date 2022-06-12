@@ -6,7 +6,7 @@ import net.lab0.skyscrapers.api.structure.GiveUp
 import net.lab0.skyscrapers.api.structure.Placement
 import net.lab0.skyscrapers.api.structure.Seal
 import net.lab0.skyscrapers.api.structure.TurnType
-import net.lab0.skyscrapers.engine.exception.GameRuleViolationException
+import net.lab0.skyscrapers.engine.rule.exception.GameRuleViolationException
 import net.lab0.skyscrapers.engine.rule.RuleBook
 
 /**

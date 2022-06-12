@@ -18,7 +18,7 @@ import net.lab0.skyscrapers.api.http4k.AUTHORIZATION
 import net.lab0.skyscrapers.api.structure.ErrorMessage
 import net.lab0.skyscrapers.api.structure.TurnType
 import net.lab0.skyscrapers.engine.api.Game
-import net.lab0.skyscrapers.engine.exception.GameRuleViolationException
+import net.lab0.skyscrapers.engine.rule.exception.GameRuleViolationException
 import org.http4k.core.Body
 import org.http4k.core.Request
 import org.http4k.core.Response

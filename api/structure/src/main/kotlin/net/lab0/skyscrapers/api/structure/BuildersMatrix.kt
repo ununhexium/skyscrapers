@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.api.structure
 
+// TODO: use this typesafe class everywhere
 @JvmInline
 value class BuildersMatrix(val matrix: Matrix<Int?>) {
   companion object {

@@ -26,3 +26,5 @@ include("api:http4k")
 findProject(":api:http4k")?.name = "http4k"
 include("client:spring-shell")
 findProject(":client:spring-shell")?.name = "spring-shell"
+include("engine:rule")
+findProject(":engine:rule")?.name = "rule"

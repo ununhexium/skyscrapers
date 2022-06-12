@@ -8,11 +8,12 @@ import net.lab0.skyscrapers.api.structure.Height
 import net.lab0.skyscrapers.api.structure.Matrix
 import net.lab0.skyscrapers.api.structure.Phase
 import net.lab0.skyscrapers.api.structure.Player
+import net.lab0.skyscrapers.api.structure.editor
 import net.lab0.skyscrapers.engine.DefaultGames.newGameWithSequentiallyPlacedBuilders
 import net.lab0.skyscrapers.engine.action.DSL
 import net.lab0.skyscrapers.engine.api.Game
 import net.lab0.skyscrapers.engine.assertj.GameStateAssert
-import net.lab0.skyscrapers.engine.exception.GameRuleViolationException
+import net.lab0.skyscrapers.engine.rule.exception.GameRuleViolationException
 import net.lab0.skyscrapers.engine.exception.InvalidBlocksConfiguration
 import net.lab0.skyscrapers.engine.exception.InvalidBoardSize
 import net.lab0.skyscrapers.engine.exception.InvalidPlayersCount

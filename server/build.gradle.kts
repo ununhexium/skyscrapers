@@ -15,6 +15,7 @@ repositories {
 
 dependencies {
   implementation(project(":engine"))
+  implementation(project(":engine:rule"))
   implementation(project(":api:dto"))
   implementation(project(":api:structure"))
   implementation(project(":api:http4k"))

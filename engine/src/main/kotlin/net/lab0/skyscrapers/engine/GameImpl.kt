@@ -11,8 +11,9 @@ import net.lab0.skyscrapers.api.structure.Placement
 import net.lab0.skyscrapers.api.structure.Player
 import net.lab0.skyscrapers.api.structure.Seal
 import net.lab0.skyscrapers.api.structure.TurnType
+import net.lab0.skyscrapers.api.structure.editor
 import net.lab0.skyscrapers.engine.api.Game
-import net.lab0.skyscrapers.engine.exception.GameRuleViolationException
+import net.lab0.skyscrapers.engine.rule.exception.GameRuleViolationException
 import net.lab0.skyscrapers.engine.exception.InvalidBlocksConfiguration
 import net.lab0.skyscrapers.engine.rule.RuleBook
 import java.util.*

@@ -1,4 +1,4 @@
-package net.lab0.skyscrapers.engine.exception
+package net.lab0.skyscrapers.engine.rule.exception
 
 import net.lab0.skyscrapers.api.structure.GameRuleViolation
 

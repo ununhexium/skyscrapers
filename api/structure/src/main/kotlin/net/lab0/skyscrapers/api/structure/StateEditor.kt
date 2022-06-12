@@ -1,9 +1,4 @@
-package net.lab0.skyscrapers.engine
-
-import net.lab0.skyscrapers.api.structure.GameState
-import net.lab0.skyscrapers.api.structure.Height
-import net.lab0.skyscrapers.api.structure.MoveOnly
-import net.lab0.skyscrapers.api.structure.Position
+package net.lab0.skyscrapers.api.structure
 
 class StateEditor(val state: GameState) {
   fun height(pos: Position, height: Int) =
