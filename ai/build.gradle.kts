@@ -15,7 +15,6 @@ repositories {
 
 dependencies {
 
-  implementation(project(":engine"))
   implementation(project(":api:structure"))
 
   // TEST
@@ -23,6 +22,8 @@ dependencies {
   testImplementation(assertJ)
   testImplementation(junit5Api)
   testRuntimeOnly(junit5Engine)
+
+  testImplementation(project(":engine"))
 }
 
 tasks {

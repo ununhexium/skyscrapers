@@ -1,5 +1,6 @@
 import dependencies.Dependencies.spring
 import dependencies.Dependencies.http4k
+import dependencies.Dependencies.mu
 
 plugins {
     kotlin("jvm")
@@ -20,8 +21,11 @@ dependencies {
     implementation(project(":server"))
     implementation(project(":engine"))
     implementation(project(":testing"))
+
     implementation(http4k.clientOkhttp)
     implementation(http4k.serverUndertow)
+
+    implementation(mu)
 
     implementation("org.springframework.boot:spring-boot-starter")
     implementation(spring.shell)

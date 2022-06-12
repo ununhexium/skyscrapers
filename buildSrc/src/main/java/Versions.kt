@@ -9,6 +9,7 @@ object Versions {
   // impl libs
   val arrow = "1.0.1"
   val clikt = "3.4.2"
+  val http4k = "4.25.14.0"
   val hoplite = "2.1.4"
   val jline = "3.21.0"
   val kaml = "0.44"
@@ -16,7 +17,7 @@ object Versions {
   val koin = "3.2.0"
   val kotlinxHtml = "0.7.5"
   val kotlinxSerializationJson = "1.3.3"
-  val http4k = "4.25.14.0"
+  val mu = "2.1.20"
   val sparkJava = "2.9.3"
   val springShell = "2.0.1.RELEASE"
 

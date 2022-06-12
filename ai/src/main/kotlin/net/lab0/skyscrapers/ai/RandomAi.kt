@@ -1,9 +1,9 @@
 package net.lab0.skyscrapers.ai
 
+import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.api.structure.Phase
 import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.api.structure.TurnType
-import net.lab0.skyscrapers.engine.api.Game
 
 class RandomAi(
   val player: Int,
@@ -22,16 +22,16 @@ class RandomAi(
     }
   }
 
-  override fun think(game: Game): TurnType {
-    return when (game.state.phase) {
-      Phase.PLACEMENT -> findPlacementTurn(game)
-      Phase.MOVEMENT -> findMovementTurn(game)
+  override fun think(state: GameState): TurnType {
+    return when (state.phase) {
+      Phase.PLACEMENT -> findPlacementTurn(state)
+      Phase.MOVEMENT -> findMovementTurn(state)
       Phase.FINISHED -> throw IllegalStateException("Should not happen as the game will stop before calling the AI with such a state")
     }
   }
 
-  private fun findPlacementTurn(game: Game): TurnType {
-    val state = game.state
+  private fun findPlacementTurn(state: GameState): TurnType {
+    val state = state
 
     val randomPosition = state
       .bounds
@@ -43,9 +43,7 @@ class RandomAi(
     return TurnType.PlacementTurn(player, randomPosition)
   }
 
-  private fun findMovementTurn(game: Game): TurnType {
-    val state = game.state
-
+  private fun findMovementTurn(state: GameState): TurnType {
     val choices = state
       .getBuilders(player)
       .flatMap { start ->
@@ -93,9 +91,10 @@ class RandomAi(
           it.buildOrSeal
         )
       }
-    }.filter {
-      game.ruleBook.tryToPlay(it, state).isEmpty()
     }
+//      .filter {
+//      game.ruleBook.tryToPlay(it, state).isEmpty()
+//    }
 
     return validatedTurns.firstOrNull() ?: TurnType.GiveUpTurn(player)
   }

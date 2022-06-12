@@ -61,6 +61,8 @@ object Dependencies {
 
   val mockK = "io.mockk:mockk:${Versions.mockk}"
 
+  val mu = "io.github.microutils:kotlin-logging-jvm:${Versions.mu}"
+
   object spring {
     val shell = "org.springframework.shell:spring-shell-starter:${Versions.springShell}"
   }
