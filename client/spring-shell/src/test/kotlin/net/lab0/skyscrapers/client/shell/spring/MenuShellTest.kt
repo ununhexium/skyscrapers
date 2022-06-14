@@ -21,6 +21,7 @@ import net.lab0.skyscrapers.api.structure.Matrix
 import net.lab0.skyscrapers.api.structure.Player
 import net.lab0.skyscrapers.client.http.SkyscraperClient
 import net.lab0.skyscrapers.client.shell.spring.component.GameAccessManager
+import net.lab0.skyscrapers.client.shell.spring.data.ShellResult
 import org.http4k.core.Status
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -115,9 +116,9 @@ internal class MenuShellTest {
 
     gameAccessManager.forceState(InternalGameAccessState(client = client))
 
-    val create = shell.evaluate { "create --game $yggdrasil" } as String
+    val create = shell.evaluate { "create --game Yggdrasil" } as ShellResult.Ok.Text
     resultHandler.handleResult(create)
-    create shouldContain "Created game $yggdrasil."
+    create.output shouldContain "Created the game Yggdrasil."
   }
 
   @Test
@@ -129,9 +130,9 @@ internal class MenuShellTest {
 
     gameAccessManager.forceState(InternalGameAccessState(client = client))
 
-    val create = shell.evaluate { "join --game $yggdrasil" } as String
+    val create = shell.evaluate { "join --game Yggdrasil" } as ShellResult.Ok.Text
     resultHandler.handleResult(create)
-    create shouldContain "Joined game $yggdrasil as player 0 with access token TOKEN."
+    create.output shouldContain "Joined the game Yggdrasil as player 0 with access token TOKEN."
   }
 
   @Test

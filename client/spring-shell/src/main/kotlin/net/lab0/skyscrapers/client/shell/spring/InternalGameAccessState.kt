@@ -9,4 +9,13 @@ data class InternalGameAccessState(
   val client: SkyscraperClient? = null,
   val currentGame: GameName? = null,
   val accessToken: AccessToken? = null,
-)
+) {
+  val inGame
+    get() = isConnected() && currentGame != null
+
+  fun isConnected(): Boolean =
+    client != null
+
+  fun <T> useClient(f: (SkyscraperClient) -> T?): T? =
+    if(isConnected()) f(client!!) else null
+}

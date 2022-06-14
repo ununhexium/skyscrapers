@@ -7,6 +7,8 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import net.lab0.skyscrapers.api.dto.AccessToken
+import net.lab0.skyscrapers.api.dto.ConnectionResponse
 import net.lab0.skyscrapers.api.dto.GameResponse
 import net.lab0.skyscrapers.api.dto.StatusResponse
 import net.lab0.skyscrapers.api.dto.value.GameName
@@ -158,6 +160,57 @@ internal class GameAccessManagerTest {
       |ERROR MESSAGE 2
     """.trimMargin()
     )
+  }
+
+  @Test
+  fun `failsafe join when not connected`() {
+    // given
+    val foo = GameName("foo")
+    val factory = mockk<SkyscraperClientFactoryComponent>() {
+      every { newClient(baseUrl) } returns mockk()
+    }
+    val subject = GameAccessManager(factory)
+
+    // then
+    subject.join(foo) shouldBe Problem.Text("Connect to a server before joining a game.")
+  }
+
+  @Test
+  fun `join a game that is not full`() {
+    // given
+    val foo = GameName("foo")
+    val factory = mockk<SkyscraperClientFactoryComponent>() {
+      every { newClient(baseUrl) } returns mockk {
+        every { join(foo) } returns
+            Right(ConnectionResponse(0, AccessToken("TOKEN")))
+      }
+    }
+    val subject = GameAccessManager(factory)
+    subject.reconnect(baseUrl)
+
+    // then
+    subject.join(foo) shouldBe Ok.Text("Joined the game foo as player 0 with access token TOKEN.")
+  }
+
+  @Test
+  fun `join a game that returns an erro`() {
+    // given
+    val foo = GameName("foo")
+    val factory = mockk<SkyscraperClientFactoryComponent>() {
+      every { newClient(baseUrl) } returns mockk {
+        every { join(foo) } returns
+            Left(listOf("ERROR MESSAGE 1", "ERROR MESSAGE 2"))
+      }
+    }
+    val subject = GameAccessManager(factory)
+    subject.reconnect(baseUrl)
+
+    // then
+    subject.join(foo) shouldBe Problem.Text("""
+      |Error when joining the game foo:
+      |ERROR MESSAGE 1
+      |ERROR MESSAGE 2
+    """.trimMargin())
   }
 
 }

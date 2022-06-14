@@ -40,7 +40,7 @@ internal class SkyscraperClientImplTest : FakeServerTest,
     // ssh port: nothing useful for us there
     val client = SkyscraperClientImpl(
       ClientFilters
-        .SetBaseUriFrom(Uri.of("http://localhost:22/api/v1/"))
+        .SetBaseUriFrom(Uri.of("http://example.com/"))
         .then(OkHttp())
     )
     client.status().shouldBeLeft()

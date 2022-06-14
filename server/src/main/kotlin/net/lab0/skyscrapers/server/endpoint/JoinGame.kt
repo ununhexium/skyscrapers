@@ -23,9 +23,10 @@ fun joinGame(service: Service, req: Request): Response =
       .mapLeft {
         when (it) {
           is JoiningError.GameIsFull ->
-            // TODO: Forbidden is missleading, find another status
+            // TODO: Forbidden is misleading, find another status
             forbidden("The game ${gameName.value} is full. Can't add any extra player.")
           is JoiningError.GameNotFound -> notFound(it.errors)
+          // TODO: the player already joined this game
         }
       }
       .map { playerAndToken ->

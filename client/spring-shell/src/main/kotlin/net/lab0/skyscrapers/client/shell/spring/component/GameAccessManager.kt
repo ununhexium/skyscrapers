@@ -25,12 +25,15 @@ class GameAccessManager(val factory: SkyscraperClientFactoryComponent) {
     get() = state.currentGame?.value
 
   val inGame
-    get() = isConnected() && state.currentGame != null
+    get() = state.inGame
+
+  fun isConnected() =
+    state.isConnected()
 
   /**
    * For test and debugging
    */
-  fun forceState(state: InternalGameAccessState) {
+  internal fun forceState(state: InternalGameAccessState) {
     this.state = state
   }
 
@@ -41,70 +44,65 @@ class GameAccessManager(val factory: SkyscraperClientFactoryComponent) {
     )
   }
 
-  fun status(): ShellResult {
-    return state
-      .client
-      ?.status()
-      ?.map {
-        Ok.Text(
-          if (it.games.isEmpty()) "No game available."
-          else "Available games:\n" +
-              it.games.sorted().joinToString(separator = "\n")
-        )
-      }
-      ?.mapLeft { status ->
-        Problem.Text(
-          "Failed to query ${state.baseUrl?.value} with status $status."
-        )
-      }
-      ?.merge()
-      ?: Problem.Text("Not connected.")
-  }
-
-  fun create(name: GameName): ShellResult {
-    return state
-      .client
-      ?.create(name)
-      ?.map {
-        Ok.Text("Created the game ${it.name}.")
-      }
-      ?.mapLeft {
-        Problem.Text(
-          "Error when creating the game:\n" + it.joinToString(
-            separator = "\n"
+  fun status(): ShellResult =
+    state.useClient { client ->
+      client.status()
+        .map {
+          Ok.Text(
+            if (it.games.isEmpty()) "No game available."
+            else "Available games:\n" +
+                it.games.sorted().joinToString(separator = "\n")
           )
-        )
-      }
-      ?.merge()
-      ?: Problem.Text("Connect to a server before creating a game.")
-  }
+        }
+        .mapLeft { status ->
+          Problem.Text(
+            "Failed to query ${state.baseUrl?.value} with status $status."
+          )
+        }
+        .merge()
+    } ?: Problem.Text("Not connected.")
 
-  // TODO: show error message when the shell is not connected (or use availability to mark this command?)
-  fun join(name: GameName): ShellResult {
-    return state
-      .client
-      ?.join(name)
-      ?.map {
-        state = state.copy(
-          accessToken = it.token,
-          currentGame = name,
-        )
+  fun create(name: GameName): ShellResult =
+    state.useClient { client ->
+      client
+        .create(name)
+        .map {
+          Ok.Text("Created the game ${it.name}.")
+        }
+        .mapLeft {
+          Problem.Text(
+            "Error when creating the game:\n" + it.joinToString(
+              separator = "\n"
+            )
+          )
+        }
+        .merge()
+    } ?: Problem.Text("Connect to a server before creating a game.")
 
-        Ok.Text(
-          "Joined game ${name.value} as player ${it.player} with access token ${it.token.value}."
-        )
-      }
-      ?.mapLeft {
-        Problem.Text(
-          "Error when joining the game:\n" + it.joinToString(separator = "\n")
-        )
-      }
-      ?.merge()
-      ?: Problem.Text("Connect to a server before joining a game.")
-  }
+  fun join(name: GameName): ShellResult =
+    state.useClient { client ->
+      client
+        .join(name)
+        .map {
+          state = state.copy(
+            accessToken = it.token,
+            currentGame = name,
+          )
+
+          Ok.Text(
+            "Joined the game ${name.value} as player ${it.player} with access token ${it.token.value}."
+          )
+        }
+        .mapLeft {
+          Problem.Text(
+            "Error when joining the game ${name.value}:\n" + it.joinToString(separator = "\n")
+          )
+        }
+        .merge()
+    } ?: Problem.Text("Connect to a server before joining a game.")
 
   fun place(position: Position): HierarchyResult =
-    checkInGame { client ->
+    state.useClient { client ->
       client
         .place(
           state.currentGame!!,
@@ -121,15 +119,10 @@ class GameAccessManager(val factory: SkyscraperClientFactoryComponent) {
           HierarchyResult.Error(it)
         }
         .merge()
-    }
-
-  private fun <T> checkInGame(f: (SkyscraperClient) -> T): T {
-    check(inGame) { "Can't play before joining a game." }
-    return f(state.client!!)
-  }
+    } ?: throw IllegalStateException()
 
   fun build(start: Position, target: Position, build: Position): String =
-    checkInGame { client ->
+    state.useClient { client ->
       client
         .build(
           state.currentGame!!,
@@ -153,10 +146,10 @@ class GameAccessManager(val factory: SkyscraperClientFactoryComponent) {
           }
         }
         .merge()
-    }
+    } ?: throw IllegalStateException()
 
   fun seal(start: Position, target: Position, seal: Position): String =
-    checkInGame { client ->
+    state.useClient { client ->
       client
         .seal(
           state.currentGame!!,
@@ -180,10 +173,10 @@ class GameAccessManager(val factory: SkyscraperClientFactoryComponent) {
           }
         }
         .merge()
-    }
+    } ?: throw IllegalStateException()
 
   fun win(start: Position, target: Position): String =
-    checkInGame { client ->
+    state.useClient { client ->
       client
         .win(
           state.currentGame!!,
@@ -205,7 +198,7 @@ class GameAccessManager(val factory: SkyscraperClientFactoryComponent) {
           }
         }
         .merge()
-    }
+    } ?: throw IllegalStateException()
 
   fun state(): String? {
     return state
@@ -219,7 +212,4 @@ class GameAccessManager(val factory: SkyscraperClientFactoryComponent) {
       }
       ?.merge()
   }
-
-  fun isConnected(): Boolean =
-    state.client != null
 }
