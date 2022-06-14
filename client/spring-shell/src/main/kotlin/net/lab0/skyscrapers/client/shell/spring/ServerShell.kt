@@ -1,8 +1,6 @@
 package net.lab0.skyscrapers.client.shell.spring
 
 import net.lab0.skyscrapers.client.shell.spring.component.ServerStateComponent
-import net.lab0.skyscrapers.server.routed
-import org.http4k.server.asServer
 import org.springframework.shell.standard.ShellComponent
 import org.springframework.shell.standard.ShellMethod
 import org.springframework.shell.standard.ShellOption

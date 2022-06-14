@@ -104,7 +104,7 @@ internal class SkyscraperClientImplTest : FakeServerTest,
     val cnc = GameName(gameName)
     service.createGame(cnc)
     val p0 = service.join(cnc).shouldBeRight()
-    val p1 = service.join(cnc).shouldBeRight()
+    service.join(cnc).shouldBeRight()
 
     fakeServer(service = service) { handler ->
       val client = SkyscraperClientImpl(handler)

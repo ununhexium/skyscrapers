@@ -1,6 +1,6 @@
-import dependencies.Dependencies.spring
 import dependencies.Dependencies.http4k
 import dependencies.Dependencies.mu
+import dependencies.Dependencies.spring
 
 plugins {
     kotlin("jvm")

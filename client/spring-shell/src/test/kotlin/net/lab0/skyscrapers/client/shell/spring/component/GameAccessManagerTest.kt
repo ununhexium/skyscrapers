@@ -1,6 +1,5 @@
 package net.lab0.skyscrapers.client.shell.spring.component
 
-import arrow.core.Either
 import arrow.core.Either.Left
 import arrow.core.Either.Right
 import io.kotest.matchers.shouldBe
@@ -15,7 +14,6 @@ import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.client.shell.spring.BaseUrl
 import net.lab0.skyscrapers.client.shell.spring.SkyscraperClientFactoryComponent
-import net.lab0.skyscrapers.client.shell.spring.data.ShellResult
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult.Ok
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult.Problem
 import org.junit.jupiter.api.Test

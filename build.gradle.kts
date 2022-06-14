@@ -44,7 +44,8 @@ subprojects {
     withType<KotlinCompile> {
       kotlinOptions.jvmTarget = Versions.java
       kotlinOptions.freeCompilerArgs = listOf(
-        "-progressive",
+        "-progressive", // enable the behaviours of future releases
+        "-opt-in=kotlin.RequiresOptIn", // disable OptIn warnings
       )
     }
   }

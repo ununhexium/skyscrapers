@@ -4,7 +4,6 @@ import arrow.core.merge
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.client.http.ClientError
-import net.lab0.skyscrapers.client.http.SkyscraperClient
 import net.lab0.skyscrapers.client.shell.spring.BaseUrl
 import net.lab0.skyscrapers.client.shell.spring.InternalGameAccessState
 import net.lab0.skyscrapers.client.shell.spring.SkyscraperClientFactoryComponent

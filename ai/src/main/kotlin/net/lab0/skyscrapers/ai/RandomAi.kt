@@ -33,8 +33,6 @@ class RandomAi(
   }
 
   private fun findPlacementTurn(state: GameState): TurnType {
-    val state = state
-
     val randomPosition = state
       .bounds
       .positionsSequence

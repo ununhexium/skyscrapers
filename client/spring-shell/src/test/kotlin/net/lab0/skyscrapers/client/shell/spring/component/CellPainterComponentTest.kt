@@ -3,11 +3,11 @@ package net.lab0.skyscrapers.client.shell.spring.component
 import io.kotest.matchers.shouldBe
 import net.lab0.skyscrapers.api.structure.Height
 import net.lab0.skyscrapers.client.shell.spring.background
-import net.lab0.skyscrapers.client.shell.spring.get
 import net.lab0.skyscrapers.client.shell.spring.data.Cell
 import net.lab0.skyscrapers.client.shell.spring.data.CellMetadata
 import net.lab0.skyscrapers.client.shell.spring.data.DarkPalette
 import net.lab0.skyscrapers.client.shell.spring.foreground
+import net.lab0.skyscrapers.client.shell.spring.get
 import net.lab0.skyscrapers.client.shell.spring.plus
 import org.jline.utils.AttributedString
 import org.jline.utils.AttributedStyle

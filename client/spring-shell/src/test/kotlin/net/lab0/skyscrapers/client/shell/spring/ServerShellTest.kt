@@ -4,12 +4,8 @@ import com.ninjasquad.springmockk.MockkBean
 import io.kotest.matchers.string.shouldContain
 import io.mockk.clearAllMocks
 import io.mockk.every
-import io.mockk.mockk
 import io.mockk.verify
-import net.lab0.skyscrapers.client.shell.spring.component.Http4kServerFactoryComponent
 import net.lab0.skyscrapers.client.shell.spring.component.ServerStateComponent
-import org.http4k.server.Http4kServer
-import org.http4k.server.Undertow
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith

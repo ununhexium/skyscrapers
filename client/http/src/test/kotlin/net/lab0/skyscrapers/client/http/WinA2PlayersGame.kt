@@ -2,7 +2,6 @@ package net.lab0.skyscrapers.client.http
 
 import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.matchers.shouldBe
-import net.lab0.skyscrapers.api.dto.PhaseDTO
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.structure.Phase
 import net.lab0.skyscrapers.api.structure.Position

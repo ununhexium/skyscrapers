@@ -4,8 +4,6 @@ import arrow.core.merge
 import net.lab0.skyscrapers.api.dto.ErrorResponse
 import net.lab0.skyscrapers.api.dto.GameResponse
 import net.lab0.skyscrapers.server.Service
-import net.lab0.skyscrapers.server.pathGameName
-import net.lab0.skyscrapers.server.withGame
 import net.lab0.skyscrapers.server.withGameName
 import org.http4k.core.Body
 import org.http4k.core.Request

@@ -1,11 +1,11 @@
 package net.lab0.skyscrapers.client.shell.spring.component
 
 import net.lab0.skyscrapers.client.shell.spring.background
-import net.lab0.skyscrapers.client.shell.spring.get
 import net.lab0.skyscrapers.client.shell.spring.data.Cell
 import net.lab0.skyscrapers.client.shell.spring.data.CellMetadata
 import net.lab0.skyscrapers.client.shell.spring.data.Palette
 import net.lab0.skyscrapers.client.shell.spring.foreground
+import net.lab0.skyscrapers.client.shell.spring.get
 import net.lab0.skyscrapers.client.shell.spring.plus
 import org.jline.utils.AttributedString
 import org.jline.utils.AttributedStyle

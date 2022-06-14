@@ -32,7 +32,7 @@ internal class PlaceTest {
     val gameName = GameName("foo")
     val service = ServiceImpl.new(mapOf(gameName to GameFactoryImpl().new()))
     val p0 = service.join(gameName).shouldBeRight()
-    val p1 = service.join(gameName).shouldBeRight()
+    service.join(gameName).shouldBeRight()
 
     val pos = PositionDTO(0, 0)
     val req = Request(POST, "/api/v1/games/foo/place").with(
@@ -52,8 +52,8 @@ internal class PlaceTest {
   fun `only allow an authorized player to place a builder`() {
     val gameName = GameName("foo")
     val service = ServiceImpl.new(mapOf(gameName to GameFactoryImpl().new()))
-    val p0 = service.join(gameName).shouldBeRight()
-    val p1 = service.join(gameName).shouldBeRight()
+    service.join(gameName).shouldBeRight()
+    service.join(gameName).shouldBeRight()
 
     val pos = PositionDTO(0, 0)
     val response = routed(service)(
@@ -76,7 +76,7 @@ internal class PlaceTest {
   fun `tell when a rule is violated, wrong turn`() {
     val gameName = GameName("foo")
     val service = ServiceImpl.new(mapOf(gameName to GameFactoryImpl().new()))
-    val p0 = service.join(gameName).shouldBeRight()
+    service.join(gameName).shouldBeRight()
     val p1 = service.join(gameName).shouldBeRight()
 
     val pos = PositionDTO(0, 0)

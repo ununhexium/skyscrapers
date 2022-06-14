@@ -2,7 +2,6 @@ package net.lab0.skyscrapers.engine.utils
 
 import io.kotest.matchers.shouldBe
 import net.lab0.skyscrapers.api.structure.GameState
-import net.lab0.skyscrapers.api.structure.TurnType
 import net.lab0.skyscrapers.api.structure.TurnType.MoveTurn.BuildTurn
 import net.lab0.skyscrapers.engine.Defaults
 import org.assertj.core.api.Assertions.assertThat

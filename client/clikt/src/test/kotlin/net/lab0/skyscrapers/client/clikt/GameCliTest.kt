@@ -108,7 +108,7 @@ internal class GameCliTest :
       cli.parse("config", "--reset")
       cli.parse("join", "foo")
 
-      val p0 = service.join(game)
+      service.join(game)
 
       cli.parse("place", "--game", "foo", "--at", "0,0")
 
@@ -130,7 +130,7 @@ internal class GameCliTest :
       cli.parse("config", "--reset")
       cli.parse("join", "foo")
 
-      val p0 = service.join(game)
+      service.join(game)
 
       cli.parse("place", "--game", "foo", "--at", "0,0")
       cli.parse("place", "--game", "foo", "--at", "0,1")

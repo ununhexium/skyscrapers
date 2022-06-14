@@ -24,7 +24,7 @@ val articles = listOf(
   Foundation,
 )
 
-fun main(args: Array<String>) {
+fun main() {
   val http = ignite()
 
   val digest = MessageDigest.getInstance("SHA256")

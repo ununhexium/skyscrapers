@@ -27,7 +27,7 @@ internal class SeriesImplTest {
     assertThat(series.rounds).isEqualTo(1)
     assertThat(
       series.getRound(0)?.state?.hasBuilder(Position(0, 0))
-    ).isTrue()
+    ).isTrue
   }
 
   @Test
@@ -59,7 +59,7 @@ internal class SeriesImplTest {
     bestOf1.start()
     bestOf1.withGame { play(TurnType.GiveUpTurn(0)) }
 
-    assertThat(bestOf1.isFinished()).isTrue()
+    assertThat(bestOf1.isFinished()).isTrue
 
     assertThat(
       assertThrows<IllegalStateException> {
@@ -74,7 +74,7 @@ internal class SeriesImplTest {
     series.start()
     series.withGame { play(TurnType.GiveUpTurn(0)) }
 
-    assertThat(series.isFinished()).isFalse()
+    assertThat(series.isFinished()).isFalse
 
     series.start()
     series.withGame { play(TurnType.GiveUpTurn(0)) }

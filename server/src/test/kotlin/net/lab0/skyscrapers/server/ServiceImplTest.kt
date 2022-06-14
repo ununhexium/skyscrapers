@@ -15,7 +15,7 @@ internal class ServiceImplTest {
     val service = ServiceImpl.new()
     val game = service.createGame(name)
     assertThat(game).isNotNull
-    val sameGame = service.getGame(name).shouldBeRight() shouldBeSameInstanceAs game
+    service.getGame(name).shouldBeRight() shouldBeSameInstanceAs game
   }
 
   @Test

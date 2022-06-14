@@ -1,7 +1,6 @@
 package net.lab0.skyscrapers.engine
 
 import net.lab0.skyscrapers.api.structure.BlocksData
-import net.lab0.skyscrapers.api.structure.Bounds
 import net.lab0.skyscrapers.api.structure.Height
 import net.lab0.skyscrapers.api.structure.Move
 import net.lab0.skyscrapers.api.structure.MoveOnly

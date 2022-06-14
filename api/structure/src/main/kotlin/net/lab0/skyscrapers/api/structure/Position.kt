@@ -33,7 +33,6 @@ data class Position(
     when (style) {
       COMA -> "$x,$y"
       X -> "${x}x$y"
-      else -> toString()
     }
 
   /**
