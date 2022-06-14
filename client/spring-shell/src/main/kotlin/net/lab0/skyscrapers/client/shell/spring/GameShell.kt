@@ -2,6 +2,7 @@ package net.lab0.skyscrapers.client.shell.spring
 
 import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.client.shell.spring.component.ServerAccessManager
+import net.lab0.skyscrapers.client.shell.spring.component.provider.PlaceAtValueProvider
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult
 import org.springframework.shell.Availability
 import org.springframework.shell.standard.ShellComponent
@@ -17,7 +18,10 @@ class GameShell(val serverAccessManager: ServerAccessManager) {
 
   @ShellMethod("Place a builder at the given position.", key = ["place"])
   fun place(
-    @ShellOption(help = "Where to place a builder.")
+    @ShellOption(
+      help = "Where to place a builder.",
+      valueProvider = PlaceAtValueProvider::class,
+    )
     at: Position,
   ): ShellResult =
     serverAccessManager.place(at)

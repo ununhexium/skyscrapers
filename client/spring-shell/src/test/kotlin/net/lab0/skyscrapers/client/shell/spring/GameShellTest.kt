@@ -2,6 +2,8 @@ package net.lab0.skyscrapers.client.shell.spring
 
 import arrow.core.Either.Right
 import com.ninjasquad.springmockk.SpykBean
+import io.kotest.matchers.Matcher
+import io.kotest.matchers.MatcherResult
 import io.kotest.matchers.should
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.types.beInstanceOf
@@ -27,6 +29,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.shell.CompletionContext
+import org.springframework.shell.CompletionProposal
 import org.springframework.shell.Shell
 import org.springframework.shell.jline.InteractiveShellApplicationRunner
 import org.springframework.shell.jline.ScriptShellApplicationRunner
@@ -106,11 +110,31 @@ internal class GameShellTest /* TODO extract ShellTest() */ {
           Right(emptyState)
     }
 
-    serverAccessManager.forceState(InternalGameAccessState(BaseUrl(""), client, game, token))
+    serverAccessManager.forceState(
+      InternalGameAccessState(
+        BaseUrl(""),
+        client,
+        game,
+        token
+      )
+    )
 
     val create = eval<StateUpdate>("place --at 0,0")
 
     create.comment shouldContain "Placed a builder at 0,0."
+  }
+
+  @Test
+  fun `propose a place for the builder`() {
+    val completion =
+      shell.complete(CompletionContext(listOf("place", "--at"), 2, 0))
+    completion should haveCompletions(
+      (0..4).flatMap { x ->
+        (0..4).map { y ->
+          CompletionProposal("$x,$y")
+        }
+      }
+    )
   }
 
   @Test
@@ -174,4 +198,58 @@ internal class GameShellTest /* TODO extract ShellTest() */ {
     resultHandler.handleResult(create)
     create shouldContain "Moved builder from 0,0 to 1,1 and won."
   }
+
+
+  fun haveCompletions(expected: List<CompletionProposal>) =
+    Matcher<List<CompletionProposal>> { value ->
+      val sameSize = value.size == expected.size
+
+      if (sameSize) {
+        val valid = value
+          .mapIndexed { index, it -> index to it }
+          .zip(expected)
+          .map { (pair, expected) -> Triple(pair.first, pair.second, expected) }
+          .groupBy { (_, actual, expected) ->
+            actual.value() == expected.value() &&
+                actual.displayText() == expected.displayText() &&
+                actual.description() == expected.description() &&
+                actual.category() == expected.category() &&
+                actual.dontQuote() == expected.dontQuote()
+          }
+
+        val different = valid[false]
+        val noDifference = different == null
+
+        MatcherResult(
+          sameSize && noDifference,
+          {
+            "Come completions didn't match:" +
+                different!!.joinToString("\n\n") { (index, actual, expected) ->
+                  """
+                    |At index $index expected:
+                    |  ${expected.value()}
+                    |  ${expected.displayText()}
+                    |  ${expected.description()}
+                    |  ${expected.category()}
+                    |  ${expected.dontQuote()}
+                    |But was:
+                    |  ${actual.value()}
+                    |  ${actual.displayText()}
+                    |  ${actual.description()}
+                    |  ${actual.category()}
+                    |  ${actual.dontQuote()}
+                  """
+                }
+          },
+          { "Huhhh..." },
+        )
+      } else {
+        MatcherResult(
+          false,
+          { "completions count was ${value.size} but we expected length ${expected.size}" },
+          { "completions count was ${value.size} but we expected a length different from ${expected.size}" },
+        )
+      }
+    }
+
 }

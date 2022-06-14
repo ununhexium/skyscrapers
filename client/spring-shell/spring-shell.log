@@ -181,3 +181,5 @@
 1654948665408:stracktrace
 1654948674598:stacktrace
 1655036478463:start-server --port 45678
+1655237027677:script --file preset_p0.play
+1655237046536:place --at 3,2
