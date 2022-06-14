@@ -20,7 +20,7 @@ import net.lab0.skyscrapers.api.structure.Height
 import net.lab0.skyscrapers.api.structure.Matrix
 import net.lab0.skyscrapers.api.structure.Player
 import net.lab0.skyscrapers.client.http.SkyscraperClient
-import net.lab0.skyscrapers.client.shell.spring.component.GameAccessManager
+import net.lab0.skyscrapers.client.shell.spring.component.ServerAccessManager
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult
 import org.http4k.core.Status
 import org.junit.jupiter.api.BeforeEach
@@ -55,7 +55,7 @@ internal class MenuShellTest {
   lateinit var factory: SkyscraperClientFactoryComponent
 
   @SpykBean
-  lateinit var gameAccessManager: GameAccessManager
+  lateinit var serverAccessManager: ServerAccessManager
 
   @Autowired
   private lateinit var shell: Shell
@@ -88,7 +88,7 @@ internal class MenuShellTest {
     connect shouldContain "foo"
     connect shouldContain "bar"
 
-    gameAccessManager.isConnected() shouldBe true
+    serverAccessManager.isConnected() shouldBe true
   }
 
   // TODO: generic error display class
@@ -114,7 +114,7 @@ internal class MenuShellTest {
           Right(GameResponse(game, GameState.DUMMY))
     }
 
-    gameAccessManager.forceState(InternalGameAccessState(client = client))
+    serverAccessManager.forceState(InternalGameAccessState(client = client))
 
     val create = shell.evaluate { "create --game Yggdrasil" } as ShellResult.Ok.Text
     resultHandler.handleResult(create)
@@ -128,7 +128,7 @@ internal class MenuShellTest {
           Right(ConnectionResponse(0, AccessToken("TOKEN")))
     }
 
-    gameAccessManager.forceState(InternalGameAccessState(client = client))
+    serverAccessManager.forceState(InternalGameAccessState(client = client))
 
     val create = shell.evaluate { "join --game Yggdrasil" } as ShellResult.Ok.Text
     resultHandler.handleResult(create)
@@ -167,7 +167,7 @@ internal class MenuShellTest {
           )
     }
 
-    gameAccessManager.forceState(InternalGameAccessState(BaseUrl(""), client, game, token))
+    serverAccessManager.forceState(InternalGameAccessState(BaseUrl(""), client, game, token))
 
     val create = shell.evaluate { "state" } as String
     resultHandler.handleResult(create)

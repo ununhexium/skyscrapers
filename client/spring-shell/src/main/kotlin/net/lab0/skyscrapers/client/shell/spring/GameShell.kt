@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.client.shell.spring
 
 import net.lab0.skyscrapers.api.structure.Position
-import net.lab0.skyscrapers.client.shell.spring.component.GameAccessManager
+import net.lab0.skyscrapers.client.shell.spring.component.ServerAccessManager
 import net.lab0.skyscrapers.client.shell.spring.data.HierarchyResult
 import org.springframework.shell.Availability
 import org.springframework.shell.standard.ShellComponent
@@ -9,10 +9,10 @@ import org.springframework.shell.standard.ShellMethod
 import org.springframework.shell.standard.ShellOption
 
 @ShellComponent
-class GameShell(val gameAccessManager: GameAccessManager) {
+class GameShell(val serverAccessManager: ServerAccessManager) {
 
   fun placeAvailability() =
-    if (gameAccessManager.inGame) Availability.available()
+    if (serverAccessManager.inGame) Availability.available()
     else Availability.unavailable("you must join a game first")
 
   @ShellMethod("Place a builder at the given position.", key = ["place"])
@@ -22,11 +22,11 @@ class GameShell(val gameAccessManager: GameAccessManager) {
       help = "Where to place a builder.",
     ) position: Position,
   ): HierarchyResult =
-    gameAccessManager.place(position)
+    serverAccessManager.place(position)
 
 
   fun buildAvailability() =
-    if (gameAccessManager.inGame) Availability.available()
+    if (serverAccessManager.inGame) Availability.available()
     else Availability.unavailable("you must join a game first")
 
   @ShellMethod("Move a builder and build.", key = ["build"])
@@ -44,11 +44,11 @@ class GameShell(val gameAccessManager: GameAccessManager) {
       help = "Where to build.",
     ) build: Position,
   ): String? {
-    return gameAccessManager.build(start, target, build)
+    return serverAccessManager.build(start, target, build)
   }
 
   fun sealAvailability() =
-    if (gameAccessManager.inGame) Availability.available()
+    if (serverAccessManager.inGame) Availability.available()
     else Availability.unavailable("you must join a game first")
 
   @ShellMethod("Move a builder and seal.", key = ["seal"])
@@ -66,11 +66,11 @@ class GameShell(val gameAccessManager: GameAccessManager) {
       help = "Where to seal.",
     ) build: Position,
   ): String? {
-    return gameAccessManager.seal(start, target, build)
+    return serverAccessManager.seal(start, target, build)
   }
 
   fun winAvailability() =
-    if (gameAccessManager.inGame) Availability.available()
+    if (serverAccessManager.inGame) Availability.available()
     else Availability.unavailable("you must join a game first")
 
   @ShellMethod("Move a builder and win.", key = ["win"])
@@ -84,12 +84,12 @@ class GameShell(val gameAccessManager: GameAccessManager) {
       help = "Where to move the builder.",
     ) target: Position,
   ): String? {
-    return gameAccessManager.win(start, target)
+    return serverAccessManager.win(start, target)
   }
 
   @ShellMethod("Shows the state of the current game.", key = ["state"])
   fun state(): String? {
-    return gameAccessManager.state()
+    return serverAccessManager.state()
   }
 
 }

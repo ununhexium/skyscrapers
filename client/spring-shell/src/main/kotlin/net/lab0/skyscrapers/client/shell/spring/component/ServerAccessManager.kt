@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component
  * Manages the info that outlives commands.
  */
 @Component
-class GameAccessManager(val factory: SkyscraperClientFactoryComponent) {
+class ServerAccessManager(val factory: SkyscraperClientFactoryComponent) {
   private var state = InternalGameAccessState()
 
   val currentGame: String?

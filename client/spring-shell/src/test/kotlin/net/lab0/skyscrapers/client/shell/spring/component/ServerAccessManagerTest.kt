@@ -18,14 +18,14 @@ import net.lab0.skyscrapers.client.shell.spring.data.ShellResult.Ok
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult.Problem
 import org.junit.jupiter.api.Test
 
-internal class GameAccessManagerTest {
+internal class ServerAccessManagerTest {
   private val baseUrl = BaseUrl("http://example.com:116/")
   private val baseUrl2 = BaseUrl("http://example2.com:117/")
 
   @Test
   fun `start unconnected and outside of any game`() {
     val factory = mockk<SkyscraperClientFactoryComponent>()
-    val subject = GameAccessManager(factory)
+    val subject = ServerAccessManager(factory)
 
     subject.inGame shouldBe false
     subject.currentGame shouldBe null
@@ -38,7 +38,7 @@ internal class GameAccessManagerTest {
       every { newClient(baseUrl2) } returns mockk()
     }
 
-    val subject = GameAccessManager(factory)
+    val subject = ServerAccessManager(factory)
     subject.reconnect(baseUrl)
 
     verify { factory.newClient(baseUrl) }
@@ -56,7 +56,7 @@ internal class GameAccessManagerTest {
   fun `failsafe status when not connected`() {
     val factory = mockk<SkyscraperClientFactoryComponent>()
 
-    val subject = GameAccessManager(factory)
+    val subject = ServerAccessManager(factory)
 
     subject.status() shouldBe Problem.Text("Not connected.")
   }
@@ -69,7 +69,7 @@ internal class GameAccessManagerTest {
         every { status() } returns Right(StatusResponse("up", emptySet()))
       }
     }
-    val subject = GameAccessManager(factory)
+    val subject = ServerAccessManager(factory)
     subject.reconnect(baseUrl)
 
     // then
@@ -89,7 +89,7 @@ internal class GameAccessManagerTest {
         )
       }
     }
-    val subject = GameAccessManager(factory)
+    val subject = ServerAccessManager(factory)
     subject.reconnect(baseUrl)
 
     // then
@@ -111,7 +111,7 @@ internal class GameAccessManagerTest {
     val factory = mockk<SkyscraperClientFactoryComponent>() {
       every { newClient(baseUrl) } returns mockk()
     }
-    val subject = GameAccessManager(factory)
+    val subject = ServerAccessManager(factory)
 
     // then
     subject.create(foo) shouldBe Problem.Text("Connect to a server before creating a game.")
@@ -126,7 +126,7 @@ internal class GameAccessManagerTest {
         every { create(foo) } returns Right(GameResponse(foo, GameState.DUMMY))
       }
     }
-    val subject = GameAccessManager(factory)
+    val subject = ServerAccessManager(factory)
     subject.reconnect(baseUrl)
 
     // then
@@ -147,7 +147,7 @@ internal class GameAccessManagerTest {
         )
       }
     }
-    val subject = GameAccessManager(factory)
+    val subject = ServerAccessManager(factory)
     subject.reconnect(baseUrl)
 
     // then
@@ -167,7 +167,7 @@ internal class GameAccessManagerTest {
     val factory = mockk<SkyscraperClientFactoryComponent>() {
       every { newClient(baseUrl) } returns mockk()
     }
-    val subject = GameAccessManager(factory)
+    val subject = ServerAccessManager(factory)
 
     // then
     subject.join(foo) shouldBe Problem.Text("Connect to a server before joining a game.")
@@ -183,7 +183,7 @@ internal class GameAccessManagerTest {
             Right(ConnectionResponse(0, AccessToken("TOKEN")))
       }
     }
-    val subject = GameAccessManager(factory)
+    val subject = ServerAccessManager(factory)
     subject.reconnect(baseUrl)
 
     // then
@@ -200,7 +200,7 @@ internal class GameAccessManagerTest {
             Left(listOf("ERROR MESSAGE 1", "ERROR MESSAGE 2"))
       }
     }
-    val subject = GameAccessManager(factory)
+    val subject = ServerAccessManager(factory)
     subject.reconnect(baseUrl)
 
     // then

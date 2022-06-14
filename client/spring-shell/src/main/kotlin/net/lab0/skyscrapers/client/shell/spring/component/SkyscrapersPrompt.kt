@@ -7,13 +7,13 @@ import org.springframework.stereotype.Component
 
 
 @Component
-class SkyscrapersPrompt(val gameAccessManager: GameAccessManager) : PromptProvider {
+class SkyscrapersPrompt(val serverAccessManager: ServerAccessManager) : PromptProvider {
 
   override fun getPrompt(): AttributedString {
-    return if (gameAccessManager.isConnected()) {
-      if (gameAccessManager.inGame) {
+    return if (serverAccessManager.isConnected()) {
+      if (serverAccessManager.inGame) {
         AttributedString(
-          "${gameAccessManager.currentGame}:>",
+          "${serverAccessManager.currentGame}:>",
           AttributedStyle.DEFAULT.foreground(AttributedStyle.GREEN)
         )
       } else {

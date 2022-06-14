@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.client.shell.spring
 
 import net.lab0.skyscrapers.api.dto.value.GameName
-import net.lab0.skyscrapers.client.shell.spring.component.GameAccessManager
+import net.lab0.skyscrapers.client.shell.spring.component.ServerAccessManager
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult
 import org.springframework.shell.Availability
 import org.springframework.shell.standard.ShellComponent
@@ -10,7 +10,7 @@ import org.springframework.shell.standard.ShellOption
 
 
 @ShellComponent
-class MenuShell(val gameAccessManager: GameAccessManager) {
+class MenuShell(val serverAccessManager: ServerAccessManager) {
 // TODO: capture sigint and stop the server if it's running
   @ShellMethod(
     "Choose the server and test the connectivity.",
@@ -19,11 +19,11 @@ class MenuShell(val gameAccessManager: GameAccessManager) {
   fun connect(
     @ShellOption("--url", help = "The server URL") baseUrl: String,
   ): String? {
-    gameAccessManager.reconnect(BaseUrl(baseUrl))
+    serverAccessManager.reconnect(BaseUrl(baseUrl))
 
     return """
       |Connected to $baseUrl.
-      |${gameAccessManager.status()}
+      |${serverAccessManager.status()}
     """.trimMargin()
   }
 
@@ -34,11 +34,11 @@ class MenuShell(val gameAccessManager: GameAccessManager) {
       help = "The name of the game.",
     ) name: GameName,
   ): ShellResult {
-    return gameAccessManager.create(name)
+    return serverAccessManager.create(name)
   }
 
   fun joinAvailability() =
-    if (gameAccessManager.isConnected()) Availability.available()
+    if (serverAccessManager.isConnected()) Availability.available()
     else Availability.unavailable("you must connect to a server first")
 
   @ShellMethod("Join an existing game.", key = ["join"])
@@ -48,7 +48,7 @@ class MenuShell(val gameAccessManager: GameAccessManager) {
       help = "The name of the game to join.",
     ) name: GameName,
   ): ShellResult {
-    return gameAccessManager.join(name)
+    return serverAccessManager.join(name)
   }
 
 }
