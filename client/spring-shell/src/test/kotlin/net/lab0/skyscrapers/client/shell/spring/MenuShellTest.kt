@@ -81,12 +81,12 @@ internal class MenuShellTest {
 
     every { factory.newClient(BaseUrl(baseUrl)) } returns client
 
-    val connect = shell.evaluate { "connect --url $baseUrl" } as String
+    val connect = shell.evaluate { "connect --url $baseUrl" } as ShellResult.Ok.Text
     resultHandler.handleResult(connect)
-    connect shouldContain "Connected to $baseUrl."
-    connect shouldContain "Available games:"
-    connect shouldContain "foo"
-    connect shouldContain "bar"
+    connect.output shouldContain "Connected to $baseUrl."
+    connect.output shouldContain "Available games:"
+    connect.output shouldContain "foo"
+    connect.output shouldContain "bar"
 
     serverAccessManager.isConnected() shouldBe true
   }
@@ -102,9 +102,9 @@ internal class MenuShellTest {
 
     every { factory.newClient(BaseUrl(baseUrl)) } returns client
 
-    val connect = shell.evaluate { "connect --url $baseUrl" } as String
+    val connect = shell.evaluate { "connect --url $baseUrl" } as ShellResult.Ok.Text
     resultHandler.handleResult(connect)
-    connect shouldContain "Failed to query $baseUrl with status $status."
+    connect.output shouldContain "Failed to query $baseUrl with status $status."
   }
 
   @Test

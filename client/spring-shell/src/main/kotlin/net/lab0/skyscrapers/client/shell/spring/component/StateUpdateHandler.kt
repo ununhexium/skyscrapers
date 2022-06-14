@@ -4,7 +4,7 @@ import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.client.shell.spring.background
 import net.lab0.skyscrapers.client.shell.spring.data.Cell
 import net.lab0.skyscrapers.client.shell.spring.data.CellMetadata
-import net.lab0.skyscrapers.client.shell.spring.data.HierarchyResult.StateUpdate
+import net.lab0.skyscrapers.client.shell.spring.data.ShellResult.Ok.StateUpdate
 import net.lab0.skyscrapers.client.shell.spring.plus
 import org.jline.utils.AttributedString
 import org.jline.utils.AttributedStyle

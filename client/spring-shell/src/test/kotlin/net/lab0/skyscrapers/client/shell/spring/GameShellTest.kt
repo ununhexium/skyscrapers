@@ -19,7 +19,7 @@ import net.lab0.skyscrapers.api.structure.Player
 import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.client.http.SkyscraperClient
 import net.lab0.skyscrapers.client.shell.spring.component.ServerAccessManager
-import net.lab0.skyscrapers.client.shell.spring.data.HierarchyResult.StateUpdate
+import net.lab0.skyscrapers.client.shell.spring.data.ShellResult.Ok.StateUpdate
 import net.lab0.skyscrapers.engine.Defaults
 import org.jline.terminal.Terminal
 import org.junit.jupiter.api.BeforeEach

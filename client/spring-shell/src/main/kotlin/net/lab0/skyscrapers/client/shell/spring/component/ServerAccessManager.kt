@@ -7,7 +7,6 @@ import net.lab0.skyscrapers.client.http.ClientError
 import net.lab0.skyscrapers.client.shell.spring.BaseUrl
 import net.lab0.skyscrapers.client.shell.spring.InternalGameAccessState
 import net.lab0.skyscrapers.client.shell.spring.SkyscraperClientFactoryComponent
-import net.lab0.skyscrapers.client.shell.spring.data.HierarchyResult
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult.Ok
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult.Problem
@@ -100,7 +99,7 @@ class ServerAccessManager(val factory: SkyscraperClientFactoryComponent) {
         .merge()
     } ?: Problem.Text("Connect to a server before joining a game.")
 
-  fun place(position: Position): HierarchyResult =
+  fun place(position: Position): ShellResult =
     state.useClient { client ->
       client
         .place(
@@ -109,13 +108,13 @@ class ServerAccessManager(val factory: SkyscraperClientFactoryComponent) {
           position
         )
         .map {
-          HierarchyResult.StateUpdate(
+          Ok.StateUpdate(
             it,
             "Placed a builder at ${position.toString(Position.Style.COMA)}."
           )
         }
         .mapLeft {
-          HierarchyResult.Error(it)
+          Problem.Client(it)
         }
         .merge()
     } ?: throw IllegalStateException()

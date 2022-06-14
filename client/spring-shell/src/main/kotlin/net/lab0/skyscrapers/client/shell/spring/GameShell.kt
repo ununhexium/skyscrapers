@@ -2,7 +2,7 @@ package net.lab0.skyscrapers.client.shell.spring
 
 import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.client.shell.spring.component.ServerAccessManager
-import net.lab0.skyscrapers.client.shell.spring.data.HierarchyResult
+import net.lab0.skyscrapers.client.shell.spring.data.ShellResult
 import org.springframework.shell.Availability
 import org.springframework.shell.standard.ShellComponent
 import org.springframework.shell.standard.ShellMethod
@@ -17,12 +17,10 @@ class GameShell(val serverAccessManager: ServerAccessManager) {
 
   @ShellMethod("Place a builder at the given position.", key = ["place"])
   fun place(
-    @ShellOption(
-      "--at",
-      help = "Where to place a builder.",
-    ) position: Position,
-  ): HierarchyResult =
-    serverAccessManager.place(position)
+    @ShellOption(help = "Where to place a builder.")
+    at: Position,
+  ): ShellResult =
+    serverAccessManager.place(at)
 
 
   fun buildAvailability() =
@@ -31,20 +29,14 @@ class GameShell(val serverAccessManager: ServerAccessManager) {
 
   @ShellMethod("Move a builder and build.", key = ["build"])
   fun build(
-    @ShellOption(
-      "--from",
-      help = "Which builder to move",
-    ) start: Position,
-    @ShellOption(
-      "--to",
-      help = "Where to move the builder.",
-    ) target: Position,
-    @ShellOption(
-      "--build",
-      help = "Where to build.",
-    ) build: Position,
+    @ShellOption(help = "Which builder to move")
+    from: Position,
+    @ShellOption(help = "Where to move the builder.")
+    to: Position,
+    @ShellOption(help = "Where to build.")
+    build: Position,
   ): String? {
-    return serverAccessManager.build(start, target, build)
+    return serverAccessManager.build(from, to, build)
   }
 
   fun sealAvailability() =
@@ -53,20 +45,14 @@ class GameShell(val serverAccessManager: ServerAccessManager) {
 
   @ShellMethod("Move a builder and seal.", key = ["seal"])
   fun seal(
-    @ShellOption(
-      "--from",
-      help = "Which builder to move",
-    ) start: Position,
-    @ShellOption(
-      "--to",
-      help = "Where to move the builder.",
-    ) target: Position,
-    @ShellOption(
-      "--seal",
-      help = "Where to seal.",
-    ) build: Position,
+    @ShellOption(help = "Which builder to move")
+    from: Position,
+    @ShellOption(help = "Where to move the builder.")
+    to: Position,
+    @ShellOption(help = "Where to seal.")
+    seal: Position,
   ): String? {
-    return serverAccessManager.seal(start, target, build)
+    return serverAccessManager.seal(from, to, seal)
   }
 
   fun winAvailability() =
@@ -75,16 +61,12 @@ class GameShell(val serverAccessManager: ServerAccessManager) {
 
   @ShellMethod("Move a builder and win.", key = ["win"])
   fun win(
-    @ShellOption(
-      "--from",
-      help = "Which builder to move",
-    ) start: Position,
-    @ShellOption(
-      "--to",
-      help = "Where to move the builder.",
-    ) target: Position,
+    @ShellOption(help = "Which builder to move")
+    from: Position,
+    @ShellOption(help = "Where to move the builder.")
+    to: Position,
   ): String? {
-    return serverAccessManager.win(start, target)
+    return serverAccessManager.win(from, to)
   }
 
   @ShellMethod("Shows the state of the current game.", key = ["state"])
