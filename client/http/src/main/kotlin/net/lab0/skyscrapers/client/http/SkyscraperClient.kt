@@ -12,11 +12,7 @@ import net.lab0.skyscrapers.api.structure.Position
 import org.http4k.core.Status
 
 interface SkyscraperClient {
-  /**
-   * Choose which server to play on
-   *
-   * @return a menu client if successful is successful, `null` otherwise.
-   */
+
   // TODO: return an error message instead of the server's status.
   fun status(): Either<Status, StatusResponse>
 

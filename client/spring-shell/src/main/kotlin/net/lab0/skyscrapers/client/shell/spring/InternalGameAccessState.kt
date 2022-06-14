@@ -4,7 +4,8 @@ import net.lab0.skyscrapers.api.dto.AccessToken
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.client.http.SkyscraperClient
 
-data class ShellState(
+data class InternalGameAccessState(
+  val baseUrl: BaseUrl? = null,
   val client: SkyscraperClient? = null,
   val currentGame: GameName? = null,
   val accessToken: AccessToken? = null,

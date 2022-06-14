@@ -6,7 +6,7 @@ import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.client.http.ClientError
 import net.lab0.skyscrapers.client.http.SkyscraperClient
 import net.lab0.skyscrapers.client.shell.spring.BaseUrl
-import net.lab0.skyscrapers.client.shell.spring.ShellState
+import net.lab0.skyscrapers.client.shell.spring.InternalGameAccessState
 import net.lab0.skyscrapers.client.shell.spring.SkyscraperClientFactoryComponent
 import net.lab0.skyscrapers.client.shell.spring.data.HierarchyResult
 import org.springframework.stereotype.Component
@@ -15,43 +15,47 @@ import org.springframework.stereotype.Component
  * Manages the info that outlives commands.
  */
 @Component
-class GameMaster(val factory: SkyscraperClientFactoryComponent) {
-  private var internalState = ShellState()
+class GameAccessManager(val factory: SkyscraperClientFactoryComponent) {
+  private var state = InternalGameAccessState()
 
-  val state
-    get() = internalState
+  val currentGame: String?
+    get() = state.currentGame?.value
 
   val inGame
-    get() = isConnected() && internalState.currentGame != null
+    get() = isConnected() && state.currentGame != null
 
   /**
    * For test and debugging
    */
-  fun forceState(state: ShellState) {
-    this.internalState = state
+  fun forceState(state: InternalGameAccessState) {
+    this.state = state
   }
 
-  fun reconnect(baseUrl: String) {
-    internalState =
-      internalState.copy(client = factory.newClient(BaseUrl(baseUrl)))
+  fun reconnect(baseUrl: BaseUrl) {
+    state = InternalGameAccessState(
+      baseUrl = baseUrl,
+      client = factory.newClient(baseUrl)
+    )
   }
 
-  fun status(baseUrl: String): String? {
-    return internalState
+  fun status(): String? {
+    return state
       .client
       ?.status()
       ?.map {
-        "Connected to $baseUrl.\nAvailable games: " +
-            it.games.joinToString(separator = "\n")
+        if (it.games.isEmpty()) "No game available."
+        else "Available games:\n" +
+            it.games.sorted().joinToString(separator = "\n")
       }
       ?.mapLeft { status ->
-        "Failed to connect to $baseUrl with status $status."
+        "Failed to query ${state.baseUrl?.value} with status $status."
       }
       ?.merge()
+      ?: "Not connected."
   }
 
   fun create(name: GameName): String? {
-    return internalState
+    return state
       .client
       ?.create(name)
       ?.map {
@@ -65,9 +69,9 @@ class GameMaster(val factory: SkyscraperClientFactoryComponent) {
 
   // TODO: show error message when the shell is not connected (or use availability to mark this command?)
   fun join(name: GameName): String? {
-    return internalState.client?.join(name)
+    return state.client?.join(name)
       ?.map {
-        internalState = internalState.copy(
+        state = state.copy(
           accessToken = it.token,
           currentGame = name,
         )
@@ -84,8 +88,8 @@ class GameMaster(val factory: SkyscraperClientFactoryComponent) {
     checkInGame { client ->
       client
         .place(
-          internalState.currentGame!!,
-          internalState.accessToken!!,
+          state.currentGame!!,
+          state.accessToken!!,
           position
         )
         .map {
@@ -109,8 +113,8 @@ class GameMaster(val factory: SkyscraperClientFactoryComponent) {
     checkInGame { client ->
       client
         .build(
-          internalState.currentGame!!,
-          internalState.accessToken!!,
+          state.currentGame!!,
+          state.accessToken!!,
           start,
           target,
           build
@@ -136,8 +140,8 @@ class GameMaster(val factory: SkyscraperClientFactoryComponent) {
     checkInGame { client ->
       client
         .seal(
-          internalState.currentGame!!,
-          internalState.accessToken!!,
+          state.currentGame!!,
+          state.accessToken!!,
           start,
           target,
           seal
@@ -163,8 +167,8 @@ class GameMaster(val factory: SkyscraperClientFactoryComponent) {
     checkInGame { client ->
       client
         .win(
-          internalState.currentGame!!,
-          internalState.accessToken!!,
+          state.currentGame!!,
+          state.accessToken!!,
           start,
           target
         )
@@ -185,9 +189,9 @@ class GameMaster(val factory: SkyscraperClientFactoryComponent) {
     }
 
   fun state(): String? {
-    return internalState
+    return state
       .client
-      ?.state(internalState.currentGame!!)
+      ?.state(state.currentGame!!)
       ?.map {
         it.toCompositeString()
       }
@@ -198,5 +202,5 @@ class GameMaster(val factory: SkyscraperClientFactoryComponent) {
   }
 
   fun isConnected(): Boolean =
-    internalState.client != null
+    state.client != null
 }

@@ -18,7 +18,7 @@ import net.lab0.skyscrapers.api.structure.Matrix
 import net.lab0.skyscrapers.api.structure.Player
 import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.client.http.SkyscraperClient
-import net.lab0.skyscrapers.client.shell.spring.component.GameMaster
+import net.lab0.skyscrapers.client.shell.spring.component.GameAccessManager
 import net.lab0.skyscrapers.client.shell.spring.data.HierarchyResult.StateUpdate
 import net.lab0.skyscrapers.engine.Defaults
 import org.jline.terminal.Terminal
@@ -55,7 +55,7 @@ internal class GameShellTest /* TODO extract ShellTest() */ {
   lateinit var factory: SkyscraperClientFactoryComponent
 
   @SpykBean
-  lateinit var gameMaster: GameMaster
+  lateinit var gameAccessManager: GameAccessManager
 
   @SpykBean
   lateinit var terminal: Terminal
@@ -106,7 +106,7 @@ internal class GameShellTest /* TODO extract ShellTest() */ {
           Right(emptyState)
     }
 
-    gameMaster.forceState(ShellState(client, game, token))
+    gameAccessManager.forceState(InternalGameAccessState(BaseUrl(""), client, game, token))
 
     val create = eval<StateUpdate>("place --at 0,0")
 
@@ -124,8 +124,8 @@ internal class GameShellTest /* TODO extract ShellTest() */ {
           Right(GameState.DUMMY)
     }
 
-    gameMaster.forceState(
-      ShellState(client, game, token)
+    gameAccessManager.forceState(
+      InternalGameAccessState(BaseUrl(""), client, game, token)
     )
 
     val create =
@@ -145,8 +145,8 @@ internal class GameShellTest /* TODO extract ShellTest() */ {
           Right(GameState.DUMMY)
     }
 
-    gameMaster.forceState(
-      ShellState(client, game, token)
+    gameAccessManager.forceState(
+      InternalGameAccessState(BaseUrl(""), client, game, token)
     )
 
     val create =
@@ -165,8 +165,8 @@ internal class GameShellTest /* TODO extract ShellTest() */ {
           Right(GameState.DUMMY)
     }
 
-    gameMaster.forceState(
-      ShellState(client, game, token)
+    gameAccessManager.forceState(
+      InternalGameAccessState(BaseUrl(""), client, game, token)
     )
 
     val create =

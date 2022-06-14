@@ -19,9 +19,8 @@ import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.api.structure.Height
 import net.lab0.skyscrapers.api.structure.Matrix
 import net.lab0.skyscrapers.api.structure.Player
-import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.client.http.SkyscraperClient
-import net.lab0.skyscrapers.client.shell.spring.component.GameMaster
+import net.lab0.skyscrapers.client.shell.spring.component.GameAccessManager
 import org.http4k.core.Status
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -55,7 +54,7 @@ internal class MenuShellTest {
   lateinit var factory: SkyscraperClientFactoryComponent
 
   @SpykBean
-  lateinit var gameMaster: GameMaster
+  lateinit var gameAccessManager: GameAccessManager
 
   @Autowired
   private lateinit var shell: Shell
@@ -88,7 +87,7 @@ internal class MenuShellTest {
     connect shouldContain "foo"
     connect shouldContain "bar"
 
-    gameMaster.isConnected() shouldBe true
+    gameAccessManager.isConnected() shouldBe true
   }
 
   // TODO: generic error display class
@@ -104,7 +103,7 @@ internal class MenuShellTest {
 
     val connect = shell.evaluate { "connect --url $baseUrl" } as String
     resultHandler.handleResult(connect)
-    connect shouldContain "Failed to connect to $baseUrl with status $status."
+    connect shouldContain "Failed to query $baseUrl with status $status."
   }
 
   @Test
@@ -114,7 +113,7 @@ internal class MenuShellTest {
           Right(GameResponse(game, GameState.DUMMY))
     }
 
-    gameMaster.forceState(ShellState(client))
+    gameAccessManager.forceState(InternalGameAccessState(client = client))
 
     val create = shell.evaluate { "create --game $yggdrasil" } as String
     resultHandler.handleResult(create)
@@ -128,7 +127,7 @@ internal class MenuShellTest {
           Right(ConnectionResponse(0, AccessToken("TOKEN")))
     }
 
-    gameMaster.forceState(ShellState(client))
+    gameAccessManager.forceState(InternalGameAccessState(client = client))
 
     val create = shell.evaluate { "join --game $yggdrasil" } as String
     resultHandler.handleResult(create)
@@ -167,7 +166,7 @@ internal class MenuShellTest {
           )
     }
 
-    gameMaster.forceState(ShellState(client, game, token))
+    gameAccessManager.forceState(InternalGameAccessState(BaseUrl(""), client, game, token))
 
     val create = shell.evaluate { "state" } as String
     resultHandler.handleResult(create)

@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.client.shell.spring
 
 import net.lab0.skyscrapers.api.dto.value.GameName
-import net.lab0.skyscrapers.client.shell.spring.component.GameMaster
+import net.lab0.skyscrapers.client.shell.spring.component.GameAccessManager
 import org.springframework.shell.Availability
 import org.springframework.shell.standard.ShellComponent
 import org.springframework.shell.standard.ShellMethod
@@ -9,7 +9,7 @@ import org.springframework.shell.standard.ShellOption
 
 
 @ShellComponent
-class MenuShell(val gameMaster: GameMaster) {
+class MenuShell(val gameAccessManager: GameAccessManager) {
 // TODO: capture sigint and stop the server if it's running
   @ShellMethod(
     "Choose the server and test the connectivity.",
@@ -18,9 +18,12 @@ class MenuShell(val gameMaster: GameMaster) {
   fun connect(
     @ShellOption("--url", help = "The server URL") baseUrl: String,
   ): String? {
-    gameMaster.reconnect(baseUrl)
+    gameAccessManager.reconnect(BaseUrl(baseUrl))
 
-    return gameMaster.status(baseUrl)
+    return """
+      |Connected to $baseUrl.
+      |${gameAccessManager.status()}
+    """.trimMargin()
   }
 
   @ShellMethod("Create a new game on the server", key = ["create"])
@@ -30,11 +33,11 @@ class MenuShell(val gameMaster: GameMaster) {
       help = "The name of the game.",
     ) name: GameName,
   ): String? {
-    return gameMaster.create(name)
+    return gameAccessManager.create(name)
   }
 
   fun joinAvailability() =
-    if (gameMaster.isConnected()) Availability.available()
+    if (gameAccessManager.isConnected()) Availability.available()
     else Availability.unavailable("you must connect to a server first")
 
   @ShellMethod("Join an existing game.", key = ["join"])
@@ -44,7 +47,7 @@ class MenuShell(val gameMaster: GameMaster) {
       help = "The name of the game to join.",
     ) name: GameName,
   ): String? {
-    return gameMaster.join(name)
+    return gameAccessManager.join(name)
   }
 
 }
