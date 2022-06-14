@@ -1,13 +1,21 @@
 package net.lab0.skyscrapers.client.shell.spring.component
 
+import arrow.core.Either
+import arrow.core.Either.Left
 import arrow.core.Either.Right
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import net.lab0.skyscrapers.api.dto.GameResponse
 import net.lab0.skyscrapers.api.dto.StatusResponse
+import net.lab0.skyscrapers.api.dto.value.GameName
+import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.client.shell.spring.BaseUrl
 import net.lab0.skyscrapers.client.shell.spring.SkyscraperClientFactoryComponent
+import net.lab0.skyscrapers.client.shell.spring.data.ShellResult
+import net.lab0.skyscrapers.client.shell.spring.data.ShellResult.Ok
+import net.lab0.skyscrapers.client.shell.spring.data.ShellResult.Problem
 import org.junit.jupiter.api.Test
 
 internal class GameAccessManagerTest {
@@ -50,7 +58,7 @@ internal class GameAccessManagerTest {
 
     val subject = GameAccessManager(factory)
 
-    subject.status() shouldBe "Not connected."
+    subject.status() shouldBe Problem.Text("Not connected.")
   }
 
   @Test
@@ -65,7 +73,7 @@ internal class GameAccessManagerTest {
     subject.reconnect(baseUrl)
 
     // then
-    subject.status() shouldBe "No game available."
+    subject.status() shouldBe Ok.Text("No game available.")
   }
 
   @Test
@@ -73,21 +81,83 @@ internal class GameAccessManagerTest {
     // given
     val factory = mockk<SkyscraperClientFactoryComponent>() {
       every { newClient(baseUrl) } returns mockk() {
-        every { status() } returns Right(StatusResponse("up", setOf("a", "z", "b", "d")))
+        every { status() } returns Right(
+          StatusResponse(
+            "up",
+            setOf("a", "z", "b", "d")
+          )
+        )
       }
     }
     val subject = GameAccessManager(factory)
     subject.reconnect(baseUrl)
 
     // then
-    subject.status() shouldBe """
+    subject.status() shouldBe Ok.Text(
+      """
       |Available games:
       |a
       |b
       |d
       |z
     """.trimMargin()
+    )
   }
 
-  // TODO continue
+  @Test
+  fun `failsafe game creation when not connected`() {
+    // given
+    val foo = GameName("foo")
+    val factory = mockk<SkyscraperClientFactoryComponent>() {
+      every { newClient(baseUrl) } returns mockk()
+    }
+    val subject = GameAccessManager(factory)
+
+    // then
+    subject.create(foo) shouldBe Problem.Text("Connect to a server before creating a game.")
+  }
+
+  @Test
+  fun `game creation when no game with that name exists`() {
+    // given
+    val foo = GameName("foo")
+    val factory = mockk<SkyscraperClientFactoryComponent>() {
+      every { newClient(baseUrl) } returns mockk {
+        every { create(foo) } returns Right(GameResponse(foo, GameState.DUMMY))
+      }
+    }
+    val subject = GameAccessManager(factory)
+    subject.reconnect(baseUrl)
+
+    // then
+    subject.create(foo) shouldBe Ok.Text("Created the game foo.")
+  }
+
+  @Test
+  fun `game creation when a game with the same name already exists`() {
+    // given
+    val foo = GameName("foo")
+    val factory = mockk<SkyscraperClientFactoryComponent>() {
+      every { newClient(baseUrl) } returns mockk {
+        every { create(foo) } returns Left(
+          listOf(
+            "ERROR MESSAGE 1",
+            "ERROR MESSAGE 2"
+          )
+        )
+      }
+    }
+    val subject = GameAccessManager(factory)
+    subject.reconnect(baseUrl)
+
+    // then
+    subject.create(foo) shouldBe Problem.Text(
+      """
+      |Error when creating the game:
+      |ERROR MESSAGE 1
+      |ERROR MESSAGE 2
+    """.trimMargin()
+    )
+  }
+
 }

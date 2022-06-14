@@ -9,6 +9,9 @@ import net.lab0.skyscrapers.client.shell.spring.BaseUrl
 import net.lab0.skyscrapers.client.shell.spring.InternalGameAccessState
 import net.lab0.skyscrapers.client.shell.spring.SkyscraperClientFactoryComponent
 import net.lab0.skyscrapers.client.shell.spring.data.HierarchyResult
+import net.lab0.skyscrapers.client.shell.spring.data.ShellResult
+import net.lab0.skyscrapers.client.shell.spring.data.ShellResult.Ok
+import net.lab0.skyscrapers.client.shell.spring.data.ShellResult.Problem
 import org.springframework.stereotype.Component
 
 /**
@@ -38,50 +41,66 @@ class GameAccessManager(val factory: SkyscraperClientFactoryComponent) {
     )
   }
 
-  fun status(): String? {
+  fun status(): ShellResult {
     return state
       .client
       ?.status()
       ?.map {
-        if (it.games.isEmpty()) "No game available."
-        else "Available games:\n" +
-            it.games.sorted().joinToString(separator = "\n")
+        Ok.Text(
+          if (it.games.isEmpty()) "No game available."
+          else "Available games:\n" +
+              it.games.sorted().joinToString(separator = "\n")
+        )
       }
       ?.mapLeft { status ->
-        "Failed to query ${state.baseUrl?.value} with status $status."
+        Problem.Text(
+          "Failed to query ${state.baseUrl?.value} with status $status."
+        )
       }
       ?.merge()
-      ?: "Not connected."
+      ?: Problem.Text("Not connected.")
   }
 
-  fun create(name: GameName): String? {
+  fun create(name: GameName): ShellResult {
     return state
       .client
       ?.create(name)
       ?.map {
-        "Created game ${it.name}."
+        Ok.Text("Created the game ${it.name}.")
       }
       ?.mapLeft {
-        "Error when creating the game:\n" + it.joinToString(separator = "\n")
+        Problem.Text(
+          "Error when creating the game:\n" + it.joinToString(
+            separator = "\n"
+          )
+        )
       }
       ?.merge()
+      ?: Problem.Text("Connect to a server before creating a game.")
   }
 
   // TODO: show error message when the shell is not connected (or use availability to mark this command?)
-  fun join(name: GameName): String? {
-    return state.client?.join(name)
+  fun join(name: GameName): ShellResult {
+    return state
+      .client
+      ?.join(name)
       ?.map {
         state = state.copy(
           accessToken = it.token,
           currentGame = name,
         )
 
-        "Joined game ${name.value} as player ${it.player} with access token ${it.token.value}."
+        Ok.Text(
+          "Joined game ${name.value} as player ${it.player} with access token ${it.token.value}."
+        )
       }
       ?.mapLeft {
-        "Error when joining the game:\n" + it.joinToString(separator = "\n")
+        Problem.Text(
+          "Error when joining the game:\n" + it.joinToString(separator = "\n")
+        )
       }
       ?.merge()
+      ?: Problem.Text("Connect to a server before joining a game.")
   }
 
   fun place(position: Position): HierarchyResult =

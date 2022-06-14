@@ -2,6 +2,7 @@ package net.lab0.skyscrapers.client.shell.spring
 
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.client.shell.spring.component.GameAccessManager
+import net.lab0.skyscrapers.client.shell.spring.data.ShellResult
 import org.springframework.shell.Availability
 import org.springframework.shell.standard.ShellComponent
 import org.springframework.shell.standard.ShellMethod
@@ -32,7 +33,7 @@ class MenuShell(val gameAccessManager: GameAccessManager) {
       "--game",
       help = "The name of the game.",
     ) name: GameName,
-  ): String? {
+  ): ShellResult {
     return gameAccessManager.create(name)
   }
 
@@ -46,7 +47,7 @@ class MenuShell(val gameAccessManager: GameAccessManager) {
       "--game",
       help = "The name of the game to join.",
     ) name: GameName,
-  ): String? {
+  ): ShellResult {
     return gameAccessManager.join(name)
   }
 
