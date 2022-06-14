@@ -210,4 +210,8 @@ class ServerAccessManager(val factory: SkyscraperClientFactoryComponent) {
       }
       ?.merge()
   }
+
+  fun buildFromCompletion(): List<Position> {
+    TODO("Not yet implemented")
+  }
 }

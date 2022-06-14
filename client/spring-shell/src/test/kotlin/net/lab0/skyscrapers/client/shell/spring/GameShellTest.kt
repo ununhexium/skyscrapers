@@ -103,6 +103,9 @@ internal class GameShellTest /* TODO extract ShellTest() */ {
     return evaluation as T
   }
 
+  fun Shell.complete(vararg args: String) =
+    this.complete(CompletionContext(args.toList(), args.toList().size, 0))
+
   @Test
   fun `place a builder`() {
     val client = mockk<SkyscraperClient>() {
@@ -126,8 +129,7 @@ internal class GameShellTest /* TODO extract ShellTest() */ {
 
   @Test
   fun `propose a place for the builder`() {
-    val completion =
-      shell.complete(CompletionContext(listOf("place", "--at"), 2, 0))
+    val completion = shell.complete("place", "--at")
     completion should haveCompletions(
       (0..4).flatMap { x ->
         (0..4).map { y ->
@@ -156,6 +158,15 @@ internal class GameShellTest /* TODO extract ShellTest() */ {
       shell.evaluate { "build --from 0,0 --to 1,1 --build 2,2" } as String
     resultHandler.handleResult(create)
     create shouldContain "Moved builder from 0,0 to 1,1 and built at 2,2."
+  }
+
+  @Test
+  fun `propose a place for the start location in build`() {
+    every { serverAccessManager.buildFromCompletion() } returns listOf(Position(100, 100))
+    val completion = shell.complete("build", "--from")
+    completion should haveCompletions(
+      CompletionProposal("100,100")
+    )
   }
 
   @Test
@@ -199,6 +210,8 @@ internal class GameShellTest /* TODO extract ShellTest() */ {
     create shouldContain "Moved builder from 0,0 to 1,1 and won."
   }
 
+  fun haveCompletions(vararg expected: CompletionProposal) =
+    haveCompletions(expected.toList())
 
   fun haveCompletions(expected: List<CompletionProposal>) =
     Matcher<List<CompletionProposal>> { value ->
