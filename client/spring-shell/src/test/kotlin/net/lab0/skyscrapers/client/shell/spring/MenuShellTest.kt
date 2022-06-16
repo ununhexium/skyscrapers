@@ -167,7 +167,7 @@ internal class MenuShellTest {
           )
     }
 
-    serverAccessManager.forceState(InternalGameAccessState(BaseUrl(""), client, game, token))
+    serverAccessManager.forceState(InternalGameAccessState(BaseUrl(""), client, 0, game, token))
 
     val create = shell.evaluate { "state" } as String
     resultHandler.handleResult(create)

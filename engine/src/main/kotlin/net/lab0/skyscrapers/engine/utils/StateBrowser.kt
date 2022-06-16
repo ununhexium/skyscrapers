@@ -3,8 +3,9 @@ package net.lab0.skyscrapers.engine.utils
 import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.api.structure.MoveOnly
 import net.lab0.skyscrapers.api.structure.Position
-import net.lab0.skyscrapers.api.structure.TurnType
 import net.lab0.skyscrapers.api.structure.TurnType.MoveTurn.BuildTurn
+import net.lab0.skyscrapers.api.structure.TurnType.MoveTurn.WinTurn
+import net.lab0.skyscrapers.api.structure.TurnType.PlacementTurn
 import net.lab0.skyscrapers.engine.rule.RuleBook
 
 class StateBrowser(val state: GameState, val ruleBook: RuleBook) {
@@ -27,7 +28,7 @@ class StateBrowser(val state: GameState, val ruleBook: RuleBook) {
       .filter { pos ->
         pos.getSurroundingPositionsWithin(state.bounds).any {
           ruleBook.canMove(
-            TurnType.MoveTurn.WinTurn(player, pos, it),
+            WinTurn(player, pos, it),
             state
           )
         }
@@ -63,9 +64,30 @@ class StateBrowser(val state: GameState, val ruleBook: RuleBook) {
     getTargetPositions(player)
       .flatMap { mov ->
         mov.target.getSurroundingPositionsWithin(state.bounds)
-          .map{ BuildTurn(player, mov.start, mov.target, it) }
+          .map { BuildTurn(player, mov.start, mov.target, it) }
           .filter { ruleBook.canBuild(it, state) }
       }
+
+
+  /**
+   * @return The builders that can move to a winning position.
+   */
+  fun getWinnableTurns(player: Int): Sequence<WinTurn> =
+    getBuilderPositionsForPlayer(player)
+      .flatMap { builder ->
+        builder
+          .getSurroundingPositionsWithin(state.bounds)
+          .map { target -> WinTurn(player, builder, target) }
+          .filter {
+            state.buildings[it.target] == state.blocks.maxHeight() &&
+                ruleBook.canMove(it, state)
+          }
+      }
+
+  fun getPlaceableTurns(player: Int): Sequence<PlacementTurn> =
+    state.bounds.positionsSequence
+      .filter { !state.hasBuilder(it) }
+      .map{ PlacementTurn(player, it) }
 
 }
 

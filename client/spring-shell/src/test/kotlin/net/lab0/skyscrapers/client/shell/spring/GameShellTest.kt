@@ -117,6 +117,7 @@ internal class GameShellTest /* TODO extract ShellTest() */ {
       InternalGameAccessState(
         BaseUrl(""),
         client,
+        0,
         game,
         token
       )
@@ -151,7 +152,7 @@ internal class GameShellTest /* TODO extract ShellTest() */ {
     }
 
     serverAccessManager.forceState(
-      InternalGameAccessState(BaseUrl(""), client, game, token)
+      InternalGameAccessState(BaseUrl(""), client, 0, game, token)
     )
 
     val create =
@@ -181,7 +182,7 @@ internal class GameShellTest /* TODO extract ShellTest() */ {
     }
 
     serverAccessManager.forceState(
-      InternalGameAccessState(BaseUrl(""), client, game, token)
+      InternalGameAccessState(BaseUrl(""), client, 0, game, token)
     )
 
     val create =
@@ -201,7 +202,7 @@ internal class GameShellTest /* TODO extract ShellTest() */ {
     }
 
     serverAccessManager.forceState(
-      InternalGameAccessState(BaseUrl(""), client, game, token)
+      InternalGameAccessState(BaseUrl(""), client, 0, game, token)
     )
 
     val create =

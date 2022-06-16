@@ -25,6 +25,11 @@ object Dependencies {
     val kotest = http4k("testing-kotest")
   }
 
+  object janino {
+    val janino = "org.codehaus.janino:janino:${Versions.janino}"
+    val commonsCompiler = "org.codehaus.janino:commons-compiler:${Versions.janino}"
+  }
+
   val jline = "org.jline:jline:${Versions.jline}"
   val jlineBuiltins = "org.jline:jline-builtins:${Versions.jline}"
 
@@ -58,6 +63,15 @@ object Dependencies {
 
   val kotlinxSerializationJson =
     "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.kotlinxSerializationJson}"
+
+  object log4j {
+    val simple = "org.slf4j:slf4j-simple:${Versions.log4j}"
+  }
+
+  object logback {
+    val classic = "ch.qos.logback:logback-classic:${Versions.logback}"
+    val core = "ch.qos.logback:logback-core:${Versions.logback}"
+  }
 
   val mockK = "io.mockk:mockk:${Versions.mockk}"
 

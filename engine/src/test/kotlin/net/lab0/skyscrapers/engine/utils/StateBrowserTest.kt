@@ -2,7 +2,10 @@ package net.lab0.skyscrapers.engine.utils
 
 import io.kotest.matchers.shouldBe
 import net.lab0.skyscrapers.api.structure.GameState
+import net.lab0.skyscrapers.api.structure.TurnType
 import net.lab0.skyscrapers.api.structure.TurnType.MoveTurn.BuildTurn
+import net.lab0.skyscrapers.api.structure.TurnType.MoveTurn.WinTurn
+import net.lab0.skyscrapers.api.structure.TurnType.PlacementTurn
 import net.lab0.skyscrapers.engine.Defaults
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -20,7 +23,7 @@ internal class StateBrowserTest {
         | A0   0  B0  0 A0
         |  0   0   0  0  0
         |Blocks: 0:0
-        |Players: 0:a, 1:a
+        |Players: A:a, B:a
       """.trimMargin()
     )
 
@@ -45,7 +48,7 @@ internal class StateBrowserTest {
         |  0   0   0  0  0
         |  0   0  B3  0  0
         |Blocks: 0:0
-        |Players: 0:a, 1:a
+        |Players: A:a, B:a
       """.trimMargin()
     )
 
@@ -68,7 +71,7 @@ internal class StateBrowserTest {
         |  2  B0  0 0
         | (0) A0  0 0
         |Blocks: 0:0
-        |Players: 0:a, 1:a
+        |Players: A:a, B:a
       """.trimMargin()
     )
 
@@ -117,16 +120,16 @@ internal class StateBrowserTest {
 
     val browser = StateBrowser(state, Defaults.RULE_BOOK)
 
-    browser.getWinnableBuilders(0).toSet() shouldBe
+    browser.getWinnableTurns(0).toSet() shouldBe
         setOf(
-          Movement(P(0, 0), P(1, 1)),
-          Movement(P(1, 2), P(1, 1)),
+          WinTurn(0, P(0, 0), P(1, 1)),
+          WinTurn(0, P(1, 2), P(1, 1)),
         )
 
-    browser.getWinnableBuilders(1).toSet() shouldBe
+    browser.getWinnableTurns(1).toSet() shouldBe
         setOf(
-          Movement(P(1, 0), P(2, 0)),
-          Movement(P(1, 0), P(1, 1)),
+          WinTurn(1, P(1, 0), P(2, 0)),
+          WinTurn(1, P(1, 0), P(1, 1)),
         )
 
     browser.getWinnableBuilders(2).toSet() shouldBe emptySet()
@@ -140,7 +143,7 @@ internal class StateBrowserTest {
         | A0  B1  2 0
         | A2   2 B0 0
         |Blocks: 0:0, 1:0, 2:0
-        |Players: 0:a, 1:a
+        |Players: A:a, B:a
       """.trimMargin()
     )
 
@@ -168,7 +171,7 @@ internal class StateBrowserTest {
         | A0  B1  2 0
         | A2   2 B0 0
         |Blocks: 0:10, 1:10, 2:10, 3:10
-        |Players: 0:a, 1:a
+        |Players: A:a, B:a
       """.trimMargin()
     )
 
@@ -200,5 +203,31 @@ internal class StateBrowserTest {
         )
   }
 
-
+  @Test
+  fun `can get all the placeable positions`() {
+    // given
+    val state = GameState.from(
+      """
+        |Board
+        | A0  B0  0 0
+        |  0   0  0 0
+        | A0   0 B0 0
+        |Blocks: 0:10, 1:10, 2:10, 3:10
+        |Players: A:a, B:a
+      """.trimMargin()
+    )
+    val browser = StateBrowser(state, Defaults.RULE_BOOK)
+    
+    // then
+    browser.getPlaceableTurns(0).toSet() shouldBe setOf(
+      PlacementTurn(0, P(2,0)),
+      PlacementTurn(0, P(3,0)),
+      PlacementTurn(0, P(0,1)),
+      PlacementTurn(0, P(1,1)),
+      PlacementTurn(0, P(2,1)),
+      PlacementTurn(0, P(3,1)),
+      PlacementTurn(0, P(1,2)),
+      PlacementTurn(0, P(3,2)),
+    )
+  }
 }

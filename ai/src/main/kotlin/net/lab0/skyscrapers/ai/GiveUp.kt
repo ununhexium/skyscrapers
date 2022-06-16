@@ -4,8 +4,12 @@ import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.api.structure.TurnType
 import net.lab0.skyscrapers.engine.rule.RuleBook
 
-interface Ai {
-  val name: String
+object GiveUp: Ai {
+  override val name = "GiveUp"
 
-  fun think(player: Int, state: GameState, ruleBook: RuleBook): TurnType
+  override fun think(
+    player: Int,
+    state: GameState,
+    ruleBook: RuleBook
+  ) = TurnType.GiveUpTurn(player)
 }
