@@ -22,6 +22,9 @@ class InGameStateBrowser(
   fun getTargetPositions() =
     stateBrowser.getTargetPositions(playerId)
 
+  fun getPlaceableTurns() =
+    stateBrowser.getPlaceableTurns(playerId)
+
   fun getBuildableTurns() =
     stateBrowser.getBuildableTurns(playerId)
 }

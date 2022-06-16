@@ -191,7 +191,7 @@ internal class ServerAccessManagerTest {
   }
 
   @Test
-  fun `join a game that returns an erro`() {
+  fun `join a game that returns an error`() {
     // given
     val foo = GameName("foo")
     val factory = mockk<SkyscraperClientFactoryComponent>() {

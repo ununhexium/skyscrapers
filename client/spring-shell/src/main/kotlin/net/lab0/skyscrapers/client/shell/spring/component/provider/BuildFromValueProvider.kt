@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.client.shell.spring.component.provider
 
-import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.api.structure.Position.Style.COMA
+import net.lab0.skyscrapers.client.shell.spring.Key
 import net.lab0.skyscrapers.client.shell.spring.component.ServerAccessManager
 import org.springframework.core.MethodParameter
 import org.springframework.shell.CompletionContext
@@ -15,9 +15,9 @@ class BuildFromValueProvider(
 ) : ValueProvider {
 
   override fun supports(
-    parameter: MethodParameter?,
+    parameter: MethodParameter,
     completionContext: CompletionContext?
-  ) = true
+  ) = parameter.executable.name == Key.Command.build
 
   override fun complete(
     parameter: MethodParameter,

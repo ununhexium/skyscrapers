@@ -19,10 +19,12 @@ import net.lab0.skyscrapers.api.structure.Height
 import net.lab0.skyscrapers.api.structure.Matrix
 import net.lab0.skyscrapers.api.structure.Player
 import net.lab0.skyscrapers.api.structure.Position
+import net.lab0.skyscrapers.api.structure.Position.Style.COMA
 import net.lab0.skyscrapers.client.http.SkyscraperClient
 import net.lab0.skyscrapers.client.shell.spring.component.ServerAccessManager
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult.Ok.StateUpdate
 import net.lab0.skyscrapers.engine.Defaults
+import net.lab0.skyscrapers.engine.GameFactoryImpl
 import org.jline.terminal.Terminal
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -130,13 +132,13 @@ internal class GameShellTest /* TODO extract ShellTest() */ {
 
   @Test
   fun `propose a place for the builder`() {
+    val completions = listOf(Position(-1, -2), Position(-3, -4))
+
+    every { serverAccessManager.placeAtCompletion() } returns completions
+
     val completion = shell.complete("place", "--at")
-    completion should haveCompletions(
-      (0..4).flatMap { x ->
-        (0..4).map { y ->
-          CompletionProposal("$x,$y")
-        }
-      }
+    completion should haveTextCompletions(
+      completions.map { it.toString(COMA) }
     )
   }
 
@@ -163,7 +165,12 @@ internal class GameShellTest /* TODO extract ShellTest() */ {
 
   @Test
   fun `propose a place for the start location in build`() {
-    every { serverAccessManager.buildFromCompletion() } returns listOf(Position(100, 100))
+    every { serverAccessManager.buildFromCompletion() } returns listOf(
+      Position(
+        100,
+        100
+      )
+    )
     val completion = shell.complete("build", "--from")
     completion should haveCompletions(
       CompletionProposal("100,100")
@@ -213,6 +220,12 @@ internal class GameShellTest /* TODO extract ShellTest() */ {
 
   fun haveCompletions(vararg expected: CompletionProposal) =
     haveCompletions(expected.toList())
+
+  fun haveCompletions(vararg expected: String) =
+    haveCompletions(expected.map { CompletionProposal(it) })
+
+  fun haveTextCompletions(expected: List<String>) =
+    haveCompletions(expected.map { CompletionProposal(it) })
 
   fun haveCompletions(expected: List<CompletionProposal>) =
     Matcher<List<CompletionProposal>> { value ->

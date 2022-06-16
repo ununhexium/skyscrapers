@@ -12,6 +12,7 @@ import net.lab0.skyscrapers.client.shell.spring.data.ShellResult.Ok
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult.Problem
 import net.lab0.skyscrapers.engine.Defaults
 import net.lab0.skyscrapers.engine.utils.StateBrowser
+import org.springframework.shell.CompletionProposal
 import org.springframework.stereotype.Component
 
 /**
@@ -224,4 +225,14 @@ class ServerAccessManager(val factory: SkyscraperClientFactoryComponent) {
     }.mapLeft {
       emptyList<Position>()
     }.merge()
+
+  fun placeAtCompletion(): List<Position> =
+    state.useStateBrowser { browser ->
+      browser.getPlaceableTurns()
+        .map { it.position }
+        .toList()
+    }.mapLeft {
+      emptyList<Position>()
+    }.merge()
+
 }
