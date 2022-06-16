@@ -183,3 +183,10 @@
 1655036478463:start-server --port 45678
 1655237027677:script --file preset_p0.play
 1655237046536:place --at 3,2
+1655367988327:script --file preset_p0.play
+1655367991824:state
+1655368001344:place --at 1,1
+1655368071226:script --file preset_p1.play
+1655368093265:place 3,3
+1655368096085:place --at 1,3
+1655368098035:place 3,1

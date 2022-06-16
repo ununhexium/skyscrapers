@@ -10,6 +10,8 @@ import net.lab0.skyscrapers.client.shell.spring.SkyscraperClientFactoryComponent
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult.Ok
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult.Problem
+import net.lab0.skyscrapers.engine.Defaults
+import net.lab0.skyscrapers.engine.utils.StateBrowser
 import org.springframework.stereotype.Component
 
 /**
@@ -83,6 +85,7 @@ class ServerAccessManager(val factory: SkyscraperClientFactoryComponent) {
         .join(name)
         .map {
           state = state.copy(
+            playerId = it.player,
             accessToken = it.token,
             currentGame = name,
           )
@@ -93,7 +96,9 @@ class ServerAccessManager(val factory: SkyscraperClientFactoryComponent) {
         }
         .mapLeft {
           Problem.Text(
-            "Error when joining the game ${name.value}:\n" + it.joinToString(separator = "\n")
+            "Error when joining the game ${name.value}:\n" + it.joinToString(
+              separator = "\n"
+            )
           )
         }
         .merge()
@@ -211,7 +216,12 @@ class ServerAccessManager(val factory: SkyscraperClientFactoryComponent) {
       ?.merge()
   }
 
-  fun buildFromCompletion(): List<Position> {
-    TODO("Not yet implemented")
-  }
+  fun buildFromCompletion(): List<Position> =
+    state.useStateBrowser { browser ->
+      browser.getBuildableTurns()
+        .map { it.start }
+        .toList()
+    }.mapLeft {
+      emptyList<Position>()
+    }.merge()
 }
