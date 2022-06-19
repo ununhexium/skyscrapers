@@ -214,7 +214,7 @@ internal class StateBrowserTest {
         |  0   0   0   0   0
         |  0   0   0  A0   0
         |  0   0   0   0   0
-        |Blocks: 17:17, 21:21, 19:19, 14:14
+        |Blocks: 0:17, 1:21, 2:19, 3:14
         |Players: A:a, B:a
       """.trimMargin()
     )

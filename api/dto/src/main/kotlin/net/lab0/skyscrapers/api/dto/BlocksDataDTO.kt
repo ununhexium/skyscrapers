@@ -10,5 +10,5 @@ data class BlocksDataDTO(val blocks: Map<Int, Int>) {
     blocks.mapKeys { Height(it.key) }
   )
 
-  constructor(blocks: BlocksData) : this(blocks.blocks.mapKeys { it.value })
+  constructor(blocks: BlocksData) : this(blocks.blocks.mapKeys { it.key.value })
 }

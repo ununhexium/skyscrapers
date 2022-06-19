@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "net.lab0.skyscrapers"
-val VERSION = "0.1-SNAPSHOT"
+val VERSION = "0.2-SNAPSHOT"
 version = VERSION
 
 repositories {

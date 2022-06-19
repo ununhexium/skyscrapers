@@ -64,7 +64,7 @@ internal class GameResponseTest {
       PlayerDTO(1, true),
     )
     val serializedBlocksData = BlocksDataDTO(
-      blocks.mapKeys { it.value }
+      blocks.mapKeys { it.key.value }
     )
     val serializedBuildings =
       MatrixDTO(buildings.map { it.map { it.value } })

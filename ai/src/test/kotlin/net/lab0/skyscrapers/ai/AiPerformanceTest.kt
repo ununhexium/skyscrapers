@@ -2,7 +2,6 @@ package net.lab0.skyscrapers.ai
 
 import net.lab0.skyscrapers.engine.GameFactoryImpl
 import org.junit.jupiter.api.Test
-import java.util.Random
 
 /**
  * Make AIs play a tournament to see which one is the best.
