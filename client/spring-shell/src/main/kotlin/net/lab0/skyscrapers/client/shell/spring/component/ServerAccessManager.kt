@@ -254,4 +254,17 @@ class ServerAccessManager(val factory: SkyscraperClientFactoryComponent) {
       emptyList<Position>()
     }.merge()
 
+  fun history(): ShellResult =
+    state.useGameClient { client ->
+      client.history()
+        .map {
+          Ok.Text(
+            it.joinToString("\n\n") { it.toCompositeString() }
+          )
+        }
+        .mapLeft {
+          Problem.Client(it)
+        }
+        .merge()
+    } ?: throw IllegalStateException()
 }

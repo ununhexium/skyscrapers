@@ -4,6 +4,7 @@ object Key {
   object Command {
     const val aiJoin = "ai-join"
     const val build = "build"
+    const val gameHistory = "game-history"
     const val place = "place"
   }
 }

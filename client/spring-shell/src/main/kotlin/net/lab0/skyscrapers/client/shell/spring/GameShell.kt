@@ -17,7 +17,10 @@ class GameShell(val serverAccessManager: ServerAccessManager) {
     if (serverAccessManager.inGame) Availability.available()
     else Availability.unavailable("you must join a game first")
 
-  @ShellMethod("Place a builder at the given position.", key = [Key.Command.place])
+  @ShellMethod(
+    "Place a builder at the given position.",
+    key = [Key.Command.place]
+  )
   fun place(
     @ShellOption(
       help = "Where to place a builder.",
@@ -82,4 +85,11 @@ class GameShell(val serverAccessManager: ServerAccessManager) {
     return serverAccessManager.state()
   }
 
+  @ShellMethod(
+    "Shows the state of the current game.",
+    key = [Key.Command.gameHistory]
+  )
+  fun history(): ShellResult {
+    return serverAccessManager.history()
+  }
 }

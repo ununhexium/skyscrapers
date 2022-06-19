@@ -151,15 +151,15 @@ internal class StateBrowserTest {
 
     browser.getTargetPositions(0).toSet() shouldBe
         setOf(
-          Movement(P(0,1), P(1,1))
+          Movement(P(0, 1), P(1, 1))
         )
 
     browser.getTargetPositions(1).toSet() shouldBe
         setOf(
-          Movement(P(1,0), P(1,1)),
-          Movement(P(1,0), P(2,0)),
-          Movement(P(2,1), P(3,0)),
-          Movement(P(2,1), P(3,1)),
+          Movement(P(1, 0), P(1, 1)),
+          Movement(P(1, 0), P(2, 0)),
+          Movement(P(2, 1), P(3, 0)),
+          Movement(P(2, 1), P(3, 1)),
         )
   }
 
@@ -179,27 +179,71 @@ internal class StateBrowserTest {
 
     browser.getBuildableTurns(0).toSet() shouldBe
         setOf(
-          BuildTurn(0, P(0,1), P(1,1), P(0,1)),
-          BuildTurn(0, P(0,1), P(1,1), P(2,0)),
+          BuildTurn(0, P(0, 1), P(1, 1), P(0, 1)),
+          BuildTurn(0, P(0, 1), P(1, 1), P(2, 0)),
         )
 
     browser.getBuildableTurns(1).toSet() shouldBe
         setOf(
-          BuildTurn(1, P(1,0), P(1,1), P(1,0)),
-          BuildTurn(1, P(1,0), P(1,1), P(2,0)),
+          BuildTurn(1, P(1, 0), P(1, 1), P(1, 0)),
+          BuildTurn(1, P(1, 0), P(1, 1), P(2, 0)),
 
-          BuildTurn(1, P(1,0), P(2,0), P(1,0)),
-          BuildTurn(1, P(1,0), P(2,0), P(1,1)),
-          BuildTurn(1, P(1,0), P(2,0), P(3,0)),
-          BuildTurn(1, P(1,0), P(2,0), P(3,1)),
+          BuildTurn(1, P(1, 0), P(2, 0), P(1, 0)),
+          BuildTurn(1, P(1, 0), P(2, 0), P(1, 1)),
+          BuildTurn(1, P(1, 0), P(2, 0), P(3, 0)),
+          BuildTurn(1, P(1, 0), P(2, 0), P(3, 1)),
 
-          BuildTurn(1, P(2,1), P(3,0), P(2,0)),
-          BuildTurn(1, P(2,1), P(3,0), P(2,1)),
-          BuildTurn(1, P(2,1), P(3,0), P(3,1)),
+          BuildTurn(1, P(2, 1), P(3, 0), P(2, 0)),
+          BuildTurn(1, P(2, 1), P(3, 0), P(2, 1)),
+          BuildTurn(1, P(2, 1), P(3, 0), P(3, 1)),
 
-          BuildTurn(1, P(2,1), P(3,1), P(2,0)),
-          BuildTurn(1, P(2,1), P(3,1), P(2,1)),
-          BuildTurn(1, P(2,1), P(3,1), P(3,0)),
+          BuildTurn(1, P(2, 1), P(3, 1), P(2, 0)),
+          BuildTurn(1, P(2, 1), P(3, 1), P(2, 1)),
+          BuildTurn(1, P(2, 1), P(3, 1), P(3, 0)),
+        )
+  }
+
+  @Test
+  fun `debug get buildable turns`() {
+    // given
+    val state = GameState.from(
+      """
+        |Board
+        | B0   0   0   0   0
+        | B0  A0   0   0   0
+        |  0   0   0   0   0
+        |  0   0   0  A0   0
+        |  0   0   0   0   0
+        |Blocks: 17:17, 21:21, 19:19, 14:14
+        |Players: A:a, B:a
+      """.trimMargin()
+    )
+
+    val browser = StateBrowser(state, Defaults.RULE_BOOK)
+
+    // then
+    browser.getBuildableTurns(1).toSet() shouldBe
+        setOf(
+          BuildTurn(1, P(0, 0), P(1, 0), P(0, 0)),
+          BuildTurn(1, P(0, 0), P(1, 0), P(2, 0)),
+          BuildTurn(1, P(0, 0), P(1, 0), P(2, 1)),
+
+          BuildTurn(1, P(0, 1), P(1, 0), P(2, 0)),
+          BuildTurn(1, P(0, 1), P(1, 0), P(2, 1)),
+          BuildTurn(1, P(0, 1), P(1, 0), P(0, 1)),
+
+          BuildTurn(1, P(0, 1), P(0, 2), P(0, 1)),
+          BuildTurn(1, P(0, 1), P(0, 2), P(1, 2)),
+          BuildTurn(1, P(0, 1), P(0, 2), P(0, 3)),
+          BuildTurn(1, P(0, 1), P(0, 2), P(1, 3)),
+
+          BuildTurn(1, P(0, 1), P(1, 2), P(0, 1)),
+          BuildTurn(1, P(0, 1), P(1, 2), P(2, 1)),
+          BuildTurn(1, P(0, 1), P(1, 2), P(0, 2)),
+          BuildTurn(1, P(0, 1), P(1, 2), P(2, 2)),
+          BuildTurn(1, P(0, 1), P(1, 2), P(0, 3)),
+          BuildTurn(1, P(0, 1), P(1, 2), P(1, 3)),
+          BuildTurn(1, P(0, 1), P(1, 2), P(2, 3)),
         )
   }
 
@@ -217,17 +261,17 @@ internal class StateBrowserTest {
       """.trimMargin()
     )
     val browser = StateBrowser(state, Defaults.RULE_BOOK)
-    
+
     // then
     browser.getPlaceableTurns(0).toSet() shouldBe setOf(
-      PlacementTurn(0, P(2,0)),
-      PlacementTurn(0, P(3,0)),
-      PlacementTurn(0, P(0,1)),
-      PlacementTurn(0, P(1,1)),
-      PlacementTurn(0, P(2,1)),
-      PlacementTurn(0, P(3,1)),
-      PlacementTurn(0, P(1,2)),
-      PlacementTurn(0, P(3,2)),
+      PlacementTurn(0, P(2, 0)),
+      PlacementTurn(0, P(3, 0)),
+      PlacementTurn(0, P(0, 1)),
+      PlacementTurn(0, P(1, 1)),
+      PlacementTurn(0, P(2, 1)),
+      PlacementTurn(0, P(3, 1)),
+      PlacementTurn(0, P(1, 2)),
+      PlacementTurn(0, P(3, 2)),
     )
   }
 }

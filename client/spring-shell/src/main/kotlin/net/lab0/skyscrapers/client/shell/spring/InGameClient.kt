@@ -1,6 +1,5 @@
 package net.lab0.skyscrapers.client.shell.spring
 
-import arrow.core.partially1
 import net.lab0.skyscrapers.api.dto.AccessToken
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.structure.Position
@@ -12,6 +11,8 @@ class InGameClient(
   val accessToken: AccessToken
 ) {
   fun state() = client.state(game)
+
+  fun history() = client.history(game)
 
   fun place(
     position: Position,

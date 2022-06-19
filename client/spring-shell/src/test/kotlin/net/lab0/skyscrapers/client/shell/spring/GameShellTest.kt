@@ -2,14 +2,13 @@ package net.lab0.skyscrapers.client.shell.spring
 
 import arrow.core.Either.Right
 import com.ninjasquad.springmockk.SpykBean
-import io.kotest.matchers.Matcher
-import io.kotest.matchers.MatcherResult
 import io.kotest.matchers.should
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.types.beInstanceOf
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import net.lab0.skyscrapers.api.dto.AccessToken
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.structure.BlocksData
@@ -22,9 +21,9 @@ import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.api.structure.Position.Style.COMA
 import net.lab0.skyscrapers.client.http.SkyscraperClient
 import net.lab0.skyscrapers.client.shell.spring.component.ServerAccessManager
+import net.lab0.skyscrapers.client.shell.spring.data.ShellResult
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult.Ok.StateUpdate
 import net.lab0.skyscrapers.engine.Defaults
-import net.lab0.skyscrapers.engine.GameFactoryImpl
 import org.jline.terminal.Terminal
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -217,5 +216,21 @@ internal class GameShellTest /* TODO extract ShellTest() */ {
     resultHandler.handleResult(create)
     create shouldContain "Moved builder from 0,0 to 1,1 and won."
   }
-  
+
+  @Test
+  fun history() {
+    serverAccessManager.forceState(
+      InternalGameAccessState(BaseUrl(""), null, 0, game, token)
+    )
+
+    every { serverAccessManager.history() } returns ShellResult.Ok.Text("The history contains 10 steps.")
+
+    val create = shell.evaluate { "game-history" } as ShellResult.Ok.Text
+
+    create.output shouldContain "The history contains 10 steps."
+
+    verify(atLeast = 1) {
+      serverAccessManager.history()
+    }
+  }
 }
