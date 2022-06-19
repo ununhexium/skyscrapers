@@ -4,6 +4,7 @@ import net.lab0.skyscrapers.server.endpoint.Build
 import net.lab0.skyscrapers.server.endpoint.ShowGame
 import net.lab0.skyscrapers.server.endpoint.ListGames
 import net.lab0.skyscrapers.server.endpoint.GetStatus
+import net.lab0.skyscrapers.server.endpoint.History
 import net.lab0.skyscrapers.server.endpoint.JoinGame
 import net.lab0.skyscrapers.server.endpoint.Place
 import net.lab0.skyscrapers.server.endpoint.NewGame
@@ -31,6 +32,8 @@ fun routed(service: Service) = errorHandler.then(
     "/api/v1/games/{gameName}" bind GET to ShowGame(service),
     "/api/v1/games/{gameName}" bind POST to NewGame(service),
     "/api/v1/games/{gameName}/join" bind POST to JoinGame(service),
+    "/api/v1/games/{gameName}/history" bind GET to History(service),
+
     "/api/v1/games/{gameName}" bind GameAccessFilter(service).then(
       routes(
         "/place" bind POST to Place(service),

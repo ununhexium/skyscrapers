@@ -1,13 +1,20 @@
 package net.lab0.skyscrapers.client.http
 
+import arrow.core.Either
+import arrow.core.Either.Right
 import io.kotest.assertions.arrow.core.shouldBeLeft
 import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.mockk.every
+import io.mockk.mockk
 import net.lab0.skyscrapers.api.dto.value.GameName
+import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.client.FakeServerTest
+import net.lab0.skyscrapers.engine.api.Game
+import net.lab0.skyscrapers.server.Service
 import net.lab0.skyscrapers.server.ServiceImpl
 import net.lab0.skyscrapers.server.served
 import org.http4k.client.OkHttp
@@ -147,6 +154,23 @@ internal class SkyscraperClientImplTest : FakeServerTest {
 
       val state = client.state(cnc).shouldBeRight()
       state.getBuilders(p1.id) shouldBe emptyList()
+    }
+  }
+
+  @Test
+  fun `can get the history of a game`() {
+    val foo = GameName("foo")
+    val state = GameState.DUMMY
+    val game = mockk<Game> {
+      every { history } returns listOf(state)
+    }
+    val service = mockk<Service>() {
+      every { getGame(foo) } returns Right(game)
+    }
+
+    fakeServer(service = service) { handler ->
+      val client = SkyscraperClientImpl(handler)
+      client.history(foo) shouldBe Right(listOf(state))
     }
   }
 }

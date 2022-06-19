@@ -217,4 +217,5 @@ internal class GameShellTest /* TODO extract ShellTest() */ {
     resultHandler.handleResult(create)
     create shouldContain "Moved builder from 0,0 to 1,1 and won."
   }
+  
 }

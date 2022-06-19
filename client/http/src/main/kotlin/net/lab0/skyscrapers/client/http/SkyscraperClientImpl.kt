@@ -10,6 +10,7 @@ import net.lab0.skyscrapers.api.dto.ErrorResponse
 import net.lab0.skyscrapers.api.dto.GameResponse
 import net.lab0.skyscrapers.api.dto.GameStateDTO
 import net.lab0.skyscrapers.api.dto.GameViolationsDTO
+import net.lab0.skyscrapers.api.dto.HistoryResponseDTO
 import net.lab0.skyscrapers.api.dto.ListGamesResponse
 import net.lab0.skyscrapers.api.dto.PlaceTurnDTO
 import net.lab0.skyscrapers.api.dto.PositionDTO
@@ -166,6 +167,17 @@ class SkyscraperClientImpl(
     return when (res.status) {
       Status.CREATED -> Right(res.extract<GameStateDTO>().toModel())
       Status.CONFLICT -> Left(GameRuleErrors(res.extract<GameViolationsDTO>().violations.map { it.toModel() }))
+      else -> Left(SimpleErrors(res.extract<ErrorResponse>().errors))
+    }
+  }
+
+  override fun history(name: GameName): Either<ClientError, List<GameState>> {
+    val req = Request(Method.GET, "/api/v1/games" / name / "history")
+
+    val res = handler(req)
+
+    return when (res.status) {
+      Status.OK -> Right(res.extract<HistoryResponseDTO>().toModel())
       else -> Left(SimpleErrors(res.extract<ErrorResponse>().errors))
     }
   }

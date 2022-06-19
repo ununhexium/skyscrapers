@@ -4,6 +4,7 @@ import arrow.core.Either
 import net.lab0.skyscrapers.api.dto.AccessToken
 import net.lab0.skyscrapers.api.dto.ConnectionResponse
 import net.lab0.skyscrapers.api.dto.GameResponse
+import net.lab0.skyscrapers.api.dto.HistoryResponseDTO
 import net.lab0.skyscrapers.api.dto.StatusResponse
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.structure.Errors
@@ -61,4 +62,6 @@ interface SkyscraperClient {
     start: Position,
     target: Position,
   ): Either<ClientError, GameState>
+
+  fun history(name: GameName): Either<ClientError, List<GameState>>
 }
