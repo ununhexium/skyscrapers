@@ -21,8 +21,9 @@ class SingleElimination(
     KotlinLogging.logger(this::class.qualifiedName!!)
 
   override fun compete(participants: List<Ai>): Pair<Ai, MutableList<Ai>> {
+    val random = Random(0) // not random, just shuffling
     val eliminated = mutableListOf<Ai>()
-    var remaining = participants
+    var remaining = participants.shuffled(random)
     if (remaining.isEmpty()) throw IllegalArgumentException("There must be at least 1 participant.")
 
     while (remaining.size >= 2) {

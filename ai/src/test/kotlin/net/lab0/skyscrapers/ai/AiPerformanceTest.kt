@@ -19,10 +19,10 @@ class AiPerformanceTest {
       SequentialAi(),
     )
 
+    val participants = (1..4).fold(listOf<Ai>()) { acc, e -> acc + ais }
+
     // when
-    val (winner, others) = tournament.compete(
-      ais + ais + ais + ais // each AI has 4 attempts
-    )
+    val (winner, others) = tournament.compete(participants)
 
     // then
     println("Winner = ${winner.name}")
