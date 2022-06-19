@@ -219,3 +219,37 @@
 1655636710039:place 1,3
 1655636714630:state
 1655636839781:build --from 1,1 --to 1,2 --build 1,1
+1655641744076:connect http://localhost:45678/
+1655641744386:ai-join --game foo
+1655641783976:script --file preset_p0.play
+1655641810539:script --file preset_p1.play
+1655641816805:g s
+1655641841355:state
+1655641847776:place --at 1,1
+1655641851045:state
+1655641859926:place --at 1,0
+1655641861835:state
+1655641883096:build --from 1,0 --to 2,0 --build 1,0
+1655641887696:state
+1655642078821:script --file preset_p0.play
+1655642082851:script --file preset_p1.play
+1655642097670:connect http://localhost:45678/
+1655642103067:ai-join --game foo --type RANDOM
+1655642109678:state
+1655642112788:place --at 1,1
+1655642116968:state
+1655642162110:script --file preset_p0.play
+1655642166321:connect http://localhost:45678/
+1655642171009:ai-join --game foo --type RANDOM
+1655642175999:place --at 1,1
+1655642192809:place --at 3,3
+1655642197549:state
+1655642247492:script --file preset_p0.play
+1655642251013:connect http://localhost:45678/
+1655642253650:ai-join --game foo --type RANDOM
+1655642258099:place --at 1,1
+1655642260320:state
+1655642265179:place --at 3,3
+1655642269360:state
+1655642301750:build 1,1 2,2 1,1
+1655642398771:history

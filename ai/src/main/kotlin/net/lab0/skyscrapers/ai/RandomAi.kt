@@ -1,5 +1,6 @@
 package net.lab0.skyscrapers.ai
 
+import mu.KotlinLogging
 import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.api.structure.TurnType
 import net.lab0.skyscrapers.api.structure.TurnType.PlacementTurn
@@ -32,8 +33,12 @@ class RandomAi(
     val browser = StateBrowser(state, ruleBook)
 
     val choices = browser.getBuildableTurns(player)
+    log.info { "Found ${choices.toList().size} possible moves." }
 
-    return choices.random() ?: TurnType.GiveUpTurn(player)
+    val random = choices.random()
+    log.info { "Chose $random" }
+
+    return random ?: TurnType.GiveUpTurn(player)
   }
 }
 

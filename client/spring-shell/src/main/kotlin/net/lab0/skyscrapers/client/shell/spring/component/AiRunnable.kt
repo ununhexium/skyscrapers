@@ -26,7 +26,7 @@ class AiRunnable(
 
     while (!finished) {
       // don't have time to make the WS work now. Going to use polling.
-      Thread.sleep(1)
+      Thread.sleep(1000)
 
       client.state(game).map { state ->
         if (state.isFinished()) {

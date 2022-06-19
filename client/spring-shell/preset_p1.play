@@ -1,2 +1,2 @@
 connect http://localhost:45678/
-ai-join --game foo
+ai-join --game foo --type SEQUENTIAL
