@@ -1,18 +1,18 @@
 package net.lab0.skyscrapers.client.shell.spring.component
 
 import arrow.core.merge
+import net.lab0.skyscrapers.ai.RandomAi
+import net.lab0.skyscrapers.ai.SequentialAi
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.client.http.ClientError
 import net.lab0.skyscrapers.client.shell.spring.BaseUrl
 import net.lab0.skyscrapers.client.shell.spring.InternalGameAccessState
+import net.lab0.skyscrapers.client.shell.spring.MenuShell
 import net.lab0.skyscrapers.client.shell.spring.SkyscraperClientFactoryComponent
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult.Ok
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult.Problem
-import net.lab0.skyscrapers.engine.Defaults
-import net.lab0.skyscrapers.engine.utils.StateBrowser
-import org.springframework.shell.CompletionProposal
 import org.springframework.stereotype.Component
 
 /**
@@ -104,6 +104,25 @@ class ServerAccessManager(val factory: SkyscraperClientFactoryComponent) {
         }
         .merge()
     } ?: Problem.Text("Connect to a server before joining a game.")
+
+  fun aiJoin(game: GameName, type: MenuShell.AiType): ShellResult =
+    state.useClient { client ->
+      val ai = when (type) {
+        MenuShell.AiType.RANDOM -> RandomAi()
+        MenuShell.AiType.SEQUENTIAL -> SequentialAi()
+      }
+
+      client.join(game).map {
+        val player = it.player
+        val token = it.token
+
+        // TODO: manage threads and stop AIs when they are not needed anymore
+        Thread(AiRunnable(client, game, player, token, ai))
+      }
+
+      Ok.Text("Joined the game foo as AI ${ai.name} of type RANDOM.")
+    } ?: throw IllegalStateException()
+
 
   fun place(position: Position): ShellResult =
     state.useClient { client ->

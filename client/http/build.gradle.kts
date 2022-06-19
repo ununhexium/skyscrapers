@@ -16,9 +16,31 @@ dependencies {
   api(project(":api:http4k"))
 
   api(arrow)
-  implementation(http4k.core)
+  api(http4k.core)
   implementation(http4k.clientOkhttp)
+  implementation(http4k.clientWebSocket)
   implementation(http4k.formatKotlinxSerialization)
+
+  implementation(
+    group = "org.http4k",
+    name = "http4k-core",
+    version = "4.27.0.0"
+  )
+  implementation(
+    group = "org.http4k",
+    name = "http4k-server-jetty",
+    version = "4.27.0.0"
+  )
+  implementation(
+    group = "org.http4k",
+    name = "http4k-client-websocket",
+    version = "4.27.0.0"
+  )
+  implementation(
+    group = "org.http4k",
+    name = "http4k-format-jackson",
+    version = "4.27.0.0"
+  )
 
   // TEST
   testImplementation(project(":engine"))

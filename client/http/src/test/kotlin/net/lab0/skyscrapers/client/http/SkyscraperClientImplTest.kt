@@ -8,22 +8,34 @@ import io.kotest.matchers.shouldNotBe
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.client.FakeServerTest
-import net.lab0.skyscrapers.client.IntegrationServerTest
 import net.lab0.skyscrapers.server.ServiceImpl
+import net.lab0.skyscrapers.server.served
 import org.http4k.client.OkHttp
 import org.http4k.core.Uri
 import org.http4k.core.then
 import org.http4k.filter.ClientFilters
+import org.http4k.server.Undertow
+import org.http4k.server.asServer
 import org.junit.jupiter.api.Test
+import kotlin.random.Random
 
-internal class SkyscraperClientImplTest : FakeServerTest,
-  IntegrationServerTest {
+internal class SkyscraperClientImplTest : FakeServerTest {
 
   @Test
   fun `can connect to a real server`() {
-    useServer { handler ->
+    val service = ServiceImpl.new()
+    val port = Random.nextInt(10_000, 20_000)
+    val config = Undertow(port)
+    val server = served(service).asServer(config).start()
+
+    try {
+      val url = "http://localhost:$port/"
+      val handler = ClientFilters.SetBaseUriFrom(Uri.of(url)).then(OkHttp())
+
       val client = SkyscraperClientImpl(handler)
       client.status().shouldBeRight()
+    } finally {
+      server.stop()
     }
   }
 

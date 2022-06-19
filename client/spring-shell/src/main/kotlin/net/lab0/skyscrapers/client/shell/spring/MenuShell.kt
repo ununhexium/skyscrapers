@@ -45,4 +45,15 @@ class MenuShell(val serverAccessManager: ServerAccessManager) {
     @ShellOption(help = "The name of the game to join.") game: GameName,
   ) = serverAccessManager.join(game)
 
+  enum class AiType {
+    RANDOM,
+    SEQUENTIAL,
+  }
+
+  @ShellMethod("Join an existing game as an AI.", key = [Key.Command.aiJoin])
+  fun aiJoin(
+    @ShellOption(help = "The name of the game to join.") game: GameName,
+    @ShellOption(help = "The AI type to use.") type: AiType,
+  ) = serverAccessManager.aiJoin(game, type)
+
 }

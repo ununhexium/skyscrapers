@@ -1,10 +1,8 @@
 package net.lab0.skyscrapers.server
 
-import org.http4k.server.Undertow
-import org.http4k.server.asServer
+import org.http4k.server.PolyHandler
 
-fun main() {
-  val service = ServiceImpl.new()
-
-  routed(service).asServer(Undertow(45678)).start()
-}
+fun served(service: Service) = PolyHandler(
+  routed(service),
+  socketed(service)
+)

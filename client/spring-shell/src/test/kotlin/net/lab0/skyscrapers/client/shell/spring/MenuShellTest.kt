@@ -24,6 +24,7 @@ import net.lab0.skyscrapers.client.shell.spring.component.ServerAccessManager
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult
 import org.http4k.core.Status
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -81,7 +82,8 @@ internal class MenuShellTest {
 
     every { factory.newClient(BaseUrl(baseUrl)) } returns client
 
-    val connect = shell.evaluate { "connect --url $baseUrl" } as ShellResult.Ok.Text
+    val connect =
+      shell.evaluate { "connect --url $baseUrl" } as ShellResult.Ok.Text
     resultHandler.handleResult(connect)
     connect.output shouldContain "Connected to $baseUrl."
     connect.output shouldContain "Available games:"
@@ -102,7 +104,8 @@ internal class MenuShellTest {
 
     every { factory.newClient(BaseUrl(baseUrl)) } returns client
 
-    val connect = shell.evaluate { "connect --url $baseUrl" } as ShellResult.Ok.Text
+    val connect =
+      shell.evaluate { "connect --url $baseUrl" } as ShellResult.Ok.Text
     resultHandler.handleResult(connect)
     connect.output shouldContain "Failed to query $baseUrl with status $status."
   }
@@ -116,7 +119,8 @@ internal class MenuShellTest {
 
     serverAccessManager.forceState(InternalGameAccessState(client = client))
 
-    val create = shell.evaluate { "create --game Yggdrasil" } as ShellResult.Ok.Text
+    val create =
+      shell.evaluate { "create --game Yggdrasil" } as ShellResult.Ok.Text
     resultHandler.handleResult(create)
     create.output shouldContain "Created the game Yggdrasil."
   }
@@ -130,9 +134,26 @@ internal class MenuShellTest {
 
     serverAccessManager.forceState(InternalGameAccessState(client = client))
 
-    val create = shell.evaluate { "join --game Yggdrasil" } as ShellResult.Ok.Text
+    val create =
+      shell.evaluate { "join --game Yggdrasil" } as ShellResult.Ok.Text
     resultHandler.handleResult(create)
     create.output shouldContain "Joined the game Yggdrasil as player 0 with access token TOKEN."
+  }
+
+  @Disabled("Need websockets")
+  @Test
+  fun `join a game as AI`() {
+    val client = mockk<SkyscraperClient>() {
+      every { join(game) } returns
+          Right(ConnectionResponse(0, AccessToken("TOKEN")))
+    }
+
+    serverAccessManager.forceState(InternalGameAccessState(client = client))
+
+    val create =
+      shell.evaluate { "ai-join --game Yggdrasil --type Random" } as ShellResult.Ok.Text
+    resultHandler.handleResult(create)
+    create.output shouldContain "AI of type Random joined the game Yggdrasil as player 0 with access token TOKEN."
   }
 
   @Test
@@ -167,7 +188,15 @@ internal class MenuShellTest {
           )
     }
 
-    serverAccessManager.forceState(InternalGameAccessState(BaseUrl(""), client, 0, game, token))
+    serverAccessManager.forceState(
+      InternalGameAccessState(
+        BaseUrl(""),
+        client,
+        0,
+        game,
+        token
+      )
+    )
 
     val create = shell.evaluate { "state" } as String
     resultHandler.handleResult(create)

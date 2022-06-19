@@ -20,15 +20,16 @@ dependencies {
   implementation(project(":api:http4k"))
 
   implementation(arrow)
-  implementation(http4k("core"))
-  implementation(http4k("server-undertow"))
+  implementation(http4k.core)
+  implementation(http4k.serverUndertow)
   implementation(http4k("client-apache"))
-  implementation(http4k("format-kotlinx-serialization"))
+  implementation(http4k.formatKotlinxSerialization)
 
   // TEST
   testImplementation(project(":testing"))
 
-  testImplementation(http4k("client-okhttp"))
+  testImplementation(http4k.clientOkhttp)
+  testImplementation(http4k.clientWebSocket)
 }
 
 application {

@@ -20,6 +20,7 @@ object Dependencies {
   object http4k {
     val core = http4k("core")
     val clientOkhttp = http4k("client-okhttp")
+    val clientWebSocket = http4k("client-websocket")
     val formatKotlinxSerialization = http4k("format-kotlinx-serialization")
     val serverUndertow = http4k("server-undertow")
     val kotest = http4k("testing-kotest")

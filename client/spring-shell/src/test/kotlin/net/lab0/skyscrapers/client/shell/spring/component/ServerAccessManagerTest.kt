@@ -2,7 +2,10 @@ package net.lab0.skyscrapers.client.shell.spring.component
 
 import arrow.core.Either.Left
 import arrow.core.Either.Right
+import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.types.beInstanceOf
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -13,7 +16,10 @@ import net.lab0.skyscrapers.api.dto.StatusResponse
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.client.shell.spring.BaseUrl
+import net.lab0.skyscrapers.client.shell.spring.MenuShell
+import net.lab0.skyscrapers.client.shell.spring.MenuShell.AiType.RANDOM
 import net.lab0.skyscrapers.client.shell.spring.SkyscraperClientFactoryComponent
+import net.lab0.skyscrapers.client.shell.spring.data.ShellResult
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult.Ok
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult.Problem
 import org.junit.jupiter.api.Test
@@ -204,11 +210,34 @@ internal class ServerAccessManagerTest {
     subject.reconnect(baseUrl)
 
     // then
-    subject.join(foo) shouldBe Problem.Text("""
+    subject.join(foo) shouldBe Problem.Text(
+      """
       |Error when joining the game foo:
       |ERROR MESSAGE 1
       |ERROR MESSAGE 2
-    """.trimMargin())
+    """.trimMargin()
+    )
   }
 
+  @Test
+  fun `join a game as an AI`() {
+    // given
+    val foo = GameName("foo")
+    val factory = mockk<SkyscraperClientFactoryComponent>() {
+      every { newClient(baseUrl) } returns mockk {
+        every { join(foo) } returns
+            Right(ConnectionResponse(5, AccessToken("TOKEN")))
+      }
+    }
+    val subject = ServerAccessManager(factory)
+    subject.reconnect(baseUrl)
+
+    // then
+    val join = subject.aiJoin(foo, RANDOM)
+    join should beInstanceOf<Ok.Text>()
+    join as Ok.Text
+    join.output shouldContain Regex(
+      "Joined the game foo as AI .* of type RANDOM."
+    )
+  }
 }

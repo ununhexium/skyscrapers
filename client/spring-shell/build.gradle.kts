@@ -16,6 +16,7 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":ai"))
     implementation(project(":api:structure"))
     implementation(project(":client:http"))
     implementation(project(":server"))
