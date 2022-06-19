@@ -112,7 +112,11 @@ data class GameState(
           .substring(playersPrefix.length)
           .split(", ")
           .map { it.split(":") }
-          .map { it.component1().toCharArray()[0] - 'A' to (it.component2() == "a") }
+          .map {
+            it
+              .component1()
+              .toCharArray()[0] - 'A' to (it.component2() == "a")
+          }
           .map { Player(it.first, it.second) }
 
       return GameState(
@@ -129,6 +133,22 @@ data class GameState(
       )
     }
   }
+
+  val victoryType: VictoryType?
+    get() {
+      if (players.map { it.active }.size == 1)
+        return VictoryType.LAST_MAN_STANDING
+
+      val allBuilders = players.fold(listOf<Position>()) { acc, e ->
+        acc + getBuilders(e.id)
+      }
+      val highest = allBuilders.maxOf { buildings[it] }
+
+      if (highest == blocks.maxHeight())
+        return VictoryType.REACHED_THE_TOP
+
+      return null
+    }
 
   val currentPlayer: Int
     get() = players.first().id

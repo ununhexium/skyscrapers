@@ -117,7 +117,7 @@ class ServerAccessManager(val factory: SkyscraperClientFactoryComponent) {
         val token = it.token
 
         // TODO: manage threads and stop AIs when they are not needed anymore
-        Thread(AiRunnable(client, game, player, token, ai))
+        Thread(AiRunnable(client, game, player, token, ai)).start()
       }
 
       Ok.Text("Joined the game foo as AI ${ai.name} of type RANDOM.")

@@ -202,3 +202,20 @@
 1655387364248:place --at 0,1
 1655387370188:place --at 2,3
 1655387378158:place --at 3,3
+1655636363150:start-server --port 45678
+1655636392475:connect http://localhost:45678/
+1655636392917:create --game foo
+1655636393013:join --game foo
+1655636536891:connect http://localhost:45678/
+1655636537201:join --game foo
+1655636611399:script --file preset_p0.play
+1655636614699:ai-join --game foo --type RANDOM
+1655636625049:stacktrace
+1655636651740:connect http://localhost:45678/
+1655636655679:ai-join --game foo --type RANDOM
+1655636680619:state
+1655636683979:place 1,1
+1655636688109:state
+1655636710039:place 1,3
+1655636714630:state
+1655636839781:build --from 1,1 --to 1,2 --build 1,1

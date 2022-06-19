@@ -20,8 +20,9 @@ class SingleElimination(
   private fun klassLogger(): KLogger =
     KotlinLogging.logger(this::class.qualifiedName!!)
 
-  override fun compete(participants: Sequence<Ai>): Ai {
-    var remaining = participants.toList()
+  override fun compete(participants: List<Ai>): Pair<Ai, MutableList<Ai>> {
+    val eliminated = mutableListOf<Ai>()
+    var remaining = participants
     if (remaining.isEmpty()) throw IllegalArgumentException("There must be at least 1 participant.")
 
     while (remaining.size >= 2) {
@@ -30,13 +31,14 @@ class SingleElimination(
         if (maybePair.size == 2) {
           val (a, b) = maybePair
           val winner = bestOf1(a, b) ?: if (Random.nextBoolean()) a else b
-          log.warn { "${a.name} VS ${b.name}: ${winner.name} wins" }
+          log.info { "${a.name} VS ${b.name}: ${winner.name} wins" }
+          eliminated.add(if(a === winner) b else a)
           winner
         } else maybePair.first()
       }
     }
 
-    return remaining.first()
+    return remaining.first() to eliminated
   }
 
   private fun bestOf1(a: Ai, b: Ai): Ai? {

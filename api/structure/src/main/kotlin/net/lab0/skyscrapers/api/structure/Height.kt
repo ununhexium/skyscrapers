@@ -1,7 +1,7 @@
 package net.lab0.skyscrapers.api.structure
 
 @JvmInline
-value class Height(val value: Int) {
+value class Height(val value: Int): Comparable<Height> {
   companion object {
     val SEAL = Height(0)
   }
@@ -18,6 +18,6 @@ value class Height(val value: Int) {
   operator fun compareTo(height: Int) =
     value.compareTo(height)
 
-  operator fun compareTo(height: Height) =
-    value.compareTo(height.value)
+  override operator fun compareTo(other: Height) =
+    value.compareTo(other.value)
 }

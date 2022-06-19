@@ -68,6 +68,7 @@ class AiRunnable(
       }.mapLeft {
         stateFailed++
         if (stateFailed > 3) finished = true
+        log.warn { "Failed to get the state. Counter=$stateFailed" }
       }
     }
   }
