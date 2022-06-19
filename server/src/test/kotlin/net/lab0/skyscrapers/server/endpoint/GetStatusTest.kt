@@ -10,7 +10,7 @@ import org.http4k.core.Method.GET
 import org.http4k.core.Request
 import org.junit.jupiter.api.Test
 
-internal class StatusTest {
+internal class GetStatusTest {
   @Test
   fun `can tell that the server is available and how many games are available`() {
     val service = ServiceImpl.new()

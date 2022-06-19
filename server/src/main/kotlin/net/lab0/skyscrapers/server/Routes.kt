@@ -1,14 +1,14 @@
 package net.lab0.skyscrapers.server
 
-import net.lab0.skyscrapers.server.endpoint.build
-import net.lab0.skyscrapers.server.endpoint.createGame
-import net.lab0.skyscrapers.server.endpoint.joinGame
-import net.lab0.skyscrapers.server.endpoint.listGames
-import net.lab0.skyscrapers.server.endpoint.place
-import net.lab0.skyscrapers.server.endpoint.seal
-import net.lab0.skyscrapers.server.endpoint.showGame
-import net.lab0.skyscrapers.server.endpoint.status
-import net.lab0.skyscrapers.server.endpoint.win
+import net.lab0.skyscrapers.server.endpoint.Build
+import net.lab0.skyscrapers.server.endpoint.ShowGame
+import net.lab0.skyscrapers.server.endpoint.ListGames
+import net.lab0.skyscrapers.server.endpoint.GetStatus
+import net.lab0.skyscrapers.server.endpoint.JoinGame
+import net.lab0.skyscrapers.server.endpoint.Place
+import net.lab0.skyscrapers.server.endpoint.NewGame
+import net.lab0.skyscrapers.server.endpoint.Seal
+import net.lab0.skyscrapers.server.endpoint.Win
 import net.lab0.skyscrapers.server.filter.GameAccessFilter
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
@@ -25,18 +25,18 @@ fun routed(service: Service) = errorHandler.then(
   routes(
     "/" bind GET to { Response(Status.OK).body("up") },
 
-    "/api/v1/status" bind GET to { status(service) },
+    "/api/v1/status" bind GET to GetStatus(service),
 
-    "/api/v1/games/" bind GET to { listGames(service) },
-    "/api/v1/games/{gameName}" bind GET to { showGame(service, it) },
-    "/api/v1/games/{gameName}" bind POST to { createGame(service, it) },
-    "/api/v1/games/{gameName}/join" bind POST to { joinGame(service, it) },
+    "/api/v1/games/" bind GET to ListGames(service),
+    "/api/v1/games/{gameName}" bind GET to ShowGame(service),
+    "/api/v1/games/{gameName}" bind POST to NewGame(service),
+    "/api/v1/games/{gameName}/join" bind POST to JoinGame(service),
     "/api/v1/games/{gameName}" bind GameAccessFilter(service).then(
       routes(
-        "/place" bind POST to { place(service, it) },
-        "/build" bind POST to { build(service, it) },
-        "/seal" bind POST to { seal(service, it) },
-        "/win" bind POST to { win(service, it) },
+        "/place" bind POST to Place(service),
+        "/build" bind POST to Build(service),
+        "/seal" bind POST to Seal(service),
+        "/win" bind POST to Win(service),
       ),
     ),
 

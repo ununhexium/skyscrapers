@@ -7,20 +7,21 @@ import net.lab0.skyscrapers.server.toModel
 import net.lab0.skyscrapers.server.withGame
 import net.lab0.skyscrapers.server.withToken
 import org.http4k.core.Body
+import org.http4k.core.HttpHandler
 import org.http4k.core.Request
-import org.http4k.core.Response
 import org.http4k.format.KotlinxSerialization.auto
 
-fun seal(service: Service, req: Request): Response =
-  withGame(req, service) { (gameName, game) ->
-    withToken(req) { accessToken ->
-      val turn = Body
-        .auto<SealTurnDTO>()
-        .toLens()
-        .extract(req)
-        .toModel(gameName, accessToken, service)
+class Seal(val service: Service): HttpHandler {
+  override fun invoke(req: Request) =
+    withGame(req, service) { (gameName, game) ->
+      withToken(req) { accessToken ->
+        val turn = Body
+          .auto<SealTurnDTO>()
+          .toLens()
+          .extract(req)
+          .toModel(gameName, accessToken, service)
 
-      playTurn(turn!!, game)
-
+        playTurn(turn!!, game)
+      }
     }
-  }
+}
