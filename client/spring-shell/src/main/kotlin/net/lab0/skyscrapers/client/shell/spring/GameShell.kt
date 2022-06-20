@@ -2,7 +2,7 @@ package net.lab0.skyscrapers.client.shell.spring
 
 import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.client.shell.spring.component.ServerAccessManager
-import net.lab0.skyscrapers.client.shell.spring.component.provider.BuildFromValueProvider
+import net.lab0.skyscrapers.client.shell.spring.component.provider.BuildValueProvider
 import net.lab0.skyscrapers.client.shell.spring.component.provider.PlaceAtValueProvider
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult
 import org.springframework.shell.Availability
@@ -39,7 +39,7 @@ class GameShell(val serverAccessManager: ServerAccessManager) {
   fun build(
     @ShellOption(
       help = "Which builder to move",
-      valueProvider = BuildFromValueProvider::class
+      valueProvider = BuildValueProvider::class
     )
     from: Position,
     @ShellOption(help = "Where to move the builder.")

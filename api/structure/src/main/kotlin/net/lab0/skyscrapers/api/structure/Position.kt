@@ -15,6 +15,18 @@ data class Position(
   }
 
   companion object {
+    fun fromComaStyle(input: String): Position {
+      val parts = input.split(",")
+
+      if (!input.contains(",") && parts.size != 2)
+        throw IllegalArgumentException(
+          "The input $input can't be parsed as a coma-style position."
+        )
+
+      val (x,y) = parts.map { it.toInt() }
+      return Position(x,y)
+    }
+
     val NONE = Position(-1, -1)
   }
 

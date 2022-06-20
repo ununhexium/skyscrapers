@@ -5,6 +5,8 @@ import net.lab0.skyscrapers.ai.RandomAi
 import net.lab0.skyscrapers.ai.SequentialAi
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.structure.Position
+import net.lab0.skyscrapers.api.structure.TurnType
+import net.lab0.skyscrapers.api.structure.TurnType.MoveTurn.BuildTurn
 import net.lab0.skyscrapers.client.http.ClientError
 import net.lab0.skyscrapers.client.shell.spring.BaseUrl
 import net.lab0.skyscrapers.client.shell.spring.InternalGameAccessState
@@ -243,6 +245,21 @@ class ServerAccessManager(val factory: SkyscraperClientFactoryComponent) {
         .toList()
     }.mapLeft {
       emptyList<Position>()
+    }.merge()
+
+  fun buildCompletion(
+    from: Position? = null,
+    to: Position? = null,
+    build: Position? = null,
+  ): List<BuildTurn> =
+    state.useStateBrowser { browser ->
+      browser.getBuildableTurns()
+        .filter { from == null || it.start == from }
+        .filter { to == null || it.target == to }
+        .filter { build == null || it.build == build }
+        .toList()
+    }.mapLeft {
+      emptyList<BuildTurn>()
     }.merge()
 
   fun placeAtCompletion(): List<Position> =

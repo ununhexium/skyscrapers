@@ -2,6 +2,7 @@ package net.lab0.skyscrapers.client.shell.spring.component
 
 import arrow.core.Either.Left
 import arrow.core.Either.Right
+import arrow.core.merge
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
@@ -15,6 +16,9 @@ import net.lab0.skyscrapers.api.dto.GameResponse
 import net.lab0.skyscrapers.api.dto.StatusResponse
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.structure.GameState
+import net.lab0.skyscrapers.api.structure.Position
+import net.lab0.skyscrapers.api.structure.TurnType
+import net.lab0.skyscrapers.api.structure.TurnType.MoveTurn.BuildTurn
 import net.lab0.skyscrapers.client.shell.spring.BaseUrl
 import net.lab0.skyscrapers.client.shell.spring.MenuShell
 import net.lab0.skyscrapers.client.shell.spring.MenuShell.AiType.RANDOM

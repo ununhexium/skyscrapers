@@ -19,6 +19,8 @@ import net.lab0.skyscrapers.api.structure.Matrix
 import net.lab0.skyscrapers.api.structure.Player
 import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.api.structure.Position.Style.COMA
+import net.lab0.skyscrapers.api.structure.TurnType
+import net.lab0.skyscrapers.api.structure.TurnType.MoveTurn.BuildTurn
 import net.lab0.skyscrapers.client.http.SkyscraperClient
 import net.lab0.skyscrapers.client.shell.spring.component.ServerAccessManager
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult
@@ -164,15 +166,60 @@ internal class GameShellTest /* TODO extract ShellTest() */ {
 
   @Test
   fun `propose a place for the start location in build`() {
-    every { serverAccessManager.buildFromCompletion() } returns listOf(
-      Position(
-        100,
-        100
+    every {
+      serverAccessManager.buildCompletion(null, null, null)
+    } returns listOf(
+      BuildTurn(
+        0,
+        Position(100, 100),
+        Position(200, 200),
+        Position(300, 300)
       )
     )
     val completion = shell.complete("build", "--from")
     completion should haveCompletions(
       CompletionProposal("100,100")
+    )
+  }
+
+  @Test
+  fun `propose a place for the target location in build`() {
+    every {
+      serverAccessManager.buildCompletion(Position(100, 100), null, null)
+    } returns listOf(
+      BuildTurn(
+        0,
+        Position(100, 100),
+        Position(200, 200),
+        Position(300, 300)
+      )
+    )
+    val completion = shell.complete("build", "--from", "100,100", "--to")
+    completion should haveCompletions(
+      CompletionProposal("200,200")
+    )
+  }
+
+  @Test
+  fun `propose a place for the build location in build`() {
+    every {
+      serverAccessManager.buildCompletion(
+        Position(100, 100),
+        Position(200, 200),
+        null
+      )
+    } returns listOf(
+      BuildTurn(
+        0,
+        Position(100, 100),
+        Position(200, 200),
+        Position(300, 300)
+      )
+    )
+    val completion =
+      shell.complete("build", "--from", "100,100", "--to", "200,200", "--build")
+    completion should haveCompletions(
+      CompletionProposal("300,300")
     )
   }
 
