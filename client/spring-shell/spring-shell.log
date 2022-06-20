@@ -338,3 +338,31 @@
 1655747414501:place --at 3,3
 1655747416551:g s
 1655747418581:state
+1655747620876:script --file preset_p0.play
+1655747624046:script --file preset_p1.play
+1655747628264:place 1,1
+1655747630654:place 3,3
+1655747643705:build --build 0,3 --from 1,1 --to 1,2
+1655748302545:[A[B
+1655748308623:script --file preset_p0.play
+1655748310834:script --file preset_p1.play
+1655748317813:place 1,1
+1655748320133:place 3,3
+1655748387915:script --file preset_p0.play
+1655748390385:script --file preset_p1.play
+1655748393654:place 1,1
+1655748396033:place 3,3
+1655748398363:state
+1655748438173:build --build 3,4 --from 3,3 --to 2,4
+1655748441323:state
+1655748457325:build --build 3,4 --from 2,4 --to 2,3
+1655748459234:state
+1655748606756:script --file preset_p0.play
+1655748609185:script --file preset_p1.play
+1655748612754:place 1,1
+1655748617425:place 3,3
+1655748636704:build --from 3,3 --to 4,3 --build 3,4
+1655748639274:state
+1655748659044:build --build 3,4 --from 4,3 --to 3,3
+1655748682124:build --to 2,2 --from 3,3 --build 2,1
+1655748683304:state

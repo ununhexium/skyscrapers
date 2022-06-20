@@ -37,10 +37,7 @@ class GameShell(val serverAccessManager: ServerAccessManager) {
 
   @ShellMethod("Move a builder and build.", key = [Key.Command.build])
   fun build(
-    @ShellOption(
-      help = "Which builder to move",
-      valueProvider = BuildValueProvider::class
-    )
+    @ShellOption(help = "Which builder to move")
     from: Position,
     @ShellOption(help = "Where to move the builder.")
     to: Position,
@@ -54,7 +51,7 @@ class GameShell(val serverAccessManager: ServerAccessManager) {
     if (serverAccessManager.inGame) Availability.available()
     else Availability.unavailable("you must join a game first")
 
-  @ShellMethod("Move a builder and seal.", key = ["seal"])
+  @ShellMethod("Move a builder and seal.", key = [Key.Command.seal])
   fun seal(
     @ShellOption(help = "Which builder to move")
     from: Position,

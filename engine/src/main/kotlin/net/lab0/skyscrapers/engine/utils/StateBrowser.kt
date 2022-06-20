@@ -4,6 +4,7 @@ import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.api.structure.MoveOnly
 import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.api.structure.TurnType.MoveTurn.BuildTurn
+import net.lab0.skyscrapers.api.structure.TurnType.MoveTurn.SealTurn
 import net.lab0.skyscrapers.api.structure.TurnType.MoveTurn.WinTurn
 import net.lab0.skyscrapers.api.structure.TurnType.PlacementTurn
 import net.lab0.skyscrapers.engine.rule.RuleBook
@@ -89,5 +90,11 @@ class StateBrowser(val state: GameState, val ruleBook: RuleBook) {
       .filter { !state.hasBuilder(it) }
       .map{ PlacementTurn(player, it) }
 
+  fun getSealableTurns(player: Int): Sequence<SealTurn> =
+    getTargetPositions(player)
+      .flatMap { mov ->
+        mov.target.getSurroundingPositionsWithin(state.bounds)
+          .map { SealTurn(player, mov.start, mov.target, it) }
+          .filter { ruleBook.canSeal(it, state) }
+      }
 }
-

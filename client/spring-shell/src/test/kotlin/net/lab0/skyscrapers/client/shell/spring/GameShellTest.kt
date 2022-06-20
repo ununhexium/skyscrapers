@@ -21,6 +21,7 @@ import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.api.structure.Position.Style.COMA
 import net.lab0.skyscrapers.api.structure.TurnType
 import net.lab0.skyscrapers.api.structure.TurnType.MoveTurn.BuildTurn
+import net.lab0.skyscrapers.api.structure.TurnType.MoveTurn.SealTurn
 import net.lab0.skyscrapers.client.http.SkyscraperClient
 import net.lab0.skyscrapers.client.shell.spring.component.ServerAccessManager
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult
@@ -165,7 +166,7 @@ internal class GameShellTest /* TODO extract ShellTest() */ {
   }
 
   @Test
-  fun `propose a place for the start location in build`() {
+  fun `propose a start location in build`() {
     every {
       serverAccessManager.buildCompletion(null, null, null)
     } returns listOf(
@@ -183,7 +184,7 @@ internal class GameShellTest /* TODO extract ShellTest() */ {
   }
 
   @Test
-  fun `propose a place for the target location in build`() {
+  fun `propose a target location in build`() {
     every {
       serverAccessManager.buildCompletion(Position(100, 100), null, null)
     } returns listOf(
@@ -201,7 +202,7 @@ internal class GameShellTest /* TODO extract ShellTest() */ {
   }
 
   @Test
-  fun `propose a place for the build location in build`() {
+  fun `propose a build location in build`() {
     every {
       serverAccessManager.buildCompletion(
         Position(100, 100),
@@ -242,6 +243,65 @@ internal class GameShellTest /* TODO extract ShellTest() */ {
       shell.evaluate { "seal --from 0,0 --to 1,1 --seal 2,2" } as String
     resultHandler.handleResult(create)
     create shouldContain "Moved builder from 0,0 to 1,1 and sealed at 2,2."
+  }
+
+  @Test
+  fun `propose a start location in seal`() {
+    every {
+      serverAccessManager.sealCompletion(null, null, null)
+    } returns listOf(
+      SealTurn(
+        0,
+        Position(100, 100),
+        Position(200, 200),
+        Position(300, 300),
+      )
+    )
+    val completion = shell.complete("seal", "--from")
+    completion should haveCompletions(
+      CompletionProposal("100,100")
+    )
+  }
+
+  @Test
+  fun `propose a target location in seal`() {
+    every {
+      serverAccessManager.sealCompletion(Position(100, 100), null, null)
+    } returns listOf(
+      SealTurn(
+        0,
+        Position(100, 100),
+        Position(200, 200),
+        Position(300, 300),
+      )
+    )
+    val completion = shell.complete("seal", "--from", "100,100", "--to")
+    completion should haveCompletions(
+      CompletionProposal("200,200")
+    )
+  }
+
+  @Test
+  fun `propose a seal location in seal`() {
+    every {
+      serverAccessManager.sealCompletion(
+        Position(100, 100),
+        Position(200, 200),
+        null
+      )
+    } returns listOf(
+      SealTurn(
+        0,
+        Position(100, 100),
+        Position(200, 200),
+        Position(300, 300),
+      )
+    )
+    val completion =
+      shell.complete("seal", "--from", "100,100", "--to", "200,200", "--seal")
+    completion should haveCompletions(
+      CompletionProposal("300,300")
+    )
   }
 
   @Test

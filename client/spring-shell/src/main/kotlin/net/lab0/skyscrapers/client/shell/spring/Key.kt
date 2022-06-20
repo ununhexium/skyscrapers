@@ -6,5 +6,6 @@ object Key {
     const val build = "build"
     const val gameHistory = "game-history"
     const val place = "place"
+    const val seal = "seal"
   }
 }

@@ -5,8 +5,8 @@ import net.lab0.skyscrapers.ai.RandomAi
 import net.lab0.skyscrapers.ai.SequentialAi
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.structure.Position
-import net.lab0.skyscrapers.api.structure.TurnType
 import net.lab0.skyscrapers.api.structure.TurnType.MoveTurn.BuildTurn
+import net.lab0.skyscrapers.api.structure.TurnType.MoveTurn.SealTurn
 import net.lab0.skyscrapers.client.http.ClientError
 import net.lab0.skyscrapers.client.shell.spring.BaseUrl
 import net.lab0.skyscrapers.client.shell.spring.InternalGameAccessState
@@ -260,6 +260,21 @@ class ServerAccessManager(val factory: SkyscraperClientFactoryComponent) {
         .toList()
     }.mapLeft {
       emptyList<BuildTurn>()
+    }.merge()
+
+  fun sealCompletion(
+    from: Position? = null,
+    to: Position? = null,
+    seal: Position? = null,
+  ): List<SealTurn> =
+    state.useStateBrowser { browser ->
+      browser.getSealableTurns()
+        .filter { from == null || it.start == from }
+        .filter { to == null || it.target == to }
+        .filter { seal == null || it.seal == seal }
+        .toList()
+    }.mapLeft {
+      emptyList<SealTurn>()
     }.merge()
 
   fun placeAtCompletion(): List<Position> =

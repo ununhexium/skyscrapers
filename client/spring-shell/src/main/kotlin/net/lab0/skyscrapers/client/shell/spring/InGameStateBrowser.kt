@@ -27,4 +27,7 @@ class InGameStateBrowser(
 
   fun getBuildableTurns() =
     stateBrowser.getBuildableTurns(playerId)
+
+  fun getSealableTurns()=
+    stateBrowser.getSealableTurns(playerId)
 }

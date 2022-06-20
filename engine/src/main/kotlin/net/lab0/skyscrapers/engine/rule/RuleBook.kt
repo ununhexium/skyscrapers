@@ -92,4 +92,8 @@ class RuleBook(
   ): Boolean =
     canMove(turn, state) &&
         checkRules(buildRules, turn, state.editor().move(turn)).isEmpty()
+
+  fun canSeal(turn: SealTurn, state: GameState): Boolean  =
+    canMove(turn, state) &&
+        checkRules(sealRules, turn, state.editor().move(turn)).isEmpty()
 }

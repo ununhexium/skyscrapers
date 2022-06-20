@@ -1,6 +1,5 @@
 package net.lab0.skyscrapers.client.shell.spring.component.provider
 
-import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.api.structure.Position.Style.COMA
 import net.lab0.skyscrapers.client.shell.spring.Key
 import net.lab0.skyscrapers.client.shell.spring.component.ServerAccessManager
@@ -11,28 +10,29 @@ import org.springframework.shell.standard.ValueProvider
 import org.springframework.stereotype.Component
 
 @Component
-class BuildValueProvider(
+class SealValueProvider(
   val serverAccessManager: ServerAccessManager
 ) : ValueProvider {
 
   override fun supports(
     parameter: MethodParameter,
     completionContext: CompletionContext?
-  ) = parameter.executable.name == Key.Command.build
+  ) = parameter.executable.name == Key.Command.seal
 
   override fun complete(
     parameter: MethodParameter,
     completionContext: CompletionContext,
     hints: Array<out String>?
   ): List<CompletionProposal> {
+
     val from = valueOfParam(completionContext, "--from")
     val to = valueOfParam(completionContext, "--to")
-    val build = valueOfParam(completionContext, "--build")
+    val seal = valueOfParam(completionContext, "--seal")
 
-    val turns = serverAccessManager.buildCompletion(
+    val turns = serverAccessManager.sealCompletion(
       from = from,
       to = to,
-      build = build,
+      seal = seal,
     )
 
     return when (parameter.parameterName) {
@@ -42,8 +42,8 @@ class BuildValueProvider(
       "to" -> turns.map {
         CompletionProposal(it.target.toString(COMA))
       }
-      "build" -> turns.map {
-        CompletionProposal(it.build.toString(COMA))
+      "seal" -> turns.map {
+        CompletionProposal(it.seal.toString(COMA))
       }
       else -> listOf()
     }
