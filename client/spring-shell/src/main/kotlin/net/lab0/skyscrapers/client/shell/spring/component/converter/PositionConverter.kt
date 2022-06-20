@@ -1,4 +1,4 @@
-package net.lab0.skyscrapers.client.shell.spring.component
+package net.lab0.skyscrapers.client.shell.spring.component.converter
 
 import net.lab0.skyscrapers.api.structure.Position
 import org.springframework.core.convert.converter.Converter

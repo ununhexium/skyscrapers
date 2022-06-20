@@ -20,14 +20,13 @@ class MenuShell(val serverAccessManager: ServerAccessManager) {
   )
   fun connect(
     @ShellOption(help = "The server URL") url: String,
-  ): ShellResult {
+  ): ShellResult.Tree {
     serverAccessManager.reconnect(BaseUrl(url))
 
-    return Ok.Text(
-      """
-      |Connected to $url.
-      |${serverAccessManager.status()}
-    """.trimMargin()
+    return ShellResult.Tree(
+      Ok.Text("Connected"),
+      Ok.Text("Connected to $url."),
+      serverAccessManager.status()
     )
   }
 

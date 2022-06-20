@@ -1,4 +1,4 @@
-package net.lab0.skyscrapers.client.shell.spring.component
+package net.lab0.skyscrapers.client.shell.spring
 
 import mu.KotlinLogging
 import net.lab0.skyscrapers.ai.Ai

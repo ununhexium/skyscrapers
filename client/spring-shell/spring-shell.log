@@ -366,3 +366,16 @@
 1655748659044:build --build 3,4 --from 4,3 --to 3,3
 1655748682124:build --to 2,2 --from 3,3 --build 2,1
 1655748683304:state
+1655749552593:script --file preset_p0.play
+1655749554402:script --file preset_p1.play
+1655749563012:place --at 1,1
+1655749565591:place --at 3,3
+1655749575041:seal --seal 2,2 --from 1,1 --to 1,2
+1655749578171:state
+1655749794894:seal --seal 2,2 --from 1,2 --to 1,1
+1655749799764:state
+1655749934036:place --at 0,0
+1655749942516:g s
+1655750822697:script --file preset_p0.play
+1655750827266:script --file preset_p1.play
+1655751763657:script --file preset_p0.play

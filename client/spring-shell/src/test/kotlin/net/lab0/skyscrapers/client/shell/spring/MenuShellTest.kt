@@ -83,31 +83,19 @@ internal class MenuShellTest {
     every { factory.newClient(BaseUrl(baseUrl)) } returns client
 
     val connect =
-      shell.evaluate { "connect --url $baseUrl" } as ShellResult.Ok.Text
-    resultHandler.handleResult(connect)
-    connect.output shouldContain "Connected to $baseUrl."
-    connect.output shouldContain "Available games:"
-    connect.output shouldContain "foo"
-    connect.output shouldContain "bar"
+      shell.evaluate { "connect --url $baseUrl" } as ShellResult.Tree
+
+    connect.node shouldBe ShellResult.Ok.Text("Connected")
+    connect.children shouldBe listOf(
+      ShellResult.Ok.Text("Connected to $baseUrl."),
+      ShellResult.Tree(
+        ShellResult.Ok.Text("Available games"),
+        ShellResult.Ok.Text("bar"),
+        ShellResult.Ok.Text("foo"),
+      ),
+    )
 
     serverAccessManager.isConnected() shouldBe true
-  }
-
-  // TODO: generic error display class
-  @Test
-  fun `connection fails`() {
-    val status = Status.INTERNAL_SERVER_ERROR
-
-    val client = mockk<SkyscraperClient>() {
-      every { status() } returns Either.Left(status)
-    }
-
-    every { factory.newClient(BaseUrl(baseUrl)) } returns client
-
-    val connect =
-      shell.evaluate { "connect --url $baseUrl" } as ShellResult.Ok.Text
-    resultHandler.handleResult(connect)
-    connect.output shouldContain "Failed to query $baseUrl with status $status."
   }
 
   @Test

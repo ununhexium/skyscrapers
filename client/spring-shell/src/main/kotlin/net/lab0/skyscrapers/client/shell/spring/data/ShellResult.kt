@@ -4,6 +4,12 @@ import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.client.http.ClientError
 
 sealed class ShellResult {
+  data class Tree(val node: ShellResult, val children: List<ShellResult>) :
+    ShellResult() {
+    constructor(node: ShellResult, vararg children: ShellResult) :
+        this(node, children.toList())
+  }
+
   sealed class Ok : ShellResult() {
     data class Text(val output: String) : Ok()
     data class StateUpdate(val state: GameState, val comment: String) : Ok()

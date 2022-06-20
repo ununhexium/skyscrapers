@@ -8,6 +8,7 @@ import net.lab0.skyscrapers.api.structure.Position
 import net.lab0.skyscrapers.api.structure.TurnType.MoveTurn.BuildTurn
 import net.lab0.skyscrapers.api.structure.TurnType.MoveTurn.SealTurn
 import net.lab0.skyscrapers.client.http.ClientError
+import net.lab0.skyscrapers.client.shell.spring.AiRunnable
 import net.lab0.skyscrapers.client.shell.spring.BaseUrl
 import net.lab0.skyscrapers.client.shell.spring.InternalGameAccessState
 import net.lab0.skyscrapers.client.shell.spring.MenuShell
@@ -51,11 +52,13 @@ class ServerAccessManager(val factory: SkyscraperClientFactoryComponent) {
     state.useClient { client ->
       client.status()
         .map {
-          Ok.Text(
-            if (it.games.isEmpty()) "No game available."
-            else "Available games:\n" +
-                it.games.sorted().joinToString(separator = "\n")
-          )
+          if (it.games.isEmpty())
+            Ok.Text("No game available.")
+          else
+            ShellResult.Tree(
+              Ok.Text("Available games"),
+              it.games.sorted().map { Ok.Text(it) }
+            )
         }
         .mapLeft { status ->
           Problem.Text(

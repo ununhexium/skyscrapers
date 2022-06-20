@@ -26,6 +26,7 @@ import net.lab0.skyscrapers.client.shell.spring.SkyscraperClientFactoryComponent
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult.Ok
 import net.lab0.skyscrapers.client.shell.spring.data.ShellResult.Problem
+import net.lab0.skyscrapers.client.shell.spring.data.ShellResult.Tree
 import org.junit.jupiter.api.Test
 
 internal class ServerAccessManagerTest {
@@ -103,14 +104,13 @@ internal class ServerAccessManagerTest {
     subject.reconnect(baseUrl)
 
     // then
-    subject.status() shouldBe Ok.Text(
-      """
-      |Available games:
-      |a
-      |b
-      |d
-      |z
-    """.trimMargin()
+    subject.status() shouldBe Tree(
+      Ok.Text("Available games"),
+
+      Ok.Text("a"),
+      Ok.Text("b"),
+      Ok.Text("d"),
+      Ok.Text("z"),
     )
   }
 

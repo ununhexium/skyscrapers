@@ -14,6 +14,16 @@ object DarkPalette : Palette {
     )
   )
 
+  override val errorForeground =
+    PaletteColor(
+      AttributedCharSequence.roundRgbColor(
+        200,
+        0,
+        0,
+        256
+      )
+    )
+
   fun nearest(color: Color) =
     AttributedCharSequence.roundRgbColor(
       color.red,
