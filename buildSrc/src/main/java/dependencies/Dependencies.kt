@@ -18,6 +18,7 @@ object Dependencies {
     "org.http4k:http4k-$part:${Versions.http4k}"
 
   object http4k {
+    val contract = http4k("contract")
     val core = http4k("core")
     val clientOkhttp = http4k("client-okhttp")
     val clientWebSocket = http4k("client-websocket")

@@ -22,6 +22,7 @@ dependencies {
   implementation(arrow)
   implementation(http4k.core)
   implementation(http4k.serverUndertow)
+  implementation(http4k.contract)
   implementation(http4k("client-apache"))
   implementation(http4k.formatKotlinxSerialization)
 

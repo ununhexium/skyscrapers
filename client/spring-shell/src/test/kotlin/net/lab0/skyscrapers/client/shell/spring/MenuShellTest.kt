@@ -2,6 +2,7 @@ package net.lab0.skyscrapers.client.shell.spring
 
 import arrow.core.Either
 import arrow.core.Either.Right
+import arrow.core.computations.either
 import com.ninjasquad.springmockk.SpykBean
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
