@@ -1,5 +1,7 @@
 import dependencies.Dependencies.http4k
 import dependencies.Dependencies.arrow
+import dependencies.Dependencies.mu
+import dependencies.Dependencies.logback
 
 plugins {
   application
@@ -25,6 +27,8 @@ dependencies {
   implementation(http4k.contract)
   implementation(http4k("client-apache"))
   implementation(http4k.formatKotlinxSerialization)
+  implementation(logback.classic)
+  implementation(mu)
 
   // TEST
   testImplementation(project(":testing"))

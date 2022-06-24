@@ -96,7 +96,11 @@ fun BuildTurnDTO.toModel(
   }
 }
 
-fun SealTurnDTO.toModel(game: GameName, accessToken: AccessToken, service: Service): TurnType? {
+fun SealTurnDTO.toModel(
+  game: GameName,
+  accessToken: AccessToken,
+  service: Service
+): TurnType? {
   return service.getPlayerId(game, accessToken)?.let { playerId ->
     TurnType.MoveTurn.BuildTurn(
       playerId,
@@ -107,7 +111,11 @@ fun SealTurnDTO.toModel(game: GameName, accessToken: AccessToken, service: Servi
   }
 }
 
-fun WinTurnDTO.toModel(game: GameName, accessToken: AccessToken, service: Service): TurnType? {
+fun WinTurnDTO.toModel(
+  game: GameName,
+  accessToken: AccessToken,
+  service: Service
+): TurnType? {
   return service.getPlayerId(game, accessToken)?.let { playerId ->
     TurnType.MoveTurn.WinTurn(
       playerId,
@@ -147,6 +155,13 @@ fun withGame(
       f(gameName to game)
     }.merge()
   }
+
+fun withGame(
+  gameName: GameName,
+  service: Service,
+  f: (Game) -> Response
+): Response =
+  service.getGame(gameName).map(f).mapLeft { notFound(it) }.merge()
 
 fun playTurn(
   turn: TurnType,
