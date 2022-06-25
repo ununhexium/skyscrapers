@@ -84,4 +84,6 @@ object Dependencies {
   }
 
   val sparkJava = "com.sparkjava:spark-core:${Versions.sparkJava}"
+
+  val swaggerUi = "org.webjars:swagger-ui:${Versions.swaggerUi}"
 }

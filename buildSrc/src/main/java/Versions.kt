@@ -23,6 +23,7 @@ object Versions {
   val mu = "2.1.20"
   val sparkJava = "2.9.3"
   val springShell = "2.0.1.RELEASE"
+  val swaggerUi = "3.43.0"
 
   // test
   val assertJ = "3.22.0"

@@ -1,7 +1,8 @@
-import dependencies.Dependencies.http4k
 import dependencies.Dependencies.arrow
-import dependencies.Dependencies.mu
+import dependencies.Dependencies.http4k
 import dependencies.Dependencies.logback
+import dependencies.Dependencies.mu
+import dependencies.Dependencies.swaggerUi
 
 plugins {
   application
@@ -16,10 +17,10 @@ repositories {
 }
 
 dependencies {
-  implementation(project(":engine"))
   implementation(project(":api:dto"))
   implementation(project(":api:structure"))
   implementation(project(":api:http4k"))
+  implementation(project(":engine"))
 
   implementation(arrow)
   implementation(http4k.core)
@@ -29,6 +30,7 @@ dependencies {
   implementation(http4k.formatKotlinxSerialization)
   implementation(logback.classic)
   implementation(mu)
+  implementation(swaggerUi)
 
   // TEST
   testImplementation(project(":testing"))

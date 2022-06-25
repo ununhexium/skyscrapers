@@ -23,8 +23,12 @@ import org.http4k.core.Status.Companion.OK
 import org.http4k.core.then
 import org.http4k.format.Jackson
 import org.http4k.routing.Fallback
+import org.http4k.routing.ResourceLoader.Companion.Classpath
+import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
+import org.http4k.routing.static
+import org.http4k.routing.webJars
 
 // https://www.http4k.org/guide/reference/contracts/
 // TODO: web UI for swagger https://stackoverflow.com/questions/61729113/how-to-expose-swagger-ui-with-http4k
@@ -37,6 +41,16 @@ fun apiContract(service: Service) = contract {
   routes += ShowGame(service)
 }
 
+private const val API_DESCRIPTION_PATH = "/api/v1/swagger.json"
+
+fun swaggerUi(descriptionPath: String): RoutingHttpHandler = routes(
+  "docs" bind GET to {
+    Response(Status.FOUND).header("Location", "/docs/index.html?url=$descriptionPath")
+  },
+  // TODO: this version must be set by Gradle
+  "/docs" bind static(Classpath("META-INF/resources/webjars/swagger-ui/3.43.0"))
+)
+
 fun routed(service: Service) = errorHandler.then(
   routes(
     "/" bind GET to { Response(OK).body("up") },
@@ -45,7 +59,6 @@ fun routed(service: Service) = errorHandler.then(
 
     "/api/v1/games/" bind GET to ListGames(service),
     routes("/api/v1" bind apiContract(service)),
-//    "/api/v1/games/{gameName}" bind GET to ShowGame(service),
     "/api/v1/games/{gameName}" bind POST to NewGame(service),
     "/api/v1/games/{gameName}/join" bind POST to JoinGame(service),
     "/api/v1/games/{gameName}/history" bind GET to History(service),
@@ -58,6 +71,9 @@ fun routed(service: Service) = errorHandler.then(
         "/win" bind POST to Win(service),
       ),
     ),
+
+    swaggerUi(API_DESCRIPTION_PATH),
+    webJars(),
 
     Fallback bind { req: Request -> Response(Status.NOT_FOUND).body("Not found: ${req.method} '${req.uri}'") },
   ),
