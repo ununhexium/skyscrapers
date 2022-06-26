@@ -16,8 +16,8 @@ internal class ListGamesTest {
   @Test
   fun `can list all the games`() {
     val service = ServiceImpl.new()
-    service.createGame(GameName("foo"))
-    service.createGame(GameName("bar"))
+    service.createGameIfItDoesntExist(GameName("foo"))
+    service.createGameIfItDoesntExist(GameName("bar"))
 
     val readGame = routed(service)(Request(GET, "/api/v1/games/"))
 

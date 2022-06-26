@@ -121,7 +121,7 @@ internal class SkyscraperClientImplTest : FakeServerTest {
     val service = ServiceImpl.new()
     val gameName = "go"
     val cnc = GameName(gameName)
-    service.createGame(cnc)
+    service.createGameIfItDoesntExist(cnc)
     val p0 = service.join(cnc).shouldBeRight()
     service.join(cnc).shouldBeRight()
 
@@ -141,7 +141,7 @@ internal class SkyscraperClientImplTest : FakeServerTest {
     val service = ServiceImpl.new()
     val gameName = "go"
     val cnc = GameName(gameName)
-    service.createGame(cnc)
+    service.createGameIfItDoesntExist(cnc)
     val p0 = service.join(cnc).shouldBeRight()
     val p1 = service.join(cnc).shouldBeRight()
 

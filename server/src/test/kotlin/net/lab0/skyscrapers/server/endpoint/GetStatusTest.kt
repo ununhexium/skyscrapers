@@ -21,7 +21,7 @@ internal class GetStatusTest {
       GameName("fubar3"),
     )
 
-    games.forEach { service.createGame(it) }
+    games.forEach { service.createGameIfItDoesntExist(it) }
 
     val status = routed(service)(Request(GET, "/api/v1/status"))
     status should haveResponseBe(

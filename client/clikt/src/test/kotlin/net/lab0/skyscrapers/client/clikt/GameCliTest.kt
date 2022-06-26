@@ -55,7 +55,7 @@ internal class GameCliTest :
   @Test
   fun `show a game`() {
     val service = ServiceImpl.new()
-    service.createGame(GameName("foo"))
+    service.createGameIfItDoesntExist(GameName("foo"))
 
     fakeServer(service = service) {
       declare { it }
@@ -72,7 +72,7 @@ internal class GameCliTest :
   @Test
   fun `join a game`() {
     val service = ServiceImpl.new()
-    service.createGame(GameName("foo"))
+    service.createGameIfItDoesntExist(GameName("foo"))
 
     fakeServer(service = service) {
       declare { it }
@@ -98,7 +98,7 @@ internal class GameCliTest :
   fun `place a builder`() {
     val service = ServiceImpl.new()
     val game = GameName("foo")
-    service.createGame(game)
+    service.createGameIfItDoesntExist(game)
 
     fakeServer(service = service) {
       declare { it }
@@ -120,7 +120,7 @@ internal class GameCliTest :
   fun `place a builder again shows the violated rule`() {
     val service = ServiceImpl.new()
     val game = GameName("foo")
-    service.createGame(game)
+    service.createGameIfItDoesntExist(game)
 
     fakeServer(service = service) {
       declare { it }
@@ -168,7 +168,7 @@ internal class GameCliTest :
   fun `build on a cell`() {
     val service = ServiceImpl.new()
     val game = GameName("foo")
-    service.createGame(game)
+    service.createGameIfItDoesntExist(game)
 
     fakeServer(service = service) {
       declare { it }
@@ -198,7 +198,7 @@ internal class GameCliTest :
   fun `seal a cell`() {
     val service = ServiceImpl.new()
     val game = GameName("foo")
-    service.createGame(game)
+    service.createGameIfItDoesntExist(game)
 
     fakeServer(service = service) {
       declare { it }
@@ -229,7 +229,7 @@ internal class GameCliTest :
   fun `win a turn`() {
     val service = ServiceImpl.new()
     val game = GameName("foo")
-    service.createGame(game)
+    service.createGameIfItDoesntExist(game)
 
     fakeServer(service = service) {
       declare { it }

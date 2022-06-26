@@ -13,13 +13,13 @@ interface Service {
   @Deprecated("Use getGameState() or another direct access method")
   fun getGame(name: GameName): Either<ErrorMessage, Game>
 
-  fun getGameState(name: GameName): Either<ErrorMessage, GameState>
+  fun createGameIfItDoesntExist(name: GameName): Either<ErrorMessage, GameState>
   fun getGameHistory(name: GameName): Either<ErrorMessage, List<GameState>>
+  fun getGameNames(): Set<GameName>
+  fun getGameState(name: GameName): Either<ErrorMessage, GameState>
+  fun join(gameName: GameName): Either<JoiningError, PlayerAndToken>
   fun playGame(name:GameName, turn: TurnType):
       Either<ErrorMessage, GameState>
-  fun createGame(name: GameName): Game
-  fun join(gameName: GameName): Either<JoiningError, PlayerAndToken>
-  fun getGameNames(): Set<GameName>
 
   /**
    * Check if a player can play on a game.

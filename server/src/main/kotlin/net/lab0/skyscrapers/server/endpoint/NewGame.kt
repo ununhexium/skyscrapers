@@ -47,16 +47,13 @@ object NewGame {
 
     fun impl(gameName: GameName): HttpHandler =
       { req ->
-        service.getGame(gameName)
-          // here this is actually the case we want -> no game exists, and we can crate it.
-          .mapLeft {
-            val new = service.createGame(gameName)
+        service.createGameIfItDoesntExist(gameName)
+          .map {
             Response(Status.CREATED).with(
-              Body.auto<GameResponse>().toLens() of
-                  GameResponse(gameName, new.state)
+              Body.auto<GameResponse>().toLens() of GameResponse(gameName, it)
             )
           }
-          .map {
+          .mapLeft {
             Response(Status.BAD_REQUEST).with(
               Body.auto<ErrorResponse>().toLens() of
                   ErrorResponse("The game $gameName already exists.")

@@ -3,7 +3,6 @@ package net.lab0.skyscrapers.server
 import io.kotest.assertions.arrow.core.shouldBeLeft
 import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.types.shouldBeSameInstanceAs
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.structure.ErrorMessage
@@ -13,21 +12,19 @@ import org.junit.jupiter.api.Test
 
 internal class ServiceImplTest {
   @Test
-  fun `can create and read a game`() {
+  fun `can create a non existing game`() {
     val name = GameName("foo")
     val service = ServiceImpl.new()
-    val game = service.createGame(name)
-    assertThat(game).isNotNull
-    service.getGame(name).shouldBeRight() shouldBeSameInstanceAs game
+    service.createGameIfItDoesntExist(name).shouldBeRight()
   }
 
   @Test
-  fun `can get the state of an existing game`() {
+  fun `can't create an already existing game`() {
     val name = GameName("foo")
     val service = ServiceImpl.new()
-    service.createGame(name)
-    val state = service.getGameState(name)
-    state.shouldBeRight()
+    service.createGameIfItDoesntExist(name).shouldBeRight()
+    service.createGameIfItDoesntExist(name) shouldBeLeft
+        ErrorMessage("The game foo already exists.")
   }
 
   @Test
@@ -43,7 +40,7 @@ internal class ServiceImplTest {
   fun `can get the history of an existing game`() {
     val name = GameName("foo")
     val service = ServiceImpl.new()
-    service.createGame(name)
+    service.createGameIfItDoesntExist(name)
     val state = service.getGameHistory(name)
     state.shouldBeRight()
   }
@@ -61,7 +58,7 @@ internal class ServiceImplTest {
   fun `can't join a full game`() {
     val name = GameName("foo")
     val service = ServiceImpl.new()
-    service.createGame(name)
+    service.createGameIfItDoesntExist(name)
 
     val cnx0 = service.join(name).shouldBeRight()
     assertThat(cnx0.id).isEqualTo(0)
@@ -75,7 +72,7 @@ internal class ServiceImplTest {
   fun `can get the game names`() {
     val names = listOf("1", "2", "abc").map { GameName(it) }
     val service = ServiceImpl.new()
-    names.forEach { service.createGame(it) }
+    names.forEach { service.createGameIfItDoesntExist(it) }
 
     service.getGameNames() shouldBe names.toSet()
   }
@@ -84,7 +81,7 @@ internal class ServiceImplTest {
   fun `a player can play in a game that he joined`() {
     val service = ServiceImpl.new()
     val g = GameName("g")
-    service.createGame(g)
+    service.createGameIfItDoesntExist(g)
     val p0 = service.join(g).shouldBeRight()
     val p1 = service.join(g).shouldBeRight()
 
@@ -99,8 +96,8 @@ internal class ServiceImplTest {
     val a = GameName("A")
     val b = GameName("B")
 
-    service.createGame(a)
-    service.createGame(b)
+    service.createGameIfItDoesntExist(a)
+    service.createGameIfItDoesntExist(b)
 
     val p0 = service.join(a).shouldBeRight()
     val p1 = service.join(a).shouldBeRight()
@@ -118,7 +115,7 @@ internal class ServiceImplTest {
     val service = ServiceImpl.new()
     val a = GameName("A")
 
-    service.createGame(a)
+    service.createGameIfItDoesntExist(a)
 
     val p0 = service.join(a).shouldBeRight()
     val p1 = service.join(a).shouldBeRight()
@@ -131,7 +128,7 @@ internal class ServiceImplTest {
   fun `can play an existing game`() {
     val name = GameName("foo")
     val service = ServiceImpl.new()
-    service.createGame(name)
+    service.createGameIfItDoesntExist(name)
     val state = service.playGame(name, TurnType.GiveUpTurn(0))
     state.shouldBeRight()
   }
@@ -140,7 +137,7 @@ internal class ServiceImplTest {
   fun `can't play a non existing game`() {
     val name = GameName("foo")
     val service = ServiceImpl.new()
-//    service.createGame(name)
+//    service.createGameIfItDoesntExist(name)
     val state = service.playGame(name, TurnType.GiveUpTurn(0))
     state shouldBeLeft ErrorMessage("No game named 'foo'.")
   }
@@ -149,7 +146,7 @@ internal class ServiceImplTest {
   fun `return the errors when playing an invalid turn`() {
     val name = GameName("foo")
     val service = ServiceImpl.new()
-//    service.createGame(name)
+//    service.createGameIfItDoesntExist(name)
     val state = service.playGame(name, TurnType.GiveUpTurn(0))
     state shouldBeLeft ErrorMessage("No game named 'foo'.")
   }

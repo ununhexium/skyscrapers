@@ -23,12 +23,13 @@ class ServiceImpl(
   private val playersInGame =
     mutableMapOf<GameName, MutableList<PlayerAndToken>>()
 
+  // TODO: make internal
   override fun getGame(name: GameName): Either<ErrorMessage, Game> =
     games[name]?.let { Right(it) }
       ?: Left(
         ErrorMessage(
           "No game named 'missing'. " +
-              "There ${if(games.size <= 1) "is" else "are"} ${games.size} available game" +
+              "There ${if (games.size <= 1) "is" else "are"} ${games.size} available game" +
               when (games.size) {
                 0 -> "."
                 1 -> ". " + games.keys.first().value
@@ -37,8 +38,10 @@ class ServiceImpl(
         )
       )
 
-  override fun createGame(name: GameName): Game =
-    GameFactoryImpl().new().also { games[name] = it }
+  override fun createGameIfItDoesntExist(name: GameName): Either<ErrorMessage, GameState> =
+    games[name]?.let {
+      Left(ErrorMessage("The game ${name.value} already exists."))
+    } ?: Right(GameFactoryImpl().new().also { games[name] = it }.state)
 
   override fun join(gameName: GameName): Either<JoiningError, PlayerAndToken> =
     getGame(gameName)
