@@ -12,7 +12,7 @@ import net.lab0.skyscrapers.engine.api.Game
 interface Service {
   @Deprecated("Use getGameState() or another direct access method")
   fun getGame(name: GameName): Either<ErrorMessage, Game>
-  
+
   fun getGameState(name: GameName): Either<ErrorMessage, GameState>
   fun getGameHistory(name: GameName): Either<ErrorMessage, List<GameState>>
   fun playGame(name:GameName, turn: TurnType):

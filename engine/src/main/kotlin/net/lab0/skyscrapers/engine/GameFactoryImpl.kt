@@ -7,6 +7,7 @@ import net.lab0.skyscrapers.engine.exception.InvalidPlayersCount
 import net.lab0.skyscrapers.engine.rule.RuleBook
 
 open class GameFactoryImpl : GameFactory {
+
   override fun new(
     width: Int,
     height: Int,

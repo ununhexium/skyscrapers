@@ -145,21 +145,23 @@ internal class GameCliTest :
   private fun doDefaultPlacement(
     cli: CliktCommand,
     service: ServiceImpl,
-    nameName: GameName
+    gameName: GameName
   ) {
     cli.parse("config", "--reset")
     cli.parse("join", "foo")
 
-    val p1 = service.join(nameName).shouldBeRight()
+    val p1 = service.join(gameName).shouldBeRight()
 
     cli.parse("place", "--game", "foo", "--at", "0,0")
 
-    val game = service.getGame(nameName).shouldBeRight()
-    game.play(TurnType.PlacementTurn(p1.id, Position(0, 1)))
+    val game = service.playGame(
+      gameName,
+      TurnType.PlacementTurn(p1.id, Position(0, 1))
+    )
 
     cli.parse("place", "--game", "foo", "--at", "0,2")
 
-    game.play(TurnType.PlacementTurn(p1.id, Position(0, 3)))
+    service.playGame(gameName, TurnType.PlacementTurn(p1.id, Position(0, 3)))
   }
 
   @Test

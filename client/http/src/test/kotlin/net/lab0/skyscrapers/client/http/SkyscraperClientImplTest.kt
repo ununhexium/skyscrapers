@@ -161,16 +161,13 @@ internal class SkyscraperClientImplTest : FakeServerTest {
   fun `can get the history of a game`() {
     val foo = GameName("foo")
     val state = GameState.DUMMY
-    val game = mockk<Game> {
-      every { history } returns listOf(state)
-    }
     val service = mockk<Service>() {
-      every { getGame(foo) } returns Right(game)
+      every { getGameHistory(foo) } returns Right(listOf(state))
     }
 
     fakeServer(service = service) { handler ->
       val client = SkyscraperClientImpl(handler)
-      client.history(foo) shouldBe Right(listOf(state))
+      client.history(foo) shouldBeRight listOf(state)
     }
   }
 }
