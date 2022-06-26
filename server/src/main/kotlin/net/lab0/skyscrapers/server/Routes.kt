@@ -40,6 +40,7 @@ fun apiContract(service: Service) = contract {
   descriptionPath = "/swagger.json"
   routes += ShowGame(service)
   routes += NewGame(service)
+  routes += JoinGame(service)
 }
 
 private const val API_DESCRIPTION_PATH = "/api/v1/swagger.json"
@@ -60,8 +61,6 @@ fun routed(service: Service) = errorHandler.then(
 
     "/api/v1/games/" bind GET to ListGames(service),
     routes("/api/v1" bind apiContract(service)),
-    "/api/v1/games/{gameName}" bind POST to NewGame(service),
-    "/api/v1/games/{gameName}/join" bind POST to JoinGame(service),
     "/api/v1/games/{gameName}/history" bind GET to History(service),
 
     "/api/v1/games/{gameName}" bind GameAccessFilter(service).then(
