@@ -7,6 +7,7 @@ import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.types.shouldBeSameInstanceAs
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.structure.ErrorMessage
+import net.lab0.skyscrapers.api.structure.TurnType
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -124,5 +125,32 @@ internal class ServiceImplTest {
 
     service.getPlayerId(a, p0.token) shouldBe 0
     service.getPlayerId(a, p1.token) shouldBe 1
+  }
+
+  @Test
+  fun `can play an existing game`() {
+    val name = GameName("foo")
+    val service = ServiceImpl.new()
+    service.createGame(name)
+    val state = service.playGame(name, TurnType.GiveUpTurn(0))
+    state.shouldBeRight()
+  }
+
+  @Test
+  fun `can't play a non existing game`() {
+    val name = GameName("foo")
+    val service = ServiceImpl.new()
+//    service.createGame(name)
+    val state = service.playGame(name, TurnType.GiveUpTurn(0))
+    state shouldBeLeft ErrorMessage("No game named 'foo'.")
+  }
+
+  @Test
+  fun `return the errors when playing an invalid turn`() {
+    val name = GameName("foo")
+    val service = ServiceImpl.new()
+//    service.createGame(name)
+    val state = service.playGame(name, TurnType.GiveUpTurn(0))
+    state shouldBeLeft ErrorMessage("No game named 'foo'.")
   }
 }

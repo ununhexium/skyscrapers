@@ -7,6 +7,7 @@ import net.lab0.skyscrapers.api.dto.AccessToken
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.structure.ErrorMessage
 import net.lab0.skyscrapers.api.structure.GameState
+import net.lab0.skyscrapers.api.structure.TurnType
 import net.lab0.skyscrapers.engine.GameFactoryImpl
 import net.lab0.skyscrapers.engine.api.Game
 import net.lab0.skyscrapers.server.JoiningError.GameNotFound
@@ -80,5 +81,15 @@ class ServiceImpl(
 
   override fun getGameHistory(name: GameName): Either<ErrorMessage, List<GameState>> =
     games[name]?.let { Right(it.history) }
+      ?: Left(ErrorMessage("No game named '${name.value}'."))
+
+  override fun playGame(
+    name: GameName,
+    turn: TurnType
+  ): Either<ErrorMessage, GameState> =
+    games[name]?.let { game ->
+      playTurn(game, turn)
+      Right(game.state)
+    }
       ?: Left(ErrorMessage("No game named '${name.value}'."))
 }

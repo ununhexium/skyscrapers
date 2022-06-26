@@ -21,7 +21,7 @@ class Seal(val service: Service): HttpHandler {
           .extract(req)
           .toModel(gameName, accessToken, service)
 
-        playTurn(turn!!, game)
+        playTurn(game, turn!!)
       }
     }
 }

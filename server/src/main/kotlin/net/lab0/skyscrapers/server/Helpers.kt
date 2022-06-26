@@ -164,8 +164,8 @@ fun withGame(
   service.getGame(gameName).map(f).mapLeft { notFound(it) }.merge()
 
 fun playTurn(
-  turn: TurnType,
   game: Game,
+  turn: TurnType,
 ) = try {
   game.play(turn)
 
