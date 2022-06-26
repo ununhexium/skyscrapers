@@ -14,6 +14,7 @@ import org.http4k.contract.div
 import org.http4k.contract.meta
 import org.http4k.core.Body
 import org.http4k.core.ContentType
+import org.http4k.core.HttpHandler
 import org.http4k.core.Method
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.OK
@@ -52,9 +53,7 @@ object ShowGame {
   )
 
   operator fun invoke(service: Service): ContractRoute {
-    val gameNamePath = Path.map(::GameName).of("gameName")
-
-    val spec = "/games" / gameNamePath meta {
+    val spec = "/games" / Common.gameNamePath meta {
       summary = "Get the current state of a game."
       description = """
         |Returns the latest state of the game if it exists or 
@@ -73,7 +72,7 @@ object ShowGame {
       operationId = "getGameStateByGameName"
     } bindContract Method.GET
 
-    return spec to { gameName: GameName ->
+    fun impl(gameName: GameName): HttpHandler =
       {
         withGame(gameName, service) { game ->
           Response(OK).with(
@@ -84,6 +83,7 @@ object ShowGame {
           )
         }
       }
-    }
+
+    return spec to ::impl
   }
 }

@@ -14,7 +14,7 @@ import org.http4k.core.Status
 import org.http4k.format.KotlinxSerialization.auto
 import org.junit.jupiter.api.Test
 
-internal class GameFactoryTest {
+internal class NewGameTest {
   @Test
   fun `creates a new game when requesting new game`() {
     val service = ServiceImpl.new()

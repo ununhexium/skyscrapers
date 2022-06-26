@@ -39,6 +39,7 @@ fun apiContract(service: Service) = contract {
   renderer = OpenApi3(ApiInfo("Skyscrapers API", "v1"), Jackson)
   descriptionPath = "/swagger.json"
   routes += ShowGame(service)
+  routes += NewGame(service)
 }
 
 private const val API_DESCRIPTION_PATH = "/api/v1/swagger.json"
