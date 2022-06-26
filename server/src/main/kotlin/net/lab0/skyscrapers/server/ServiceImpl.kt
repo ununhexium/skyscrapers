@@ -6,6 +6,7 @@ import arrow.core.Either.Right
 import net.lab0.skyscrapers.api.dto.AccessToken
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.structure.ErrorMessage
+import net.lab0.skyscrapers.api.structure.GameState
 import net.lab0.skyscrapers.engine.GameFactoryImpl
 import net.lab0.skyscrapers.engine.api.Game
 import net.lab0.skyscrapers.server.JoiningError.GameNotFound
@@ -72,4 +73,12 @@ class ServiceImpl(
     playersInGame[game]
       ?.first { it.token == token }
       ?.id
+
+  override fun getGameState(name: GameName): Either<ErrorMessage, GameState> =
+    games[name]?.let { Right(it.state) }
+      ?: Left(ErrorMessage("No game named '${name.value}'."))
+
+  override fun getGameHistory(name: GameName): Either<ErrorMessage, List<GameState>> =
+    games[name]?.let { Right(it.history) }
+      ?: Left(ErrorMessage("No game named '${name.value}'."))
 }

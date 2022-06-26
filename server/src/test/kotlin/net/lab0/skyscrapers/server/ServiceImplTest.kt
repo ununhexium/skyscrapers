@@ -3,8 +3,10 @@ package net.lab0.skyscrapers.server
 import io.kotest.assertions.arrow.core.shouldBeLeft
 import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.types.shouldBeSameInstanceAs
 import net.lab0.skyscrapers.api.dto.value.GameName
+import net.lab0.skyscrapers.api.structure.ErrorMessage
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -16,6 +18,42 @@ internal class ServiceImplTest {
     val game = service.createGame(name)
     assertThat(game).isNotNull
     service.getGame(name).shouldBeRight() shouldBeSameInstanceAs game
+  }
+
+  @Test
+  fun `can get the state of an existing game`() {
+    val name = GameName("foo")
+    val service = ServiceImpl.new()
+    service.createGame(name)
+    val state = service.getGameState(name)
+    state.shouldBeRight()
+  }
+
+  @Test
+  fun `can't get the state of a non existing game`() {
+    val name = GameName("foo")
+    val service = ServiceImpl.new()
+//    service.createGame(name)
+    val state = service.getGameState(name)
+    state shouldBeLeft ErrorMessage("No game named 'foo'.")
+  }
+
+  @Test
+  fun `can get the history of an existing game`() {
+    val name = GameName("foo")
+    val service = ServiceImpl.new()
+    service.createGame(name)
+    val state = service.getGameHistory(name)
+    state.shouldBeRight()
+  }
+
+  @Test
+  fun `can't get the history of a non existing game`() {
+    val name = GameName("foo")
+    val service = ServiceImpl.new()
+//    service.createGame(name)
+    val state = service.getGameHistory(name)
+    state shouldBeLeft ErrorMessage("No game named 'foo'.")
   }
 
   @Test
