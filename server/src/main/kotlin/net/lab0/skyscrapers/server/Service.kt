@@ -6,6 +6,7 @@ import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.api.structure.ErrorMessage
 import net.lab0.skyscrapers.engine.api.Game
 
+// TODO: this should never return a game
 interface Service {
   fun getGame(name: GameName): Either<ErrorMessage, Game>
   fun createGame(name: GameName): Game

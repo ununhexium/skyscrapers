@@ -6,9 +6,12 @@ import net.lab0.skyscrapers.api.dto.ConnectionResponse
 import net.lab0.skyscrapers.api.dto.value.GameName
 import net.lab0.skyscrapers.server.JoiningError
 import net.lab0.skyscrapers.server.Service
+import net.lab0.skyscrapers.server.ServiceImpl
+import net.lab0.skyscrapers.server.endpoint.JoinGame.Examples.exampleResponse
+import net.lab0.skyscrapers.server.endpoint.JoinGame.Examples.joiningImpossibleTooManyPlayers
+import net.lab0.skyscrapers.server.endpoint.JoinGame.Examples.joiningImpossibleWhenInvalidGameName
 import net.lab0.skyscrapers.server.forbidden
 import net.lab0.skyscrapers.server.notFound
-import net.lab0.skyscrapers.server.withGame
 import org.http4k.contract.ContractRoute
 import org.http4k.contract.HttpMessageMeta
 import org.http4k.contract.div
@@ -17,26 +20,34 @@ import org.http4k.core.Body
 import org.http4k.core.ContentType
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method
-import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.with
 import org.http4k.format.KotlinxSerialization.auto
-import java.util.UUID
 
 /**
  * Gives a random token to that connection, to identify it as a user
  */
 object JoinGame {
 
-  val exampleBody = ConnectionResponse(
-    0,
-    AccessToken("UUID-0123-abcedf")
-  )
+  object Examples {
 
-  val exampleResponse = Response(CREATED).with(
-    Body.auto<ConnectionResponse>().toLens() of exampleBody
-  )
+    val exampleBody = ConnectionResponse(
+      0,
+      AccessToken("UUID-0123-abcedf")
+    )
+
+    val exampleResponse = Response(CREATED).with(
+      Body.auto<ConnectionResponse>().toLens() of exampleBody
+    )
+
+    val joiningImpossibleTooManyPlayers =
+      forbidden("The game foo is full. Can't add any extra player.")
+
+    val joiningImpossibleWhenInvalidGameName =
+      notFound("Not found message + indication about which games are available.")
+
+  }
 
   operator fun invoke(service: Service): ContractRoute {
     val spec = "/games" / Common.gameNamePath / "join" meta {
@@ -44,11 +55,28 @@ object JoinGame {
       returning(
         HttpMessageMeta(
           exampleResponse,
-          "Response Example",
-          "gameResponse",
-          null, // TODO: this outputs lots of garbage. Find a way to get it from kotlinx serialization
+          "When joining is accepted.",
+          "joinAcceptedResponse",
+          null,
           "sky"
-        )
+        ),
+        HttpMessageMeta(
+          joiningImpossibleTooManyPlayers,
+          "When attempting to join a game that is full.",
+          "joinFullGameResponse",
+          null,
+          "sky"
+        ),
+        HttpMessageMeta(
+          joiningImpossibleWhenInvalidGameName,
+          """
+            |No game named 'missing'.
+            |There are 2 available game. GameName1 GameName2
+          """.trimMargin(),
+          "joinFullGameResponse",
+          null,
+          "sky"
+        ),
       )
       produces += ContentType.APPLICATION_JSON
       operationId = "joinGameByGameName"
